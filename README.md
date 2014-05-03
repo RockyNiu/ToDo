@@ -3,7 +3,7 @@ ToDoList
 
 ToDoList App: Mobile + Web
 
-License and Author
+# License and Author
 
 Author::RockyNiu
 
