@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:clickable="true"
+    android:longClickable="true"
+    android:orientation="vertical" >
+
+    <CheckBox
+        android:id="@+id/checkBoxHide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/hide_checked"
+        android:textSize="@dimen/text_size_big" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edit_space_interval" />
+
+    <ListView
+        android:id="@+id/listView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:longClickable="true" >
+    </ListView>
+
+    <TextView
+        android:id="@+id/empty_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/inside_margin"
+        android:gravity="center"
+        android:text="@string/empty_list"
+        android:textColor="@color/empty_list"
+        android:textSize="@dimen/text_size_huge"
+        android:visibility="gone" >
+    </TextView>
+
+</LinearLayout>

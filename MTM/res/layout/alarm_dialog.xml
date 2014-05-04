@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+ 
+    <ImageView
+        android:id="@+id/alarm_dialog_icon"
+        android:layout_width="@dimen/alartdialog_icon_size"
+        android:layout_height="@dimen/alartdialog_icon_size"
+        android:layout_marginRight="5dp" 
+        android:src="@drawable/warning"
+        android:contentDescription="@string/warning_description"/>
+    
+ 	<LinearLayout 
+ 	    android:layout_width="match_parent"
+ 	    android:layout_height="wrap_content"
+ 	    android:orientation="vertical"
+ 	    android:layout_toRightOf="@id/alarm_dialog_icon" >
+
+    <TextView
+         android:id="@+id/alarm_dialog_text"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:textSize="@dimen/text_size_medium"/>
+ 
+     <Button
+        android:id="@+id/alarm_dialog_button"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="@string/alarm_dialog_ok"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_gravity="center_horizontal"
+        />
+ 	    
+ 	</LinearLayout>
+    
+ 
+</RelativeLayout>
