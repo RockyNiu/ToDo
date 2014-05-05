@@ -45,7 +45,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.rockyniu.todolist.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,22 +53,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".ToDoListActivity"
+            android:name="com.rockyniu.todolist.ToDoListActivity"
             android:label="@string/title_activity_to_do_list" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".EditItemActivity"
+            android:name="com.rockyniu.todolist.EditItemActivity"
             android:label="@string/title_activity_edit_item" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ToDoListActivity" />
         </activity>
-        
+        <activity
+            android:name="com.rockyniu.todolist.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName="com.rockyniu.todolist.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.rockyniu.todolist.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
