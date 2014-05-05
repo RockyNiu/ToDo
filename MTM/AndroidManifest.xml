@@ -60,6 +60,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+        
         <activity
             android:name="com.rockyniu.todolist.EditItemActivity"
             android:label="@string/title_activity_edit_item" >
@@ -67,14 +68,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ToDoListActivity" />
         </activity>
-        <activity
-            android:name="com.rockyniu.todolist.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName="com.rockyniu.todolist.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.rockyniu.todolist.MainActivity" />
-        </activity>
+        
     </application>
 
 </manifest>
