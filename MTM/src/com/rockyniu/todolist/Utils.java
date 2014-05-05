@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
+import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -83,7 +84,7 @@ public class Utils {
 		if (task.getStatus().equals("completed")) {
 			item.setCompleted(true);
 			long time = task.getCompleted().getValue();
-//			int offset = TimeZone.getDefault().getOffset(time);
+			// int offset = TimeZone.getDefault().getOffset(time);
 			item.setCompletedTime(time);
 		} else {
 			item.setCompleted(false);
@@ -100,7 +101,7 @@ public class Utils {
 			// set dueTime from notes
 			notes = notes.replace("Due ", "");
 			long dueTime = DateTime.parseRfc3339(notes).getValue();
-//			int offset = TimeZone.getDefault().getOffset(dueTime);
+			// int offset = TimeZone.getDefault().getOffset(dueTime);
 			item.setDueTime(dueTime);
 		} else {
 			// set dueTime from due
@@ -153,7 +154,7 @@ public class Utils {
 			task.setNotes(null);
 		} else {
 			long time = item.getDueTime();
-//			int offset = TimeZone.getDefault().getOffset(time);
+			// int offset = TimeZone.getDefault().getOffset(time);
 			DateTime dueTime = new DateTime(time);
 			task.setDue(dueTime);
 			task.setNotes("Due " + dueTime.toStringRfc3339());
@@ -163,7 +164,7 @@ public class Utils {
 		if (item.isCompleted()) {
 			task.setStatus("completed");
 			long time = item.getCompletedTime();
-//			int offset = TimeZone.getDefault().getOffset(time);
+			// int offset = TimeZone.getDefault().getOffset(time);
 			DateTime completedTime = new DateTime(time);
 			task.setCompleted(completedTime);
 		} else {
@@ -200,6 +201,8 @@ public class Utils {
 			if (details != null) {
 				message = details.getMessage();
 			}
+		} else if (t.getCause() instanceof OperationCanceledException) {
+			message = ((OperationCanceledException) t.getCause()).getMessage();
 		} else if (t.getCause() instanceof GoogleAuthException) {
 			message = ((GoogleAuthException) t.getCause()).getMessage();
 		} else if (t instanceof IOException) {
@@ -240,20 +243,20 @@ public class Utils {
 			}
 		});
 	}
-	
-	
+
 	/**
-	 * Shows an alert dialog with the given message.
-	 * click is need to dismiss the message.
+	 * Shows an alert dialog with the given message. click is need to dismiss
+	 * the message.
 	 * 
 	 * @param activity
 	 *            activity
 	 * @param message
 	 *            message to show or {@code null} for none
 	 * @param title
-	 * 			  title of dialog
+	 *            title of dialog
 	 */
-	private static void showNeedClickDialog(Activity activity, String message, String title){
+	private static void showNeedClickDialog(Activity activity, String message,
+			String title) {
 		AlertDialog alertDialog;
 		alertDialog = new AlertDialog.Builder(activity).create();
 		alertDialog.setTitle(title);
@@ -269,20 +272,22 @@ public class Utils {
 		alertDialog.show();
 		return;
 	}
-	
-//	public static void showPastDueDialog(Activity activity, String message){
-//		showNeedClickDialog(activity, message, "Task Past Due!");
-//	}
-	
-	private static void showTaskCreationErrorDialog(Activity activity, String message){
+
+	// public static void showPastDueDialog(Activity activity, String message){
+	// showNeedClickDialog(activity, message, "Task Past Due!");
+	// }
+
+	private static void showTaskCreationErrorDialog(Activity activity,
+			String message) {
 		showNeedClickDialog(activity, message, "Task Creation Error");
 	}
-	
-	public static void showItemNameIsEmptyDialog(Activity activity){
+
+	public static void showItemNameIsEmptyDialog(Activity activity) {
 		showTaskCreationErrorDialog(activity, "Task name cannot be empty.");
 	}
-	
-	public static void showDueTimeIsEarlierDialog(Activity activity){
-		showTaskCreationErrorDialog(activity, "Due time cannot be earlier than now.");
+
+	public static void showDueTimeIsEarlierDialog(Activity activity) {
+		showTaskCreationErrorDialog(activity,
+				"Due time cannot be earlier than now.");
 	}
 }

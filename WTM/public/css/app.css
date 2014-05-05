@@ -1,0 +1,180 @@
+/* app css stylesheet */
+
+.menu {
+  list-style: none;
+  border-bottom: 0.1em solid black;
+  margin-bottom: 2em;
+  padding: 0 0 0.5em;
+}
+
+.menu:before {
+  content: "[";
+}
+
+.menu:after {
+  content: "]";
+}
+
+.menu > li {
+  display: inline;
+}
+
+.menu > li:before {
+  content: "|";
+  padding-right: 0.3em;
+}
+
+.menu > li:nth-child(1):before {
+  content: "";
+  padding: 0;
+}
+
+.testme {
+  display:none;
+}
+
+.loginButton {
+    background: url("../images/Red-signin_Google_base_32dp.png") no-repeat scroll 0 0 transparent;
+    display:block;
+    width:125px;
+    height:42px;
+}
+
+.loginButton:active {
+    background: url("../images/Red-signin_Google_press_32dp.png") no-repeat scroll 0 0 transparent;
+}
+
+.loginButton:hover {
+    background: url("../images/Red-signin_Google_hover_32dp.png") no-repeat scroll 0 0 transparent;
+}
+
+.headerIcon {
+  width:28px;
+  height:28px;
+  padding-right:4px;
+  margin-top:-8px;
+  display:inline-block;
+}
+
+.addTask {
+  display:inline-block;
+  padding:8px;
+  margin-top:22px;
+  border:2px solid #EEE;
+}
+
+.header {
+  display:inline-block;
+}
+
+.rowLabel {
+  width:10%;
+  text-align:right;
+  padding-right:4px;
+}
+
+.rowData {
+  width:36%;
+  text-align:left;
+  padding:8px;
+}
+
+.empty {
+    clear:both;
+    padding:8px;
+    font-style:italic;
+}
+
+.invalid {
+    border: 2px solid red;
+    background: rgba(255,0,0,0.12);
+}
+
+.taskItem {
+    font-size:18px;
+    font-weight:normal;
+}
+
+.taskItem > input {
+    vertical-align:top;
+}
+
+.deleteTask, .editTask {
+    display:inline-block;
+    width:46px;
+    height:46px;
+    border-top-left-radius:0px;
+    border-bottom-left-radius:0px;
+    -moz-border-radius-bottomleft:0px;
+    -moz-border-radius-topleft:0px;
+}
+
+.editTask {
+    border-top-right-radius:0px;
+    border-bottom-right-radius:0px;
+    -moz-border-radius-bottomright:0px;
+    -moz-border-radius-topright:0px;
+}
+
+.checkbox,.checkboxSmall {
+    width:18px;
+    height:18px;
+    display:inline;
+}
+
+.checkboxSmall {
+    vertical-align:bottom;
+}
+
+.checkboxLabel {
+    padding-left:4px;
+    vertical-align:bottom;
+}
+
+.taskDetails {
+    display:block;
+    font-size:14px;
+    font-weight:lighter;
+    font-style:italic;
+    margin-left:24px;
+    margin-top:-8px;
+}
+
+.completed {
+    text-decoration:line-through;
+}
+
+.blank {
+    font-style:italic;
+    font-weight:lighter;
+}
+
+.pastDue {
+    color:red;
+}
+
+.welcome {
+    margin-top:16px;
+}
+
+.navbar-button {
+    margin-top:8px;
+}
+
+table {
+    width:100%;
+    max-width:640px;
+}
+
+.tableCell {
+    width:100%;
+}
+.tableCellOdd {
+    background-color:#EEEEEE;
+}
+
+body {
+  margin-left:8px;
+}
+
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }

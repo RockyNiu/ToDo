@@ -12,7 +12,7 @@
         android:id="@+id/checkBoxHide"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hide_checked"
+        android:text="@string/hide_completed"
         android:textSize="@dimen/text_size_big" />
 
     <Space

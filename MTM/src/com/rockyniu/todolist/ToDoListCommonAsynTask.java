@@ -7,6 +7,7 @@ import android.accounts.OperationCanceledException;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.tasks.Tasks;
 import com.rockyniu.todolist.database.ToDoItemDataSource;
 
@@ -31,7 +32,6 @@ abstract class ToDoListCommonAsynTask extends AsyncTask<Integer, Void, Boolean> 
 		super.onPreExecute();
 		
 		activity.numAsyncTasks++;
-//		progressBar.setVisibility(View.VISIBLE);
 		activity.setProgressBarIndeterminateVisibility(true);
 		
 	}
@@ -40,17 +40,12 @@ abstract class ToDoListCommonAsynTask extends AsyncTask<Integer, Void, Boolean> 
 	protected void onPostExecute(Boolean success) {
 		super.onPostExecute(success);
 		if (0 == --activity.numAsyncTasks) {
-//			progressBar.setVisibility(View.INVISIBLE); 
 			activity.setProgressBarIndeterminateVisibility(false);
 		}
 		if (0 == activity.numAsyncTasks && success){
 			activity.clearDeletedItems();
 			activity.refreshView();
 		}else{
-			// if synchronization with remote database is failed, delete the last record synTime.
-//			int numSynTimeRecords = managerDataSource.getCountOfSynTimeRecords(userId);
-//			if (numSynTimeRecords > 0){
-//			}
 		}
 //		activity.refreshView();
 		
@@ -67,6 +62,9 @@ abstract class ToDoListCommonAsynTask extends AsyncTask<Integer, Void, Boolean> 
 		} catch (AuthenticatorException e) {
 			Utils.logAndShow(activity, activity.TAG, e);
 			Log.e("AuthenticatorException", e.toString());
+		} catch (GoogleJsonResponseException e){
+			Utils.logAndShow(activity, activity.TAG, e);
+			Log.e("GoogleJsonResponseException", e.toString());
 		} catch (IOException e) {
 			Utils.logAndShow(activity, activity.TAG, e);
 			Log.e("IOException", e.toString());

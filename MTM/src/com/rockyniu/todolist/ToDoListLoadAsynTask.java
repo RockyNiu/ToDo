@@ -63,7 +63,7 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 		}
 
 		// get tasks list from Google Tasks service
-		Object[] resultsGetTasksFromRemote = getTasksFromRemote(ToDoListActivity.listName);
+		Object[] resultsGetTasksFromRemote = getTasksFromRemote(ToDoListActivity.TODOLIST_NAME);
 		taskListId = (String) resultsGetTasksFromRemote[0];
 		List<Task> tasks = (List<Task>) resultsGetTasksFromRemote[1];
 		if (requestCode == ToDoListActivity.REQUEST_REMOTE_DATABASE) {
@@ -127,7 +127,7 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 					 * tasksRequest.setKey
 					 * (ToDoListActivity.GOOGLE_TASKS_API_KEY); } }
 					 */
-					).setApplicationName("Gatech-cs6300-Team6-ToDoList/1.0")
+					).setApplicationName("RockyNiu-ToDo/1.0")
 					.build();
 		} catch (Exception e) {
 			service = null;
@@ -153,7 +153,7 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 			// if list dosen't exist
 			if (taskListId == null) {
 				TaskList taskList = new TaskList()
-						.setTitle(ToDoListActivity.listName);
+						.setTitle(ToDoListActivity.TODOLIST_NAME);
 				taskList = service.tasklists().insert(taskList).execute();
 				taskListId = taskList.getId();
 			}
@@ -235,36 +235,39 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 											"items/id, items/title, items/deleted, items/updated")
 									.execute().getItems();
 							boolean isDeleted = false;
-							for (int k = 0; k < tasksShowDeleted.size(); k++) {
-								Task taskShowDeleted = tasksShowDeleted.get(k);
-								if (taskShowDeleted.getId().equals(taskId)) {
-									isDeleted = true;
-									if (taskShowDeleted.getDeleted()) {
-										Long deletedTime = taskShowDeleted
-												.getUpdated().getValue();
-										if (deletedTime >= task.getUpdated()
-												.getValue()) {
-											// item is deleted in remote
-											// database after updated in local
-											// database
-											ToDoItem item = Utils
-													.convertTaskToToDoItem(
-															userId, task);
-											item.setModifiedTime(deletedTime);
-											toDoItemDataSource
-													.labelItemDeletedWithModifiedTime(item);
-										} else {
-											// item is deleted in remote
-											// database before updated in local
-											// database
-											service.tasks()
-													.update(taskListId, taskId,
-															task).execute();
+							if (tasksShowDeleted!=null){
+								for (int k = 0; k < tasksShowDeleted.size(); k++) {
+									Task taskShowDeleted = tasksShowDeleted.get(k);
+									if (taskShowDeleted.getId().equals(taskId)) {
+										isDeleted = true;
+										if (taskShowDeleted.getDeleted()) {
+											Long deletedTime = taskShowDeleted
+													.getUpdated().getValue();
+											if (deletedTime >= task.getUpdated()
+													.getValue()) {
+												// item is deleted in remote
+												// database after updated in local
+												// database
+												ToDoItem item = Utils
+														.convertTaskToToDoItem(
+																userId, task);
+												item.setModifiedTime(deletedTime);
+												toDoItemDataSource
+														.labelItemDeletedWithModifiedTime(item);
+											} else {
+												// item is deleted in remote
+												// database before updated in local
+												// database
+												service.tasks()
+														.update(taskListId, taskId,
+																task).execute();
+											}
 										}
+										break;
 									}
-									break;
 								}
 							}
+							
 							if (!isDeleted) {
 								task.setId(null);
 								Task newTask = service.tasks()

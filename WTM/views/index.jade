@@ -1,0 +1,18 @@
+doctype html
+html
+head
+ title= title
+ meta(name='viewport', content='width=device-width, initial-scale=1.0')
+ link(href='/css/bootstrap.min.css', rel='stylesheet', media='screen')
+ link(rel='stylesheet', href='/css/app.css')
+body
+.container
+ center
+  img.headerIcon(src='images/todoIcon.png')
+  h2.header TODO Task List Manager
+  p.lead GATech - OSMCS - Team 6 - Project 3
+  br
+  a.loginButton(href="/auth/Google")
+
+script(src='http://code.jquery.com/jquery.js')
+script(src='js/lib/bootstrap/bootstrap.min.js')

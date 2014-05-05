@@ -1,0 +1,110 @@
+extends layout
+
+block body
+  nav(class="navbar navbar-default",role="navigation")
+    div(class="container-fluid")
+        div.navbar-header
+            a.navbar-brand(href="#") WTM
+        span(class="navbar-left welcome") Welcome #{given_name}
+        a(class="navbar-right btn btn-default navbar-button",href="../logout") Logout
+
+  // You need to use an outter div (angular hack) to put the ng-init variables in the scope
+  div(ng-init="token='#{token}'; api_key='#{api_key}'")
+    div.list(ng-controller='TasksCtrl')
+      h4 Tasks
+      table(ng-if="hasTasks")
+         tr
+          div(style="display:inline-block; width:25%; padding-bottom:8px")
+            input(class="checkboxSmall",type="checkbox",ng-model="hideCompleted",ng-click="filterCompleted()")
+            span.checkboxLabel Hide Completed
+          div(style="display:inline-block;")
+            input(class="checkboxSmall",type="checkbox",ng-model="hideActive",ng-click="filterActive()")
+            span.checkboxLabel Hide Active
+         tr(ng-repeat='task in filteredTasks')
+          td.tableCell(ng-class-odd="'tableCellOdd'")
+            div
+                label.taskItem
+                    input(class="checkbox",type="checkbox",ng-model="task.checked",ng-click="completeTask(task.id)")
+                    span(ng-class="{'completed':task.checked,'blank':task.isEmpty,'pastDue':task.pastDue}") {{task.title}}
+                div(style="display:inline-block; float:right")
+                    button.editTask(class="btn btn-default",ng-show="task.checked==false",ng-click="editTask(task.id)")
+                        i(class="glyphicon glyphicon-edit")
+                    button.deleteTask(class="btn btn-default",ng-click="deleteTask(task.id)")
+                        i(class="glyphicon glyphicon-trash")
+                label.taskDetails
+                    span(ng-show="task.checked==false && task.isEmpty==false") {{task.priority}}
+                        span(ng-show="task.hasDueDate") , Due {{task.dueString}}
+                    span(ng-show="task.checked==true") {{task.priority}}, Completed {{task.completedString}}
+
+      img.loading(ng-show="isLoading",src="images/loading.gif",style="width:44px; height:44px")
+      span.empty(ng-show="!isLoading && !hasError && !hasTasks") No available tasks to show
+      span.error(ng-show="!isLoading && hasError") Error Loading Tasks: {{ error }}
+      br
+      div.addTask(ng-show="editingTask==true")
+        table
+            tr
+                td.rowLabel Due Date
+                td.rowData
+                    p.input-group
+                        input(ng-model="editDate",min="minDate",type="text",class="form-control",is-open="opened",datepicker-popup="{{format}}",ng-required="true",datepicker-options="dateOptions",close-text="Close")
+                        span.input-group-btn
+                            button(class="btn btn-default",ng-click="openCalendar($event)")
+                                i(class="glyphicon glyphicon-calendar")
+                td.rowLabel Due Time
+                td.rowData
+                    div(ng-model="editTime",style="display:inline-block;")
+                        timepicker(hour-step="hstep",minute-step="mstep",show-meridian="ismeridian")
+            tr
+                td.rowLabel Priority
+                td.rowData
+                    div.btn-group
+                        button(type="button",class="btn btn-primary",ng-model="editModel",btn-radio="'Low'") Low
+                        button(type="button",class="btn btn-primary",ng-model="editModel",btn-radio="'Medium'") Medium
+                        button(type="button",class="btn btn-primary",ng-model="editModel",btn-radio="'High'") High
+            tr
+                td.rowLabel Task
+                td.rowData(colspan=3)
+                    input(ng-class="{'invalid':taskNameIsInvalid}",ng-model="editTitle",type="text",maxlength="140",style="width:100%")
+            tr
+                td.rowData(colspan=4)
+                    button(type="button",class="btn btn-default btn-lg",style="width:100%",ng-click="saveTask()")
+                        | <span class="glyphicon glyphicon-save"></span> Save Task
+      div.addTask(ng-show="editingTask==false")
+        table
+          tr 
+            td.rowLabel Due Date
+            td.rowData 
+              p.input-group
+                input(ng-model="dueDate",min="minDate",type="text",class="form-control",is-open="opened",datepicker-popup="{{format}}",ng-required="true",datepicker-options="dateOptions",close-text="Close")
+                span.input-group-btn
+                  button(class="btn btn-default",ng-click="openCalendar($event)")
+                    i(class="glyphicon glyphicon-calendar")
+            td.rowLabel Due Time
+            td.rowData
+              div(ng-model="dueTime",style="display:inline-block;")
+                timepicker(hour-step="hstep",minute-step="mstep",show-meridian="ismeridian")
+          tr
+            td.rowLabel Priority
+            td.rowData 
+              div.btn-group
+                button(type="button",class="btn btn-primary",ng-model="radioModel",btn-radio="'Low'") Low
+                button(type="button",class="btn btn-primary",ng-model="radioModel",btn-radio="'Medium'") Medium
+                button(type="button",class="btn btn-primary",ng-model="radioModel",btn-radio="'High'") High
+          tr
+            td.rowLabel Task 
+            td.rowData(colspan=3)
+              input(ng-class="{'invalid':taskNameIsInvalid}",ng-model="taskName",type="text",maxlength="140",style="width:100%")
+          tr
+            td.rowData(colspan=4)
+              button(type="button",class="btn btn-default btn-lg",style="width:100%",ng-click="addTask()")
+                | <span class="glyphicon glyphicon-plus"></span> Add Task
+
+  script(src='js/lib/angular/angular.js')
+  script(src='js/lib/rfc3339converter/rfc3339converter.js')
+  script(src='js/app.js')
+  script(src='js/services.js')
+  script(src='js/controllers.js')
+  script(src='js/filters.js')
+  script(src='js/directives.js')
+  script(src='http://code.jquery.com/jquery.js')
+  script(src='js/lib/angular-bootstrap/ui-bootstrap-tpls.min.js')

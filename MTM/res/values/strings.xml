@@ -24,7 +24,7 @@
     <string name="priority">Priority</string>
     <string name="popmenu1">Edit task</string>
     <string name="popmenu2">Delete task</string>
-    <string name="hide_checked">Hide completed tasks</string>
+    <string name="hide_completed">Hide completed tasks</string>
     <string name="sortbydue">Sort by due</string>
     <string name="sortbypriority">Sort by priority</string>
     <string name="changepwd">Change password</string>

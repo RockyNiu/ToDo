@@ -61,8 +61,6 @@ public class ToDoListActivity extends Activity {
 	// for local database
 	ToDoItemDataSource toDoItemDataSource;
 	UserDataSource userDataSource;
-	// private static final int SORT_DUEDATE = 0;
-	// private static final int SORT_PRIORITY = 1;
 	private SortType sortType = SortType.DUE;
 	private ToDoStatus status = ToDoStatus.ALL;
 	static List<ToDoItem> localToDoItems;
@@ -80,12 +78,12 @@ public class ToDoListActivity extends Activity {
 	Tasks service;
 	// final static String GOOGLE_TASKS_API_KEY =
 	// "AIzaSyCvtrY8Rvv7KXrAWN0UjgszWe6AUPc8EVc";
-	final static String listName = "cs6300ToDoList";
+	final static String TODOLIST_NAME = "cs6300ToDoList";
 	List<Task> tasksList;
 
 	private static ListView toDoListView;
 	private CheckBox checkBox;
-	
+
 	// for check pastDue
 	AlarmReceiver pastDueAlarmReceiver = new AlarmReceiver();
 
@@ -95,18 +93,16 @@ public class ToDoListActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_PROGRESS);
 		super.onCreate(savedInstanceState);
 		IntentFilter filter = new IntentFilter();
-		filter.addAction("com.example.cs6300todolist.pastduealarm");
+		filter.addAction("_pastduealarm");
 		this.registerReceiver(pastDueAlarmReceiver, filter);
-		
+
 		setContentView(R.layout.activity_to_do_list);
 
 		Intent intent = getIntent();
-//		if (!"com.example.cs6300todolist.pastduealarm".equals(intent.getAction())){
 		Bundle bundle = intent.getExtras();
-		userId = bundle.getString("com.example.cs6300todolist.userid");
-		userName = bundle.getString("com.example.cs6300todolist.username");
-//		}
-		// token = bundle.getString("com.example.cs6300todolist.token");
+		userId = bundle.getString("_userid");
+		userName = bundle.getString("_username");
+		// token = bundle.getString("_token");
 
 		// credential = (new GoogleCredential()).setAccessToken(token);
 		// credential.setAccessToken(token);
@@ -142,7 +138,6 @@ public class ToDoListActivity extends Activity {
 		});
 
 		// click action
-		// toDoListView.setClickable(true);
 		toDoListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -152,8 +147,6 @@ public class ToDoListActivity extends Activity {
 						.getAdapter();
 				ToDoItem currentItem = (ToDoItem) tasksAdapter
 						.getItem(position);
-				// currentItem.setCompleted(currentItem.isCompleted() ? false
-				// : true);
 				long currentTime = Calendar.getInstance().getTimeInMillis();
 				if (currentItem.isCompleted()) {
 					currentItem.setCompleted(false);
@@ -164,13 +157,12 @@ public class ToDoListActivity extends Activity {
 				}
 				currentItem.setModifiedTime(currentTime);
 				toDoItemDataSource.updateItem(currentItem);
-				sync();
+				// sync();
 				refreshView();
 			}
 		});
 
 		// long cilck action
-		// toDoListView.setLongClickable(true);
 		toDoListView.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
@@ -181,15 +173,6 @@ public class ToDoListActivity extends Activity {
 						.getItem(position);
 				String itemId = currentItem.getId();
 				editItem(itemId);
-				/*
-				 * Intent myIntent = new Intent(ToDoListActivity.this,
-				 * EditItemActivity.class); Bundle bundle = new Bundle();
-				 * bundle.putString("com.example.cs6300todolist.userid",
-				 * userId);
-				 * bundle.putString("com.example.cs6300todolist.itemid",
-				 * currentItem.getId()); myIntent.putExtras(bundle);
-				 * startActivityForResult(myIntent, REQUEST_EDIT_ITEM);
-				 */
 				return true;
 			}
 		});
@@ -220,7 +203,7 @@ public class ToDoListActivity extends Activity {
 									.labelItemDeletedWithModifiedTime(currentItem);
 						}
 						refreshView();
-						sync();
+						// sync();
 						refreshView();
 					}
 				});
@@ -264,7 +247,7 @@ public class ToDoListActivity extends Activity {
 									// continue with delete
 									clearCompleted();
 									refreshView();
-									sync();
+									// sync();
 									refreshView();
 								}
 							})
@@ -306,26 +289,18 @@ public class ToDoListActivity extends Activity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REQUEST_EDIT_ITEM && resultCode == RESULT_OK) {
-			sync();
+			// sync();
 			refreshView();
 		}
 	}
 
-	/*
-	 * public void onAddItemClick(View view) { Intent myIntent = new
-	 * Intent(view.getContext(), EditItemActivity.class); Bundle bundle = new
-	 * Bundle(); bundle.putString("com.example.cs6300todolist.userid", userId);
-	 * bundle.putString("com.example.cs6300todolist.itemid",
-	 * getString(R.string.new_item)); myIntent.putExtras(bundle);
-	 * startActivityForResult(myIntent, 0); }
-	 */
 	// add or edit Item
 	private void editItem(String itemId) {
 		Intent myIntent = new Intent(ToDoListActivity.this,
 				EditItemActivity.class);
 		Bundle bundle = new Bundle();
-		bundle.putString("com.example.cs6300todolist.userid", userId);
-		bundle.putString("com.example.cs6300todolist.itemid", itemId);
+		bundle.putString("_userid", userId);
+		bundle.putString("_itemid", itemId);
 		myIntent.putExtras(bundle);
 		startActivityForResult(myIntent, REQUEST_EDIT_ITEM);
 	}
@@ -410,16 +385,14 @@ public class ToDoListActivity extends Activity {
 					"MM/dd/yyyy HH:mm a", Locale.getDefault());
 			pastDueItemNotes = "@ " + format.format(dueTime.getTime());
 		}
-		
+
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent();
-		intent.setAction("com.example.cs6300todolist.pastduealarm");
+		intent.setAction("_pastduealarm");
 		Bundle bundle = new Bundle();
-		bundle.putString("com.example.cs6300todolist.pastDueItemTitle",
-				pastDueItemTitle);
-		bundle.putString("com.example.cs6300todolist.pastDueItemNotes",
-				pastDueItemNotes);
+		bundle.putString("_pastDueItemTitle", pastDueItemTitle);
+		bundle.putString("_pastDueItemNotes", pastDueItemNotes);
 		intent.putExtras(bundle);
 
 		PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent,
@@ -431,26 +404,31 @@ public class ToDoListActivity extends Activity {
 	private class AlarmReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if ("com.example.cs6300todolist.pastduealarm".equals(intent.getAction())) {
+			if ("_pastduealarm".equals(intent.getAction())) {
 				Bundle bundle = intent.getExtras();
-				
-				String pastDueItemTitle = bundle.getString("com.example.cs6300todolist.pastDueItemTitle");
-				String pastDueItemNotes = bundle.getString("com.example.cs6300todolist.pastDueItemNotes");
+
+				String pastDueItemTitle = bundle
+						.getString("_pastDueItemTitle");
+				String pastDueItemNotes = bundle
+						.getString("_pastDueItemNotes");
 				String message = pastDueItemTitle + "\n\n" + pastDueItemNotes;
-				
+
 				final Dialog dialog = new Dialog(context);
 				dialog.setContentView(R.layout.alarm_dialog);
 				dialog.setTitle("Task Past Due!");
-	 
+
 				// set the custom dialog components - text, image and button
-				TextView text = (TextView) dialog.findViewById(R.id.alarm_dialog_text);
+				TextView text = (TextView) dialog
+						.findViewById(R.id.alarm_dialog_text);
 				text.setText(message);
-				ImageView image = (ImageView) dialog.findViewById(R.id.alarm_dialog_icon);
+				ImageView image = (ImageView) dialog
+						.findViewById(R.id.alarm_dialog_icon);
 				image.setImageResource(R.drawable.warning);
-	 
-				Button dialogButton = (Button) dialog.findViewById(R.id.alarm_dialog_button);
+
+				Button dialogButton = (Button) dialog
+						.findViewById(R.id.alarm_dialog_button);
 				// if button is clicked, close the custom dialog
-				
+
 				dialogButton.setOnClickListener(new View.OnClickListener() {
 
 					@Override
@@ -460,10 +438,10 @@ public class ToDoListActivity extends Activity {
 					}
 				});
 				dialog.show();
-	        }
+			}
 		}
 	}
-	
+
 	public List<ToDoItem> getNewListFromLocal(ToDoFlag deleted,
 			ToDoStatus status) {
 		return toDoItemDataSource.getNewListFromLocal(userId, status, sortType,

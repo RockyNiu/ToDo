@@ -8,7 +8,6 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.OperationCanceledException;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -138,9 +137,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		String token = user.getPassword();
 		Intent intent = new Intent(MainActivity.this, ToDoListActivity.class);
 		Bundle bundle = new Bundle();
-		bundle.putString("com.example.cs6300todolist.userid", userId);
-		bundle.putString("com.example.cs6300todolist.username", userName);
-		// bundle.putString("com.example.cs6300todolist.token", token);
+		bundle.putString("_userid", userId);
+		bundle.putString("_username", userName);
+		// bundle.putString("_token", token);
 		intent.putExtras(bundle);
 		startActivity(intent);
 	}

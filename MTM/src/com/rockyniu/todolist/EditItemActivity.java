@@ -15,12 +15,12 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.rockyniu.todolist.database.ToDoItem;
 import com.rockyniu.todolist.database.ToDoItemDataSource;
+
 
 //@TargetApi(9)
 public class EditItemActivity extends Activity {
@@ -46,16 +46,13 @@ public class EditItemActivity extends Activity {
 		setContentView(R.layout.activity_edit_item);
 		Intent intent = getIntent();
 		Bundle bundle = intent.getExtras();
-		userId = bundle.getString("com.example.cs6300todolist.userid");
-		itemId = bundle.getString("com.example.cs6300todolist.itemid");
+		userId = bundle.getString("_userid");
+		itemId = bundle.getString("_itemid");
 
 		itemdatasource = new ToDoItemDataSource(this);
-//		itemdatasource.open();
 		itemNameEditText = (EditText) findViewById(R.id.edit_name_edittext);
-//		itemNoteEditText = (EditText) findViewById(R.id.editText42);
 		priorityBar = (SeekBar) findViewById(R.id.edit_priority_seekbar);
 		setDueTimeCheckBox = (CheckBox) findViewById(R.id.edit_due_checkbox);
-//		dueTitle = (TextView) findViewById(R.id.textView3);
 		dueDatePicker = (DatePicker) findViewById(R.id.edit_due_datepicker);
 		dueTimePicker = (TimePicker) findViewById(R.id.edit_due_timepicker);
 		
@@ -63,8 +60,6 @@ public class EditItemActivity extends Activity {
 		if (itemId.equals(getString(R.string.new_item))) {
 			this.setTitle("Add New Item");
 
-//			dueTitle.setVisibility(View.GONE);
-			
 			// date and time
 			setDueTimeCheckBox.setChecked(false);
 			Calendar cal = Calendar.getInstance();
@@ -92,26 +87,16 @@ public class EditItemActivity extends Activity {
 				return;
 			}
 			itemNameEditText.setText(item.getTitle());
-//			itemNoteEditText.setText(item.getNotes());
-			/*String notes = item.getNotes();
-			
-			if (item.getDueTime() == null && item.getNotes() == ""){
-				
-				
-			}*/
 			
 			setDueTimeCheckBox.setChecked(item.getDueTime()==null?false:true);
 			completed = item.isCompleted();
 			completedTime = item.getCompletedTime();
-			// finishCheckBox.setChecked(item.isChecked());
 			Calendar cal = Calendar.getInstance();
 			if (item.getDueTime()==null) {
-//				dueTitle.setVisibility(View.GONE);
 				dueDatePicker.setVisibility(View.GONE);
 				dueTimePicker.setVisibility(View.GONE);
 				cal.add(Calendar.DAY_OF_MONTH, 2);
 			} else {
-//				dueTitle.setVisibility(View.VISIBLE);
 				dueDatePicker.setVisibility(View.VISIBLE);
 				dueTimePicker.setVisibility(View.VISIBLE);
 				cal.setTimeInMillis(item.getDueTime());
@@ -129,11 +114,9 @@ public class EditItemActivity extends Activity {
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
 						if (buttonView.isChecked()) {
-//							dueTitle.setVisibility(View.VISIBLE);
 							dueDatePicker.setVisibility(View.VISIBLE);
 							dueTimePicker.setVisibility(View.VISIBLE);
 						} else {
-//							dueTitle.setVisibility(View.GONE);
 							dueDatePicker.setVisibility(View.GONE);
 							dueTimePicker.setVisibility(View.GONE);
 						}
@@ -282,7 +265,6 @@ public class EditItemActivity extends Activity {
 			cal.set(Calendar.MINUTE, dueTimePicker.getCurrentMinute());
 			cal.set(Calendar.HOUR_OF_DAY, dueTimePicker.getCurrentHour());
 			if (nowcal.after(cal)) {
-//				dueTimeIsEarlierDialog();
 				return DUE_IS_EARLIER;
 			}
 		}
@@ -302,29 +284,4 @@ public class EditItemActivity extends Activity {
 		return UPDATE_DONE;
 		
 	}
-	
-//	private void taskCreationErrorDialog(String message){
-//		AlertDialog alertDialog;
-//		alertDialog = new AlertDialog.Builder(EditItemActivity.this).create();
-//		alertDialog.setTitle("Task Creation Error");
-//		alertDialog.setMessage(message);
-//		alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK",
-//				new DialogInterface.OnClickListener() {
-//
-//					@Override
-//					public void onClick(DialogInterface dialog, int which) {
-//						dialog.dismiss();
-//					}
-//				});
-//		alertDialog.show();
-//		return;
-//	}
-//	
-//	private void itemNameIsEmptyDialog(){
-//		taskCreationErrorDialog("Task name cannot be empty.");
-//	}
-//	
-//	private void dueTimeIsEarlierDialog(){
-//		taskCreationErrorDialog("Due time cannot be earlier than now.");
-//	}
 }
