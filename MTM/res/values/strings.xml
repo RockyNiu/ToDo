@@ -14,7 +14,7 @@
     <string name="add_item">Add task</string>
     <string name="title_activity_edit_item">Edit Item</string>
     <string name="item_name">Task name</string>
-    <string name="item_name_default">name</string>
+    <string name="item_name_default">name &lt;= 140 characters </string>
     <string name="item_note">Note</string>
     <string name="item_note_default">note</string>
     <string name="cancel_button">Cancel</string>

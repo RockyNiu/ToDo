@@ -84,9 +84,6 @@ public class ToDoListActivity extends Activity {
 	private static ListView toDoListView;
 	private CheckBox checkBox;
 
-	// adapter
-	ToDoListAdapter adapter;
-	
 	// for check pastDue
 	AlarmReceiver pastDueAlarmReceiver = new AlarmReceiver();
 
@@ -120,7 +117,7 @@ public class ToDoListActivity extends Activity {
 		localToDoItems = getNewListFromLocal(ToDoFlag.UNDELETED, status);
 		toDoListView = (ListView) findViewById(R.id.listView1);
 		toDoListView.setEmptyView(findViewById(R.id.empty_list_item));
-		adapter = new ToDoListAdapter(this, localToDoItems);
+		ToDoListAdapter adapter = new ToDoListAdapter(this, localToDoItems);
 		toDoListView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 
@@ -205,7 +202,9 @@ public class ToDoListActivity extends Activity {
 							toDoItemDataSource
 									.labelItemDeletedWithModifiedTime(currentItem);
 						}
-						refreshView();
+						Utils.showToastInternal(ToDoListActivity.this,
+								"Task deleted.");
+						// refreshView();
 						// sync();
 						refreshView();
 					}
@@ -346,6 +345,9 @@ public class ToDoListActivity extends Activity {
 	}
 
 	private void refresh() {
+		ToDoListAdapter adapter = new ToDoListAdapter(ToDoListActivity.this,
+				localToDoItems);
+		toDoListView.setAdapter(adapter);
 		localToDoItems = getNewListFromLocal(ToDoFlag.UNDELETED,
 				checkBox.isChecked() ? ToDoStatus.ACTIVE : ToDoStatus.ALL);
 		adapter.updateList(localToDoItems);
@@ -408,10 +410,8 @@ public class ToDoListActivity extends Activity {
 			if ("_pastduealarm".equals(intent.getAction())) {
 				Bundle bundle = intent.getExtras();
 
-				String pastDueItemTitle = bundle
-						.getString("_pastDueItemTitle");
-				String pastDueItemNotes = bundle
-						.getString("_pastDueItemNotes");
+				String pastDueItemTitle = bundle.getString("_pastDueItemTitle");
+				String pastDueItemNotes = bundle.getString("_pastDueItemNotes");
 				String message = pastDueItemTitle + "\n\n" + pastDueItemNotes;
 
 				final Dialog dialog = new Dialog(context);

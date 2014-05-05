@@ -20,4 +20,5 @@
     
     <dimen name="button_with">100sp</dimen>
 
+    <dimen name="inset_size">2dp</dimen>
 </resources>

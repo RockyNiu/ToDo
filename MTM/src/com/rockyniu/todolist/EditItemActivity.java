@@ -27,6 +27,8 @@ public class EditItemActivity extends Activity {
 
 	private final static int DUE_IS_EARLIER = 404;
 	private final static int UPDATE_DONE = 0;
+	private final int MAX_LENGTH = 140; // max length of name
+	
 	private ToDoItemDataSource itemdatasource;
 	private String userId;
 	private String itemId;
@@ -79,9 +81,10 @@ public class EditItemActivity extends Activity {
 			this.setTitle("Edit Item");
 			ToDoItem item = itemdatasource.getItemByItemId(itemId);
 			if (item == null) {
-				Toast toast = Toast.makeText(this, "Task does not exist.",
-						Toast.LENGTH_LONG);
-				toast.show();
+				Utils.showErrorToast(this, "Task does not exits.");
+//				Toast toast = Toast.makeText(this, "Task does not exist.",
+//						Toast.LENGTH_LONG);
+//				toast.show();
 				finish();
 				this.setResult(RESULT_CANCELED);
 				return;
@@ -141,36 +144,28 @@ public class EditItemActivity extends Activity {
 	}
 
 	public void onSaveClick(View view) {
-		
-		// save data here
-		String name = itemNameEditText.getText().toString().trim();
-		if (name.isEmpty()) {
-			Utils.showItemNameIsEmptyDialog(EditItemActivity.this);
-			return;
-		}
-		if (itemId.equals(getString(R.string.new_item))) {
-			// Add item
-			addItem (name);
-		} else {
-			// Update item
-			updateItem();
-		}
+		saveItem();
 		this.setResult(RESULT_OK);
 		this.finish();
 	}
 
 	public void onCancelClick(View view) {
-		Toast toast = Toast
-				.makeText(this, "Cancel Editing.", Toast.LENGTH_LONG);
-		toast.show();
+		Utils.showToastInternal(this, "Cancel Editing.");
 		this.setResult(RESULT_CANCELED);
-		finish();
+		this.finish();
 	}
 
 	@Override
 	public void onBackPressed() {
-		// save data here
-		String name = itemNameEditText.getText().toString().trim();
+		saveItem();
+		this.setResult(RESULT_OK);
+		this.finish();
+		super.onBackPressed();
+	}
+	
+	private void saveItem(){
+		String name = itemNameEditText.getText().toString().trim()
+				.replaceAll("\\s+", " ");
 		if (name.isEmpty()) {
 			Utils.showItemNameIsEmptyDialog(EditItemActivity.this);
 			return;
@@ -178,33 +173,25 @@ public class EditItemActivity extends Activity {
 		if (itemId.equals(getString(R.string.new_item))) {
 			// Add item
 			int updateResult = addItem(name);
-			if (updateResult == UPDATE_DONE){
-				Toast toast = Toast.makeText(this, "Task created.",
-						Toast.LENGTH_LONG);
-				toast.show();
-			}else if (updateResult == DUE_IS_EARLIER){
+			if (updateResult == UPDATE_DONE) {
+				Utils.showToastInternal(this, "Task created.");
+			} else if (updateResult == DUE_IS_EARLIER) {
 				Utils.showDueTimeIsEarlierDialog(EditItemActivity.this);
 				return;
 			}
 		} else {
 			// Update item
-			int updateResult = updateItem();
-			if (updateResult == UPDATE_DONE){
-				Toast toast = Toast.makeText(this, "Task updated.", Toast.LENGTH_LONG);
-				toast.show();
-			}else if (updateResult == DUE_IS_EARLIER){
+			int updateResult = updateItem(name);
+			if (updateResult == UPDATE_DONE) {
+				Utils.showToastInternal(this, "Task updated.");
+			} else if (updateResult == DUE_IS_EARLIER) {
 				Utils.showDueTimeIsEarlierDialog(EditItemActivity.this);
 				return;
 			}
 		}
-		this.setResult(RESULT_OK);
-		this.finish();
-		super.onBackPressed();
 	}
 	
 	private int addItem (String name){
-//		String note = itemNoteEditText.getText().toString();
-		String note ="";
 		Calendar cal = Calendar.getInstance();
 //		cal.set(Calendar.MILLISECOND, 1);
 //		cal.set(dueDatePicker.getYear(), dueDatePicker.getMonth(),
@@ -218,7 +205,6 @@ public class EditItemActivity extends Activity {
 			cal.set(Calendar.MINUTE, dueTimePicker.getCurrentMinute());
 			cal.set(Calendar.HOUR_OF_DAY, dueTimePicker.getCurrentHour());
 			if (nowcal.after(cal)) {
-//				dueTimeIsEarlierDialog();
 				return DUE_IS_EARLIER;
 			}
 		}
@@ -227,8 +213,13 @@ public class EditItemActivity extends Activity {
 		ToDoItem newItem = new ToDoItem();
 		newItem.setId(UUID.randomUUID().toString());
 		newItem.setUserId(userId);
+		if (name.length() > MAX_LENGTH){
+			name = name.substring(0,MAX_LENGTH);
+			Utils.showToastInternal(this, "Name is truncated to 140 characters.");
+		}
 		newItem.setTitle(name);
-		newItem.setNotes(note);
+		newItem.setNotes("");
+		
 		if (setDueTimeCheckBox.isChecked()){
 			newItem.setDueTime(cal.getTimeInMillis());
 		}else{
@@ -240,18 +231,11 @@ public class EditItemActivity extends Activity {
 		newItem.setPriority(priorityBar.getProgress());
 		newItem.setModifiedTime(Calendar.getInstance().getTimeInMillis());
 		itemdatasource.insertItemWithId(newItem);
-//		boolean done = itemdatasource.insertItemWithId(newItem);
-//		if (done) {
-			return UPDATE_DONE;
-//		}
+		return UPDATE_DONE;
 	}
 	
-	private int updateItem(){
-		// Update item
-		ToDoItem item = new ToDoItem();
-		item.setTitle(itemNameEditText.getText().toString());
-		item.setNotes("");
-//		item.setNotes(itemNoteEditText.getText().toString());
+	private int updateItem(String name){
+
 		Calendar cal = Calendar.getInstance();
 //		cal.set(Calendar.MILLISECOND, 1);
 //		cal.set(dueDatePicker.getYear(), dueDatePicker.getMonth(),
@@ -268,12 +252,22 @@ public class EditItemActivity extends Activity {
 				return DUE_IS_EARLIER;
 			}
 		}
+		
 		// update item and database
+		ToDoItem item = new ToDoItem();
+		if (name.length() > MAX_LENGTH){
+			name = name.substring(0,MAX_LENGTH);
+			Utils.showToastInternal(this, "Name is truncated to 140 characters.");
+		}
+		item.setTitle(name);		
+		item.setNotes("");
+		
 		if (setDueTimeCheckBox.isChecked()){
 			item.setDueTime(cal.getTimeInMillis());
 		}else{
 			item.setDueTime(null);
 		}
+		
 		item.setId(itemId);
 		item.setUserId(userId);
 		item.setCompleted(completed);

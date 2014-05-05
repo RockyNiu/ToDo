@@ -210,20 +210,20 @@ public class Utils {
 				message = "IOException";
 			}
 		}
-		showError(activity, message);
+		showErrorToast(activity, message);
 	}
 
 	/**
-	 * Shows an error alert dialog with the given message.
+	 * Shows an toast message with the given message.
 	 * 
 	 * @param activity
 	 *            activity
 	 * @param message
 	 *            message to show or {@code null} for none
 	 */
-	public static void showError(Activity activity, String message) {
+	public static void showErrorToast(Activity activity, String message) {
 		String errorMessage = getErrorMessage(activity, message);
-		showErrorInternal(activity, errorMessage);
+		showToastInternal(activity, errorMessage);
 	}
 
 	private static String getErrorMessage(Activity activity, String message) {
@@ -234,11 +234,11 @@ public class Utils {
 		return resources.getString(R.string.error_format, message);
 	}
 
-	private static void showErrorInternal(final Activity activity,
-			final String errorMessage) {
+	public static void showToastInternal(final Activity activity,
+			final String toastMessage) {
 		activity.runOnUiThread(new Runnable() {
 			public void run() {
-				Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG)
+				Toast.makeText(activity, toastMessage, Toast.LENGTH_LONG)
 						.show();
 			}
 		});
