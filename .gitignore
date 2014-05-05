@@ -22,3 +22,6 @@ local.properties
 # Eclipse
 proguard/
 .metadata/
+
+MTM/libs/
+MTM/.google_apis
