@@ -44,10 +44,10 @@ abstract class ToDoListCommonAsynTask extends AsyncTask<Integer, Void, Boolean> 
 		}
 		if (0 == activity.numAsyncTasks && success){
 			activity.clearDeletedItems();
-			activity.refreshView();
+//			activity.refreshView();
 		}else{
 		}
-//		activity.refreshView();
+		activity.refreshView();
 		
 	}
 	

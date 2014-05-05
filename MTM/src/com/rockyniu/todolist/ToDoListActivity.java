@@ -84,6 +84,9 @@ public class ToDoListActivity extends Activity {
 	private static ListView toDoListView;
 	private CheckBox checkBox;
 
+	// adapter
+	ToDoListAdapter adapter;
+	
 	// for check pastDue
 	AlarmReceiver pastDueAlarmReceiver = new AlarmReceiver();
 
@@ -117,7 +120,7 @@ public class ToDoListActivity extends Activity {
 		localToDoItems = getNewListFromLocal(ToDoFlag.UNDELETED, status);
 		toDoListView = (ListView) findViewById(R.id.listView1);
 		toDoListView.setEmptyView(findViewById(R.id.empty_list_item));
-		ToDoListAdapter adapter = new ToDoListAdapter(this, localToDoItems);
+		adapter = new ToDoListAdapter(this, localToDoItems);
 		toDoListView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 
@@ -343,12 +346,10 @@ public class ToDoListActivity extends Activity {
 	}
 
 	private void refresh() {
-		ToDoListAdapter adapter = new ToDoListAdapter(this, localToDoItems);
-		toDoListView.setAdapter(adapter);
-		adapter.notifyDataSetChanged();
 		localToDoItems = getNewListFromLocal(ToDoFlag.UNDELETED,
 				checkBox.isChecked() ? ToDoStatus.ACTIVE : ToDoStatus.ALL);
 		adapter.updateList(localToDoItems);
+		adapter.notifyDataSetChanged();
 	}
 
 	// get the first being pastDue ToDoItem
