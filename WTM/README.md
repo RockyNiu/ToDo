@@ -10,7 +10,7 @@ account before you are allowed to use the application. The application has the f
 - Edit an existing task
 - Mark a task a completed
 - Delete a task
-- Synchronize with mobile app and Google Tasks
+- Synchronize the tasks with mobile version, web version, and Google Tasks.
 
 ### Prerequisites
 
