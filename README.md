@@ -1,7 +1,7 @@
-ToDoList
+ToDo
 ========
 
-ToDoList App: [Mobile](/MTM/README.md) + [Web](/WTM/README.md)
+ToDo App: [Mobile](/MTM/README.md) + [Web](/WTM/README.md)
 
 ### Version
 1.0
