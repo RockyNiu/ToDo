@@ -13,4 +13,4 @@ ToDo Mobile App is a Task Manager application that is integrated into the [Googl
 
 ## Example App
 
-A hosted version of the app can be found [here](https://play.google.com/store/apps/details?id=com.rockyniu.todolist).
+A working version of the app can be found [here](https://play.google.com/store/apps/details?id=com.rockyniu.todolist).
