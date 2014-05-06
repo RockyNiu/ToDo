@@ -1,9 +1,10 @@
 ToDoList
 ========
 
-ToDoList App: Mobile + Web
+ToDoList App: [Mobile](/MTM/README.md) + [Web](/WTM/README.md)
 
 ### Version
+1.0
 
 ### License and Author
 * Author::[RockyNiu](https://github.com/RockyNiu)
