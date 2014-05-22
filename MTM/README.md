@@ -14,3 +14,12 @@ ToDo Mobile App is a Task Manager application that is integrated into the [Googl
 ## Example App
 
 A working version of the app can be found [here](https://play.google.com/store/apps/details?id=com.rockyniu.todolist).
+
+## Build your own project
+
+1) put support\v4 package into /lib folder
+the package is here, ANDRIOD_SDK_BUNDEL\Eclipse\sdk\extras\android\support\v4, if you use SDK manager download it.
+
+2) import google_play_services library, you can find the instruction here : http://developer.android.com/google/play-services/setup.html
+
+3) update android_sdk_bundle to latest version, import google_tasks_api
