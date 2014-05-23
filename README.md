@@ -6,6 +6,9 @@ ToDo App: [Mobile](/MTM/README.md) + [Web](/WTM/README.md)
 ### Version
 1.0
 
+### Need to do
+* change framework, add ToGo frame, and use googel-map-api
+
 ### License and Author
 * Author::[RockyNiu](https://github.com/RockyNiu)
 * Author::[pdenney](https://github.com/pdenney)
