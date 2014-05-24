@@ -1,2 +1,17 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_add_new_user"
+        android:icon="@drawable/google_plus_icon"
+        android:showAsAction="always|withText"
+        android:title="@string/add_user">
+    </item>
+    
+    <item
+        android:id="@+id/menu_exit"
+        android:icon="@android:drawable/ic_lock_power_off"
+        android:showAsAction="withText"
+        android:title="@string/exit">
+    </item>
+
 </menu>

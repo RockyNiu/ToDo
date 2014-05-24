@@ -30,5 +30,5 @@
         android:id="@+id/menu_sync"
         android:title="@string/sync">
     </item>
-
+  
 </menu>

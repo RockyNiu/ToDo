@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -19,6 +20,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -109,7 +111,9 @@ public class ToDoListActivity extends Activity {
 
 		// String[] nameSplit = userName.split("@");
 		// this.setTitle("ToDos for " + nameSplit[0]);
-		this.setTitle(userName);
+		ActionBar actionBar = getActionBar();
+		actionBar.setTitle(userName);
+//		this.setTitle(userName);
 		sortType = SortType.DUE;
 		toDoItemDataSource = new ToDoItemDataSource(this);
 		// userDataSource = new UserDataSource(this);
@@ -220,7 +224,8 @@ public class ToDoListActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_to_do_list, menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.activity_to_do_list, menu);
 		return true;
 	}
 
