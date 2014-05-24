@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,22 +27,15 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.rockyniu.todolist.database.User;
 import com.rockyniu.todolist.database.UserDataSource;
 
-public class MainActivity extends Activity {
+public class LoginActivity extends Activity {
 
 	static final String TAG = "MainActiviy";
 	static final int REQUEST_ACCOUNT_PICKER = 114;
 	static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 911;
 	UserDataSource userDataSource;
 	AccountManager mAccountManager;
-	// String token;
-	// int numAsyncTasks;
-
-	// Users user;
 	List<String> namesList;
-	// String userName;
-	// String userId;
 	ListView mUserNamesList;
-//	SignInButton mAddUserButton;
 	ProgressBar progressBar;
 
 	@Override
@@ -49,11 +43,6 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		userDataSource = new UserDataSource(this);
-
-//		mAddUserButton = (SignInButton) findViewById(R.id.add_account_button);
-//		// mAddUserButton.setSize(SignInButton.SIZE_WIDE);
-//		mAddUserButton.setOnClickListener(MainActivity.this);
-//		mAddUserButton.setContentDescription("Add User");
 
 		// get account names
 		mAccountManager = AccountManager.get(this);
@@ -97,7 +86,7 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		refreshView();
-		checkGooglePlaySerViceAvailable(MainActivity.this);
+		checkGooglePlaySerViceAvailable(LoginActivity.this);
 	}
 
 	@Override
@@ -130,7 +119,7 @@ public class MainActivity extends Activity {
 		try {
 			startActivityForResult(intent, REQUEST_ACCOUNT_PICKER);
 		} catch (Exception e) {
-			checkGooglePlaySerViceAvailable(MainActivity.this);
+			checkGooglePlaySerViceAvailable(LoginActivity.this);
 		}
 	}
 	
@@ -141,9 +130,29 @@ public class MainActivity extends Activity {
 		finish();
 	}
 
+	@Override
+	public boolean onTouchEvent(MotionEvent event){
+		if (event.getAction() == MotionEvent.ACTION_DOWN){
+			toggleActionBar();
+		}
+		return true;
+	}
+	
+	
+	private void toggleActionBar(){
+		ActionBar actionBar = getActionBar();
+		if (actionBar!=null){
+			if (actionBar.isShowing()){
+				actionBar.hide();
+			} else {
+				actionBar.show();
+			}
+		}
+	}
+	
 	private void checkGooglePlaySerViceAvailable(Activity activity) {
 		int status = GooglePlayServicesUtil
-				.isGooglePlayServicesAvailable(MainActivity.this);
+				.isGooglePlayServicesAvailable(LoginActivity.this);
 		if (status != ConnectionResult.SUCCESS) {
 			Log.v(TAG, "GoolgePlayService is not available.");
 			if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
@@ -171,7 +180,7 @@ public class MainActivity extends Activity {
 		User user = userDataSource.selectUser(userName);
 		String userId = user.getId();
 		String token = user.getPassword();
-		Intent intent = new Intent(MainActivity.this, ToDoListActivity.class);
+		Intent intent = new Intent(LoginActivity.this, ToDoListActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putString("_userid", userId);
 		bundle.putString("_username", userName);
@@ -196,20 +205,5 @@ public class MainActivity extends Activity {
 		mUserNamesList.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 	}
-
-//	@Override
-//	public void onClick(View view) {
-//		if (view == findViewById(R.id.add_account_button)) {
-//
-//			Intent intent = AccountPicker.newChooseAccountIntent(null, null,
-//					new String[] { GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE }, false,
-//					null, null, null, null);
-//			try {
-//				startActivityForResult(intent, REQUEST_ACCOUNT_PICKER);
-//			} catch (Exception e) {
-//				checkGooglePlaySerViceAvailable(MainActivity.this);
-//			}
-//		}
-//	}
 
 }
