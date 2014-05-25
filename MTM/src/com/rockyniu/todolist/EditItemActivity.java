@@ -16,11 +16,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.rockyniu.todolist.database.ToDoItem;
 import com.rockyniu.todolist.database.ToDoItemDataSource;
-
 
 //@TargetApi(9)
 public class EditItemActivity extends Activity {
@@ -28,16 +26,16 @@ public class EditItemActivity extends Activity {
 	private final static int DUE_IS_EARLIER = 404;
 	private final static int UPDATE_DONE = 0;
 	private final int MAX_LENGTH = 140; // max length of name
-	
+
 	private ToDoItemDataSource itemdatasource;
 	private String userId;
 	private String itemId;
 	private boolean completed;
 	private Long completedTime;
 	private EditText itemNameEditText;
-//	private EditText itemNoteEditText;
+	// private EditText itemNoteEditText;
 	private CheckBox setDueTimeCheckBox;
-//	private TextView dueTitle;
+	// private TextView dueTitle;
 	private DatePicker dueDatePicker;
 	private TimePicker dueTimePicker;
 	private SeekBar priorityBar;
@@ -57,45 +55,45 @@ public class EditItemActivity extends Activity {
 		setDueTimeCheckBox = (CheckBox) findViewById(R.id.edit_due_checkbox);
 		dueDatePicker = (DatePicker) findViewById(R.id.edit_due_datepicker);
 		dueTimePicker = (TimePicker) findViewById(R.id.edit_due_timepicker);
-		
-		
+
 		if (itemId.equals(getString(R.string.new_item))) {
-			this.setTitle("Add New Item");
+			this.setTitle(R.string.title_activity_add_item);
 
 			// date and time
 			setDueTimeCheckBox.setChecked(false);
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.DAY_OF_MONTH, 2);
-				// date
+			// date
 			dueDatePicker.updateDate(cal.get(Calendar.YEAR),
 					cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 			dueDatePicker.setVisibility(View.GONE);
-				// time
+			// time
 			dueTimePicker.setCurrentHour(0);
 			dueTimePicker.setCurrentMinute(0);
 			dueTimePicker.setVisibility(View.GONE);
-			
+
 			priorityBar.setProgress(1);
 
 		} else {
-			this.setTitle("Edit Item");
+			this.setTitle(R.string.title_activity_edit_item);
 			ToDoItem item = itemdatasource.getItemByItemId(itemId);
 			if (item == null) {
 				Utils.showErrorToast(this, "Task does not exits.");
-//				Toast toast = Toast.makeText(this, "Task does not exist.",
-//						Toast.LENGTH_LONG);
-//				toast.show();
+				// Toast toast = Toast.makeText(this, "Task does not exist.",
+				// Toast.LENGTH_LONG);
+				// toast.show();
 				finish();
 				this.setResult(RESULT_CANCELED);
 				return;
 			}
 			itemNameEditText.setText(item.getTitle());
-			
-			setDueTimeCheckBox.setChecked(item.getDueTime()==null?false:true);
+
+			setDueTimeCheckBox.setChecked(item.getDueTime() == null ? false
+					: true);
 			completed = item.isCompleted();
 			completedTime = item.getCompletedTime();
 			Calendar cal = Calendar.getInstance();
-			if (item.getDueTime()==null) {
+			if (item.getDueTime() == null) {
 				dueDatePicker.setVisibility(View.GONE);
 				dueTimePicker.setVisibility(View.GONE);
 				cal.add(Calendar.DAY_OF_MONTH, 2);
@@ -162,8 +160,8 @@ public class EditItemActivity extends Activity {
 		this.finish();
 		super.onBackPressed();
 	}
-	
-	private void saveItem(){
+
+	private void saveItem() {
 		String name = itemNameEditText.getText().toString().trim()
 				.replaceAll("\\s+", " ");
 		if (name.isEmpty()) {
@@ -190,12 +188,12 @@ public class EditItemActivity extends Activity {
 			}
 		}
 	}
-	
-	private int addItem (String name){
+
+	private int addItem(String name) {
 		Calendar cal = Calendar.getInstance();
-//		cal.set(Calendar.MILLISECOND, 1);
-//		cal.set(dueDatePicker.getYear(), dueDatePicker.getMonth(),
-//				dueDatePicker.getDayOfMonth(), 23, 59, 59);
+		// cal.set(Calendar.MILLISECOND, 1);
+		// cal.set(dueDatePicker.getYear(), dueDatePicker.getMonth(),
+		// dueDatePicker.getDayOfMonth(), 23, 59, 59);
 		cal.set(dueDatePicker.getYear(), dueDatePicker.getMonth(),
 				dueDatePicker.getDayOfMonth());
 		if (setDueTimeCheckBox.isChecked()) {
@@ -208,38 +206,39 @@ public class EditItemActivity extends Activity {
 				return DUE_IS_EARLIER;
 			}
 		}
-		
+
 		// create item and save into database
 		ToDoItem newItem = new ToDoItem();
 		newItem.setId(UUID.randomUUID().toString());
 		newItem.setUserId(userId);
-		if (name.length() > MAX_LENGTH){
-			name = name.substring(0,MAX_LENGTH);
-			Utils.showToastInternal(this, "Name is truncated to 140 characters.");
+		if (name.length() > MAX_LENGTH) {
+			name = name.substring(0, MAX_LENGTH);
+			Utils.showToastInternal(this,
+					"Name is truncated to 140 characters.");
 		}
 		newItem.setTitle(name);
 		newItem.setNotes("");
-		
-		if (setDueTimeCheckBox.isChecked()){
+
+		if (setDueTimeCheckBox.isChecked()) {
 			newItem.setDueTime(cal.getTimeInMillis());
-		}else{
+		} else {
 			newItem.setDueTime(null);
 		}
-		
+
 		newItem.setCompleted(false);
-		newItem.setCompletedTime((long)0);
+		newItem.setCompletedTime((long) 0);
 		newItem.setPriority(priorityBar.getProgress());
 		newItem.setModifiedTime(Calendar.getInstance().getTimeInMillis());
 		itemdatasource.insertItemWithId(newItem);
 		return UPDATE_DONE;
 	}
-	
-	private int updateItem(String name){
+
+	private int updateItem(String name) {
 
 		Calendar cal = Calendar.getInstance();
-//		cal.set(Calendar.MILLISECOND, 1);
-//		cal.set(dueDatePicker.getYear(), dueDatePicker.getMonth(),
-//				dueDatePicker.getDayOfMonth(), 23, 59, 59);
+		// cal.set(Calendar.MILLISECOND, 1);
+		// cal.set(dueDatePicker.getYear(), dueDatePicker.getMonth(),
+		// dueDatePicker.getDayOfMonth(), 23, 59, 59);
 		cal.set(dueDatePicker.getYear(), dueDatePicker.getMonth(),
 				dueDatePicker.getDayOfMonth());
 		if (setDueTimeCheckBox.isChecked()) {
@@ -252,22 +251,23 @@ public class EditItemActivity extends Activity {
 				return DUE_IS_EARLIER;
 			}
 		}
-		
+
 		// update item and database
 		ToDoItem item = new ToDoItem();
-		if (name.length() > MAX_LENGTH){
-			name = name.substring(0,MAX_LENGTH);
-			Utils.showToastInternal(this, "Name is truncated to 140 characters.");
+		if (name.length() > MAX_LENGTH) {
+			name = name.substring(0, MAX_LENGTH);
+			Utils.showToastInternal(this,
+					"Name is truncated to 140 characters.");
 		}
-		item.setTitle(name);		
+		item.setTitle(name);
 		item.setNotes("");
-		
-		if (setDueTimeCheckBox.isChecked()){
+
+		if (setDueTimeCheckBox.isChecked()) {
 			item.setDueTime(cal.getTimeInMillis());
-		}else{
+		} else {
 			item.setDueTime(null);
 		}
-		
+
 		item.setId(itemId);
 		item.setUserId(userId);
 		item.setCompleted(completed);
@@ -276,6 +276,6 @@ public class EditItemActivity extends Activity {
 		item.setModifiedTime(Calendar.getInstance().getTimeInMillis());
 		itemdatasource.updateItem(item);
 		return UPDATE_DONE;
-		
+
 	}
 }

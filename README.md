@@ -1,9 +1,13 @@
-ToDoList
+ToDo
 ========
 
-ToDoList App: Mobile + Web
+ToDo App: [Mobile](/MTM/README.md) + [Web](/WTM/README.md)
 
 ### Version
+1.0
+
+### Need to do
+* change framework, add ToGo frame, and use google-map-api
 
 ### License and Author
 * Author::[RockyNiu](https://github.com/RockyNiu)

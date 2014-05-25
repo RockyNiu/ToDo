@@ -1,6 +1,6 @@
-# MTW Team 6 App
+# ToDo Web App
 
-MTW Team 6 App is a Task Manager application that is integrated into the [Google Tasks API](https://developers.google.com/google-apps/tasks/)
+ToDo Web App is a Task Manager application that is integrated into the [Google Tasks API](https://developers.google.com/google-apps/tasks/)
 and adds additional features on top of the Google Task view like the ability to set task due times
 and priority. It is linked to your Google+ account and requires you to first log in with your Google+
 account before you are allowed to use the application. The application has the following features
@@ -9,6 +9,8 @@ account before you are allowed to use the application. The application has the f
 - Set a task due date, due time, priority, and title
 - Edit an existing task
 - Mark a task a completed
+- Delete a task
+- Synchronize the tasks with mobile version, web version, and Google Tasks.
 
 ### Prerequisites
 

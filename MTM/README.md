@@ -1,12 +1,25 @@
-Starter code for MTM, the mobile version of the TODO List application
--------------------------------------------------------------------------------
+# ToDo Mobile App
 
-This is the source code for the existing mobile TODO List application. Please import the project in Eclipse and feel free to update the target Android SDK version to the one that best suits you.
+ToDo Mobile App is a Task Manager application that is integrated into the [Google Tasks API](https://developers.google.com/google-apps/tasks/) and adds additional features on top of the Google Task view, like the ability to set task due time and priority. It is linked to your Google+ account and requires you to first log in with your Google+ account before you are allowed to use the application. The application has the following features:
 
-We recommend the use of the [Genymotion Android emulator](http://www.genymotion.com/). The free version is fully functional and is much faster than the standard Android emulator. Genymotion is getting increasingly popular and is well maintained for now.
+- Add items to your task list; (press menu icon on top)
+- Set a task name, priority, due date, due time;
+- Edit an existing task; (long press)
+- Mark a task a completed;
+- Delete a task; (swipe)
+- Sort tasks by due or priority;
+- Reminder you the task past due;
+- Synchronize the tasks with mobile version, web version, and Google Tasks.
 
-To install and configure Genymotion:
+## Example App
 
-1. Download and install Genymotion. Reference: [Section "Installation" of the User Guide](https://cloud.genymotion.com/page/doc/#collapse4).
-2. Create new devices with Genymotion. Reference: [Section "Quick start" of the User Guide](https://cloud.genymotion.com/page/doc/#collapse5).
-3. Install and configure Genymotion's Eclipse plugin. Reference: [Section "Eclipse Plugin" of the User Guide](https://cloud.genymotion.com/page/doc/#collapse8).
+A working version of the app can be found [here](https://play.google.com/store/apps/details?id=com.rockyniu.todolist).
+
+## Build your own project
+
+1) put support\v4 package into /lib folder
+the package is here, ANDRIOD_SDK_BUNDEL\Eclipse\sdk\extras\android\support\v4, if you use SDK manager download it.
+
+2) import google_play_services library, you can find the instruction here : http://developer.android.com/google/play-services/setup.html
+
+3) update android_sdk_bundle to latest version, import google_tasks_api
