@@ -8,9 +8,9 @@
     <string name="user_name">User name</string>
     <string name="user_pwd">Password</string>
     <string name="confirm_pwd">Confirm password</string>
-    <string name="create_account">Add user</string>
     <string name="login">Login</string>
-    <string name="title_activity_to_do_list">TODO List</string>
+    <string name="title_activity_to_do_list">ToDo</string>
+    <string name="title_activity_to_go_list">ToGo</string>
     <string name="add_item">Add task</string>
     <string name="title_activity_edit_item">Edit Item</string>
     <string name="title_activity_add_item">Add Item</string>
@@ -51,5 +51,5 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="alarm_dialog_ok">OK</string>
-
+	<string name="exit">Exit</string>
 </resources>

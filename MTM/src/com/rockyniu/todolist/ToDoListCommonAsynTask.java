@@ -13,41 +13,41 @@ import com.rockyniu.todolist.database.ToDoItemDataSource;
 
 abstract class ToDoListCommonAsynTask extends AsyncTask<Integer, Void, Boolean> {
 	
-	final ToDoListActivity activity;
+	final ToDoFragment toDoFragment;
 //	private final View progressBar;
 	protected Tasks service;
 	protected ToDoItemDataSource toDoItemDataSource; 
 	String userId;
 	String taskListId;
-	public ToDoListCommonAsynTask(ToDoListActivity toDoListActivity){
-		this.activity = toDoListActivity;
+	public ToDoListCommonAsynTask(ToDoFragment toDoFragment){
+		this.toDoFragment = toDoFragment;
 //		progressBar = activity.findViewById(R.id.progressBar_connecting);
-		service = activity.service;
-		toDoItemDataSource = activity.toDoItemDataSource;
-		userId = activity.userId;
+		service = toDoFragment.service;
+		toDoItemDataSource = toDoFragment.toDoItemDataSource;
+		userId = toDoFragment.userId;
 	}
 	
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
 		
-		activity.numAsyncTasks++;
-		activity.setProgressBarIndeterminateVisibility(true);
+		toDoFragment.numAsyncTasks++;
+		toDoFragment.getActivity().setProgressBarIndeterminateVisibility(true);
 		
 	}
 
 	@Override
 	protected void onPostExecute(Boolean success) {
 		super.onPostExecute(success);
-		if (0 == --activity.numAsyncTasks) {
-			activity.setProgressBarIndeterminateVisibility(false);
+		if (0 == --toDoFragment.numAsyncTasks) {
+			toDoFragment.getActivity().setProgressBarIndeterminateVisibility(false);
 		}
-		if (0 == activity.numAsyncTasks && success){
-			activity.clearDeletedItems();
+		if (0 == toDoFragment.numAsyncTasks && success){
+			toDoFragment.clearDeletedItems();
 //			activity.refreshView();
 		}else{
 		}
-		activity.refreshView();
+		toDoFragment.refreshView();
 		
 	}
 	
@@ -57,16 +57,16 @@ abstract class ToDoListCommonAsynTask extends AsyncTask<Integer, Void, Boolean> 
 		try {
 			return doInBackground(requestCodes[0]);
 		} catch (OperationCanceledException e) {
-			Utils.logAndShow(activity, activity.TAG, e);
+			Utils.logAndShow(toDoFragment.getActivity(), ToDoFragment.TAG, e);
 			Log.e("OperationCanceledException", e.toString());
 		} catch (AuthenticatorException e) {
-			Utils.logAndShow(activity, activity.TAG, e);
+			Utils.logAndShow(toDoFragment.getActivity(), ToDoFragment.TAG, e);
 			Log.e("AuthenticatorException", e.toString());
 		} catch (GoogleJsonResponseException e){
-			Utils.logAndShow(activity, activity.TAG, e);
+			Utils.logAndShow(toDoFragment.getActivity(), ToDoFragment.TAG, e);
 			Log.e("GoogleJsonResponseException", e.toString());
 		} catch (IOException e) {
-			Utils.logAndShow(activity, activity.TAG, e);
+			Utils.logAndShow(toDoFragment.getActivity(), ToDoFragment.TAG, e);
 			Log.e("IOException", e.toString());
 		} catch (Exception e){
 			Log.e("Exception", e.toString());

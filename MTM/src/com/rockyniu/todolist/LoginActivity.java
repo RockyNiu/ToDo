@@ -5,11 +5,14 @@ import java.util.List;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,38 +24,25 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.SignInButton;
 import com.rockyniu.todolist.database.User;
 import com.rockyniu.todolist.database.UserDataSource;
 
-public class MainActivity extends Activity implements View.OnClickListener {
+public class LoginActivity extends Activity {
 
 	static final String TAG = "MainActiviy";
 	static final int REQUEST_ACCOUNT_PICKER = 114;
 	static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 911;
 	UserDataSource userDataSource;
 	AccountManager mAccountManager;
-	// String token;
-	// int numAsyncTasks;
-
-	// Users user;
 	List<String> namesList;
-	// String userName;
-	// String userId;
 	ListView mUserNamesList;
-	SignInButton mAddUserButton;
 	ProgressBar progressBar;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_login);
 		userDataSource = new UserDataSource(this);
-
-		mAddUserButton = (SignInButton) findViewById(R.id.add_account_button);
-		// mAddUserButton.setSize(SignInButton.SIZE_WIDE);
-		mAddUserButton.setOnClickListener(MainActivity.this);
-		mAddUserButton.setContentDescription("Add User");
 
 		// get account names
 		mAccountManager = AccountManager.get(this);
@@ -63,10 +53,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 				android.R.layout.simple_list_item_1, namesList);
 		mUserNamesList.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
-		
+
 		// delete redundant user data
 		deleteRedundantUsers();
-		
+
 		// set click listener to user name list
 		mUserNamesList
 				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -86,9 +76,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REQUEST_ACCOUNT_PICKER && resultCode == RESULT_OK) {
-//			String userName = data
-//					.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-//			goToToDoList(userName);
+			// String userName = data
+			// .getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+			// goToToDoList(userName);
 		}
 	}
 
@@ -96,18 +86,73 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	protected void onResume() {
 		super.onResume();
 		refreshView();
-		checkGooglePlaySerViceAvailable(MainActivity.this);
+		checkGooglePlaySerViceAvailable(LoginActivity.this);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_main, menu);
+		getMenuInflater().inflate(R.menu.activity_login, menu);
 		return true;
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()){
+		case R.id.menu_add_new_user:
+			onAddUserClicked();
+			return true;
+		case R.id.menu_exit:
+			onExitClicked();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	/*
+	 * click add_new_user menu icon
+	 */
+	public void onAddUserClicked(){
+		Intent intent = AccountPicker.newChooseAccountIntent(null, null,
+				new String[] { GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE }, false,
+				null, null, null, null);
+		try {
+			startActivityForResult(intent, REQUEST_ACCOUNT_PICKER);
+		} catch (Exception e) {
+			checkGooglePlaySerViceAvailable(LoginActivity.this);
+		}
+	}
+	
+	/*
+	 * click exit menu icon
+	 */
+	public void onExitClicked() {
+		finish();
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event){
+		if (event.getAction() == MotionEvent.ACTION_DOWN){
+			toggleActionBar();
+		}
+		return true;
+	}
+	
+	
+	private void toggleActionBar(){
+		ActionBar actionBar = getActionBar();
+		if (actionBar!=null){
+			if (actionBar.isShowing()){
+				actionBar.hide();
+			} else {
+				actionBar.show();
+			}
+		}
+	}
+	
 	private void checkGooglePlaySerViceAvailable(Activity activity) {
 		int status = GooglePlayServicesUtil
-				.isGooglePlayServicesAvailable(MainActivity.this);
+				.isGooglePlayServicesAvailable(LoginActivity.this);
 		if (status != ConnectionResult.SUCCESS) {
 			Log.v(TAG, "GoolgePlayService is not available.");
 			if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
@@ -135,7 +180,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		User user = userDataSource.selectUser(userName);
 		String userId = user.getId();
 		String token = user.getPassword();
-		Intent intent = new Intent(MainActivity.this, ToDoListActivity.class);
+		Intent intent = new Intent(LoginActivity.this, TabsActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putString("_userid", userId);
 		bundle.putString("_username", userName);
@@ -144,36 +189,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		startActivity(intent);
 	}
 
-	private void deleteRedundantUsers(){
+	private void deleteRedundantUsers() {
 		List<User> usersList = userDataSource.getAllUsers();
 		for (User user : usersList) {
-			if (!namesList.contains(user.getName())){
+			if (!namesList.contains(user.getName())) {
 				userDataSource.deleteUser(user);
 			}
 		}
 	}
-	
+
 	private void refreshView() {
 		namesList = getAccounts(mAccountManager);
 		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, namesList);
 		mUserNamesList.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
-	}
-
-	@Override
-	public void onClick(View view) {
-		if (view == findViewById(R.id.add_account_button)) {
-
-			Intent intent = AccountPicker.newChooseAccountIntent(null, null,
-					new String[] { GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE }, false,
-					null, null, null, null);
-			try {
-				startActivityForResult(intent, REQUEST_ACCOUNT_PICKER);
-			}  catch (Exception e) {
-				checkGooglePlaySerViceAvailable(MainActivity.this);
-			}
-		}
 	}
 
 }

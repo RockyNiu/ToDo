@@ -2,4 +2,7 @@
 <resources>
     <style name="AppTheme" parent="android:Theme.Light" />
     <style name="HoloDarkTheme" parent="android:Theme.Holo" />
+    <style name="Theme.Holo.ActionBarOverlay" parent="android:Theme.Holo">
+    	<item name="android:windowActionBarOverlay">true</item>
+    </style>
 </resources>
