@@ -35,8 +35,8 @@ import com.rockyniu.todolist.database.ToDoItemDataSource.ToDoStatus;
 
 class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 
-	ToDoListLoadAsynTask(ToDoListActivity toDoListActivity) {
-		super(toDoListActivity);
+	ToDoListLoadAsynTask(ToDoFragment toDoFragment) {
+		super(toDoFragment);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -48,9 +48,9 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 		getToken();
 
 		// }
-		if (activity.token == null && activity.token == null) {
+		if (toDoFragment.token == null && toDoFragment.token == null) {
 			return false;
-		} else if (requestCode == ToDoListActivity.REQUEST_TOKEN) {
+		} else if (requestCode == ToDoFragment.REQUEST_TOKEN) {
 			return true;
 		}
 
@@ -58,31 +58,31 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 		getGoogleTasksService();
 		if (service == null) {
 			return false;
-		} else if (requestCode == ToDoListActivity.REQUEST_GOOGLE_TASKS_SERVICES) {
+		} else if (requestCode == ToDoFragment.REQUEST_GOOGLE_TASKS_SERVICES) {
 			return true;
 		}
 
 		// get tasks list from Google Tasks service
-		Object[] resultsGetTasksFromRemote = getTasksFromRemote(ToDoListActivity.TODOLIST_NAME);
+		Object[] resultsGetTasksFromRemote = getTasksFromRemote(ToDoFragment.TODOLIST_NAME);
 		taskListId = (String) resultsGetTasksFromRemote[0];
 		List<Task> tasks = (List<Task>) resultsGetTasksFromRemote[1];
-		if (requestCode == ToDoListActivity.REQUEST_REMOTE_DATABASE) {
+		if (requestCode == ToDoFragment.REQUEST_REMOTE_DATABASE) {
 			return true;
 		}
 
 		// synchronize local database
 		Object[] sync = syncLocalDatabase(tasks);
-		if (requestCode == ToDoListActivity.UPDATE_LOCAL_DATABASE) {
+		if (requestCode == ToDoFragment.UPDATE_LOCAL_DATABASE) {
 			return true;
 		}
 		// synchronize remote database
 		tasks = syncRemoteDatabase(sync);
 		if (tasks == null) {
 			return false;
-		} else if (requestCode == ToDoListActivity.UPDATE_REMOTE_DATABASE) {
+		} else if (requestCode == ToDoFragment.UPDATE_REMOTE_DATABASE) {
 			// managerDataSource.updateLastSynTime(userId,
 			// lastSynDateTime.getValue());
-			activity.tasksList = tasks;
+			toDoFragment.tasksList = tasks;
 			return true;
 		}
 		// activity.refreshView();
@@ -93,27 +93,27 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 	protected void getToken() throws OperationCanceledException,
 			AuthenticatorException, IOException {
 		// activity.token = null;
-		Account account = new Account(activity.userName,
+		Account account = new Account(toDoFragment.userName,
 				GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
 		AccountManagerFuture<Bundle> accountManagerFuture = AccountManager.get(
-				activity).getAuthToken(account, "oauth2:" + TasksScopes.TASKS,
-				null, activity, null, null);
-		activity.token = accountManagerFuture.getResult().getString(
+				toDoFragment.getActivity()).getAuthToken(account, "oauth2:" + TasksScopes.TASKS,
+				null, toDoFragment.getActivity(), null, null);
+		toDoFragment.token = accountManagerFuture.getResult().getString(
 				AccountManager.KEY_AUTHTOKEN);
 		// Users user = activity.userDataSource.selectUser(activity.userName);
 		// user.setPwd(activity.token);
-		if (activity.token != null && !activity.token.isEmpty()) {
+		if (toDoFragment.token != null && !toDoFragment.token.isEmpty()) {
 			// activity.userDataSource.updateUsers(user);
-			activity.credential = (new GoogleCredential())
-					.setAccessToken(activity.token);
+			toDoFragment.credential = (new GoogleCredential())
+					.setAccessToken(toDoFragment.token);
 		}
 	}
 
 	// Setting up the Tasks API Service
 	protected void getGoogleTasksService() {
 		try {
-			service = new Tasks.Builder(activity.httpTransport,
-					activity.jsonFactory, activity.credential)
+			service = new Tasks.Builder(toDoFragment.httpTransport,
+					toDoFragment.jsonFactory, toDoFragment.credential)
 					.setTasksRequestInitializer(new TasksRequestInitializer()
 					/*
 					 * {
@@ -153,7 +153,7 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 			// if list dosen't exist
 			if (taskListId == null) {
 				TaskList taskList = new TaskList()
-						.setTitle(ToDoListActivity.TODOLIST_NAME);
+						.setTitle(ToDoFragment.TODOLIST_NAME);
 				taskList = service.tasklists().insert(taskList).execute();
 				taskListId = taskList.getId();
 			}
@@ -207,8 +207,8 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 						// insert new item into remote database
 						if (syncResults.get(j).getSyncValue() == 8) {
 							Tasks serviceShowDeleted = new Tasks.Builder(
-									activity.httpTransport,
-									activity.jsonFactory, activity.credential)
+									toDoFragment.httpTransport,
+									toDoFragment.jsonFactory, toDoFragment.credential)
 									.setTasksRequestInitializer(
 											new TasksRequestInitializer() {
 												@Override
@@ -301,7 +301,7 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 			return tasks;
 		} catch (Exception e) {
 
-			Log.e(ToDoListActivity.TAG, e.getMessage());
+			Log.e(ToDoFragment.TAG, e.getMessage());
 		}
 		return null;
 	}

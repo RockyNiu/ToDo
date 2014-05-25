@@ -55,11 +55,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ToDoListActivity"
+            android:name=".TabsActivity"
             android:label="@string/title_activity_to_do_list" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
+        </activity>
+        
+        <activity
+            android:name=".ToDoFragment"
+            android:label="@string/title_activity_to_do_list" >
+        </activity>
+
+       	<activity
+            android:name=".ToGoFragment"
+            android:label="@string/title_activity_to_go_list" >
         </activity>
         
         <activity

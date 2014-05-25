@@ -41,7 +41,7 @@ public class LoginActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_login);
 		userDataSource = new UserDataSource(this);
 
 		// get account names
@@ -91,7 +91,7 @@ public class LoginActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_main, menu);
+		getMenuInflater().inflate(R.menu.activity_login, menu);
 		return true;
 	}
 
@@ -180,7 +180,7 @@ public class LoginActivity extends Activity {
 		User user = userDataSource.selectUser(userName);
 		String userId = user.getId();
 		String token = user.getPassword();
-		Intent intent = new Intent(LoginActivity.this, ToDoListActivity.class);
+		Intent intent = new Intent(LoginActivity.this, TabsActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putString("_userid", userId);
 		bundle.putString("_username", userName);

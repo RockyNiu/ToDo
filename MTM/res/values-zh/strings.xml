@@ -10,6 +10,7 @@
     <string name="confirm_pwd">确认密码</string>
     <string name="login">登录</string>
     <string name="title_activity_to_do_list">任务列表</string>
+    <string name="title_activity_to_go_list">地点列表</string>
     <string name="add_item">添加任务</string>
     <string name="title_activity_edit_item">编辑任务</string>
     <string name="title_activity_add_item">添加任务</string>

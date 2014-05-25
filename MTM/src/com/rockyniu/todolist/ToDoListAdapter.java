@@ -22,12 +22,12 @@ import com.rockyniu.todolist.database.ToDoItem;
 public class ToDoListAdapter extends ArrayAdapter<ToDoItem> {
 
 	private final List<ToDoItem> list;
-	private final Context context;
+//	private final Context context;
 	private static LayoutInflater inflater = null;
 
 	public ToDoListAdapter(Activity context, List<ToDoItem> list) {
 		super(context, R.layout.row_layout, list);
-		this.context = context;
+//		this.context = context;
 		this.list = list;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
