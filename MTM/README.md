@@ -17,8 +17,8 @@ A working version of the app can be found [here](https://play.google.com/store/a
 
 ## Build your own project
 
-1) put support\v4 package into /lib folder
-the package is here, ANDRIOD_SDK_BUNDEL\Eclipse\sdk\extras\android\support\v4, if you use SDK manager download it.
+1) put support\v4 and support\v13 package into /lib folder
+the package is here, ANDRIOD_SDK_BUNDEL\Eclipse\sdk\extras\android\support\v4|v13, if you use SDK manager download it.
 
 2) import google_play_services library, you can find the instruction here : http://developer.android.com/google/play-services/setup.html
 
