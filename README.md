@@ -7,7 +7,10 @@ ToDo App: [Mobile](/MTM/README.md) + [Web](/WTM/README.md)
 1.0
 
 ### Need to do
-* change framework, add ToGo frame, and use google-map-api
+* *change UI, add ToGo tab (done)*
+* use google-map-api
+* Push notifications
+* Social integration(fb/Twitter)
 
 ### License and Author
 * Author::[RockyNiu](https://github.com/RockyNiu)
