@@ -89,7 +89,7 @@ public class ToDoFragment extends Fragment {
 	private CheckBox checkBox;
 
 	// for check pastDue
-	AlarmReceiver pastDueAlarmReceiver = new AlarmReceiver();
+	AlarmReceiver pastDueAlarmReceiver;
 
 	/**
 	 * The fragment arguments
@@ -115,13 +115,14 @@ public class ToDoFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+
 		View rootView = inflater.inflate(R.layout.fragment_tab_todo, container,
 				false);
-		
+
 		setHasOptionsMenu(true);
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("_pastduealarm");
+		pastDueAlarmReceiver = new AlarmReceiver();
 		this.getActivity().registerReceiver(pastDueAlarmReceiver, filter);
 
 		Bundle bundle = getArguments();
@@ -142,7 +143,8 @@ public class ToDoFragment extends Fragment {
 		localToDoItems = getNewListFromLocal(ToDoFlag.UNDELETED, status);
 		toDoListView = (ListView) rootView.findViewById(R.id.toDoListView);
 		toDoListView.setEmptyView(rootView.findViewById(R.id.empty_list_item));
-		ToDoListAdapter adapter = new ToDoListAdapter(this.getActivity(), localToDoItems);
+		ToDoListAdapter adapter = new ToDoListAdapter(this.getActivity(),
+				localToDoItems);
 		toDoListView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 
@@ -227,7 +229,8 @@ public class ToDoFragment extends Fragment {
 							toDoItemDataSource
 									.labelItemDeletedWithModifiedTime(currentItem);
 						}
-						Utils.showToastInternal(ToDoFragment.this.getActivity(),
+						Utils.showToastInternal(
+								ToDoFragment.this.getActivity(),
 								"Task deleted.");
 						// refreshView();
 						// sync();
@@ -243,7 +246,7 @@ public class ToDoFragment extends Fragment {
 		refreshView();
 		return rootView;
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.activity_to_do_list, menu);
@@ -293,7 +296,7 @@ public class ToDoFragment extends Fragment {
 			refreshView();
 			return true;
 		case android.R.id.home:
-			
+
 			NavUtils.navigateUpFromSameTask(this.getActivity());
 			return true;
 		}
@@ -307,15 +310,17 @@ public class ToDoFragment extends Fragment {
 		refreshView();
 	}
 
-//	@Override
-//	public void onStop(){
-//		this.getActivity().unregisterReceiver(pastDueAlarmReceiver);
-//	}
-	
+	@Override
+	public void onStop() {
+		doStopListening();
+		super.onStop();
+	}
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == REQUEST_EDIT_ITEM && resultCode == Activity.RESULT_OK) {
+		if (requestCode == REQUEST_EDIT_ITEM
+				&& resultCode == Activity.RESULT_OK) {
 			// sync();
 			refreshView();
 		}
@@ -323,8 +328,7 @@ public class ToDoFragment extends Fragment {
 
 	// add or edit Item
 	private void editItem(String itemId) {
-		Intent myIntent = new Intent(this.getActivity(),
-				EditItemActivity.class);
+		Intent myIntent = new Intent(this.getActivity(), EditItemActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putString("_userid", userId);
 		bundle.putString("_itemid", itemId);
@@ -472,5 +476,12 @@ public class ToDoFragment extends Fragment {
 			ToDoStatus status) {
 		return toDoItemDataSource.getNewListFromLocal(userId, status, sortType,
 				deleted);
+	}
+	
+	void doStopListening(){
+		if (pastDueAlarmReceiver != null) {
+			this.getActivity().unregisterReceiver(pastDueAlarmReceiver);
+			pastDueAlarmReceiver = null;
+		}
 	}
 }

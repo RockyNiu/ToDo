@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_StartListening"
+        android:title="Start Listening">
+    </item>
+    
+    <item
+        android:id="@+id/menu_StopListening"
+        android:title="Stop Listening">
+    </item>
+    
+    <item
+        android:id="@+id/menu_RecentLocation"
+        android:title="Recent Location">
+    </item>
+    
+    <item
+        android:id="@+id/menu_SingleLocation"
+        android:title="Single Location">
+    </item>
+  
+</menu>
