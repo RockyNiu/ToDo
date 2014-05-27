@@ -13,7 +13,7 @@ ToDo App: [Mobile](/MTM/README.md) + [Web](/WTM/README.md)
 - Mark a task a completed;
 - Delete a task; (swipe)
 - Sort tasks by due or priority;
-- Reminder you the task past due;
+- Remind you the task past due;
 - Synchronize the tasks with mobile version, web version, and Google Tasks.
 
 ### Need to do
