@@ -10,7 +10,7 @@ ToDo App: [Mobile](/MTM/README.md) + [Web](/WTM/README.md)
 - Add items to your task list; (press menu icon "+" on top)
 - Set a task name, priority, due date, due time;
 - Edit an existing task; (long press)
-- Mark a task a completed;
+- Mark a task a completed; (press)
 - Delete a task; (swipe)
 - Sort tasks by due or priority;
 - Remind you the task past due;
