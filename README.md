@@ -24,5 +24,5 @@ ToDo App: [Mobile](/MTM/README.md) + [Web](/WTM/README.md)
 * Social integration(fb/Twitter)
 
 ### Contribution
-* Author::[RockyNiu](https://github.com/RockyNiu)
-* Author::[pdenney](https://github.com/pdenney)
+* Author::[RockyNiu](https://github.com/RockyNiu) (Android)
+* Author::[pdenney](https://github.com/pdenney) (Web)
