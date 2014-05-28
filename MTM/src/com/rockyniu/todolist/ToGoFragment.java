@@ -1,13 +1,14 @@
 package com.rockyniu.todolist;
 
-import com.rockyniu.todolist.database.ToDoItemDataSource.SortType;
+import java.util.List;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.location.Criteria;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -50,18 +51,18 @@ public class ToGoFragment extends Fragment {
 
 		View rootView = inflater.inflate(R.layout.fragment_tab_togo, container,
 				false);
-		
+
 		setHasOptionsMenu(true);
-		
+
 		TextView textView = (TextView) rootView
 				.findViewById(R.id.section_label);
 		textView.setText(Integer.toString(getArguments().getInt(
 				ARG_SECTION_NUMBER)));
 		return rootView;
 	}
-	
+
 	@Override
-	public void onStop(){
+	public void onStop() {
 		doStopListening();
 		super.onStop();
 	}
@@ -71,7 +72,7 @@ public class ToGoFragment extends Fragment {
 		inflater.inflate(R.menu.activity_to_go_list, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -87,13 +88,19 @@ public class ToGoFragment extends Fragment {
 		case R.id.menu_SingleLocation:
 			onSingleLocation(item);
 			return true;
+		case R.id.menu_AccurateProvider:
+			onAccurateProvider(item);
+			return true;
+		case R.id.menu_LowPowerProvider:
+			onLowPowerProvider(item);
+			return true;
 		case android.R.id.home:
 			NavUtils.navigateUpFromSameTask(this.getActivity());
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	public void onStartListening(MenuItem item) {
 		Log.d(_logTag, "Monitor Location - Start Listening");
 
@@ -104,10 +111,10 @@ public class ToGoFragment extends Fragment {
 			_networkListener = new MyLocationListener();
 			lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
 					_networkListener);
-			
-//			_gpsListener = new MyLocationListener();
-//			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
-//					_gpsListener);
+
+			_gpsListener = new MyLocationListener();
+			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+					_gpsListener);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -117,29 +124,108 @@ public class ToGoFragment extends Fragment {
 
 	public void onStopListening(MenuItem item) {
 		Log.d(_logTag, "Monitor Location - Stop Listening");
+
+		doStopListening();
 	}
 
 	public void onRecentLocation(MenuItem item) {
 		Log.d(_logTag, "Monitor - Recent Location");
+
+		Location networkLocation;
+		Location gpsLocation;
+
+		LocationManager lm = (LocationManager) getActivity().getSystemService(
+				Context.LOCATION_SERVICE);
+
+		networkLocation = lm
+				.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		gpsLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+		if (networkLocation == null) {
+			Log.d(_logTag, "Monitor Location: Network Location is NULL");
+		} else {
+			String networkLogMessage = LogHelper
+					.FormatLocationInfo(networkLocation);
+			Log.d(_logTag, "Monitor Location " + networkLogMessage);
+		}
+
+		if (gpsLocation == null) {
+			Log.d(_logTag, "Monitor Location: GPS Location is NULL");
+		} else {
+			String gpsLogMessage = LogHelper.FormatLocationInfo(gpsLocation);
+			Log.d(_logTag, "Monitor Location " + gpsLogMessage);
+		}
 	}
 
 	public void onSingleLocation(MenuItem item) {
 		Log.d(_logTag, "Monitor - Single Location");
+
+		LocationManager lm = (LocationManager) getActivity().getSystemService(
+				Context.LOCATION_SERVICE);
+
+		_networkListener = new MyLocationListener();
+		lm.requestSingleUpdate(LocationManager.NETWORK_PROVIDER,
+				_networkListener, null);
+
+		_gpsListener = new MyLocationListener();
+		lm.requestSingleUpdate(LocationManager.GPS_PROVIDER, _gpsListener, null);
+
 	}
 
+	
+	public void onAccurateProvider(MenuItem item) {
+		Criteria criteria = new Criteria();
+
+		criteria.setAccuracy(Criteria.ACCURACY_FINE);
+		criteria.setSpeedRequired(true);
+		criteria.setAltitudeRequired(true);
+
+		LocationManager lm = (LocationManager) getActivity().getSystemService(
+				Context.LOCATION_SERVICE);
+
+		List<String> matchingProvideNames = lm.getProviders(criteria, false);
+		for (String providerName : matchingProvideNames) {
+			LocationProvider provider = lm.getProvider(providerName);
+			String logMessage = LogHelper.formationLocationProvider(
+					getActivity(), provider);
+			Log.d(_logTag, logMessage);
+		}
+	}
+
+	public void onLowPowerProvider(MenuItem item){
+		Criteria criteria = new Criteria();
+
+		criteria.setPowerRequirement(Criteria.POWER_LOW);
+
+		LocationManager lm = (LocationManager) getActivity().getSystemService(
+				Context.LOCATION_SERVICE);
+
+		List<String> matchingProvideNames = lm.getProviders(criteria, false);
+		for (String providerName : matchingProvideNames) {
+			LocationProvider provider = lm.getProvider(providerName);
+			String logMessage = LogHelper.formationLocationProvider(
+					getActivity(), provider);
+			Log.d(_logTag, logMessage);
+		}
+	}
 	public void onExit(MenuItem item) {
-//		Log.d(_logTag, "Monitor Location Exit");
-//		doStopListening();
+		// Log.d(_logTag, "Monitor Location Exit");
+		// doStopListening();
 		getActivity().finish();
 	}
 
 	void doStopListening() {
 		LocationManager lm = (LocationManager) getActivity().getSystemService(
 				Context.LOCATION_SERVICE);
-		
+
 		if (_networkListener != null) {
 			lm.removeUpdates(_networkListener);
 			_networkListener = null;
+		}
+
+		if (_gpsListener != null) {
+			lm.removeUpdates(_gpsListener);
+			_gpsListener = null;
 		}
 		Log.d(_logTag, "Monitor Location Exit");
 	}

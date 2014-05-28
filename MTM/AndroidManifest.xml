@@ -25,7 +25,8 @@
 
     <!-- Required Location information, incuding GPS/Wifi/tower -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            
     <!-- Required to get pictures from the camera -->
     <!-- uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" -->
 
