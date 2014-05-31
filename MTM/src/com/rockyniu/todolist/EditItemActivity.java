@@ -29,6 +29,7 @@ public class EditItemActivity extends Activity {
 	private final int MAX_LENGTH = 140; // max length of name
 
 	private ToDoItemDataSource itemdatasource;
+	private ToDoItem toDoItem;
 	private String userId;
 	private String itemId;
 	private boolean completed;
@@ -77,8 +78,8 @@ public class EditItemActivity extends Activity {
 
 		} else {
 			this.setTitle("Edit Item");
-			ToDoItem item = itemdatasource.getItemByItemId(itemId);
-			if (item == null) {
+			toDoItem = itemdatasource.getItemByItemId(itemId);
+			if (toDoItem == null) {
 				Utils.showErrorToast(this, "Task does not exits.");
 				// Toast toast = Toast.makeText(this, "Task does not exist.",
 				// Toast.LENGTH_LONG);
@@ -87,27 +88,27 @@ public class EditItemActivity extends Activity {
 				this.setResult(RESULT_CANCELED);
 				return;
 			}
-			itemNameEditText.setText(item.getTitle());
+			itemNameEditText.setText(toDoItem.getTitle());
 
-			setDueTimeCheckBox.setChecked(item.getDueTime() == null ? false
+			setDueTimeCheckBox.setChecked(toDoItem.getDueTime() == null ? false
 					: true);
-			completed = item.isCompleted();
-			completedTime = item.getCompletedTime();
+			completed = toDoItem.isCompleted();
+			completedTime = toDoItem.getCompletedTime();
 			Calendar cal = Calendar.getInstance();
-			if (item.getDueTime() == null) {
+			if (toDoItem.getDueTime() == null) {
 				dueDatePicker.setVisibility(View.GONE);
 				dueTimePicker.setVisibility(View.GONE);
 				cal.add(Calendar.DAY_OF_MONTH, 2);
 			} else {
 				dueDatePicker.setVisibility(View.VISIBLE);
 				dueTimePicker.setVisibility(View.VISIBLE);
-				cal.setTimeInMillis(item.getDueTime());
+				cal.setTimeInMillis(toDoItem.getDueTime());
 			}
 			dueDatePicker.updateDate(cal.get(Calendar.YEAR),
 					cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 			dueTimePicker.setCurrentHour(cal.get(Calendar.HOUR_OF_DAY));
 			dueTimePicker.setCurrentMinute(cal.get(Calendar.MINUTE));
-			priorityBar.setProgress((int) item.getPriority());
+			priorityBar.setProgress((int) toDoItem.getPriority());
 		}
 		setDueTimeCheckBox
 				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -133,13 +134,25 @@ public class EditItemActivity extends Activity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
+	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		switch (menuItem.getItemId()) {
+		case R.id.menu_sendSmsMessage:
+			if (saveItem()) {
+				String smsMessage = toDoItem.toSmsMessage();
+				Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+				sendIntent.putExtra("sms_body", smsMessage);
+				sendIntent.setType("vnd.android-dir/mms-sms");
+				startActivity(sendIntent);
+			} else {
+				Utils.showToastInternal(this,
+						"Error happened when saving task.");
+			}
+			return true;
 		case android.R.id.home:
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		}
-		return super.onOptionsItemSelected(item);
+		return super.onOptionsItemSelected(menuItem);
 	}
 
 	public void onSaveClick(View view) {
@@ -234,6 +247,7 @@ public class EditItemActivity extends Activity {
 		newItem.setPriority(priorityBar.getProgress());
 		newItem.setModifiedTime(Calendar.getInstance().getTimeInMillis());
 		itemdatasource.insertItemWithId(newItem);
+		toDoItem = newItem;
 		return UPDATE_DONE;
 	}
 
@@ -279,6 +293,7 @@ public class EditItemActivity extends Activity {
 		item.setPriority(priorityBar.getProgress());
 		item.setModifiedTime(Calendar.getInstance().getTimeInMillis());
 		itemdatasource.updateItem(item);
+		toDoItem = item;
 		return UPDATE_DONE;
 
 	}
