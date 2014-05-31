@@ -1,5 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    <!-- 
+    
     <item
         android:id="@+id/menu_StartListening"
         android:title="Start Listening">
@@ -26,5 +28,8 @@
         android:id="@+id/menu_LowPowerProvider"
         android:title="LowPower Provider">
     </item>
+    
+     -->
+    
 
 </menu>

@@ -34,6 +34,7 @@ public class ToGoFragment extends Fragment {
 	final String _logTag = "Monitor Location";
 	LocationListener _networkListener;
 	LocationListener _gpsListener;
+	Location currentLocation;
 	private static GoogleMap googleMap;
 	
 	private static final String ARG_SECTION_NUMBER = "section_number";
@@ -67,19 +68,28 @@ public class ToGoFragment extends Fragment {
 //		textView.setText(Integer.toString(getArguments().getInt(
 //				ARG_SECTION_NUMBER)));
 		
+//		onStartListening();
+		currentLocation = getLastKnowLocation();
+		String here = "Sydney";
+		String snippet = "The most populous city in Australia.";
+		LatLng currentLatLng = new LatLng(-33.867, 151.206);
+		if (currentLocation != null){
+			here = "Here";
+			snippet = "My feet step here.";
+			currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+		}
+		
 		// Get a handle to the Map Fragment
 		googleMap = ((MapFragment) getActivity().getFragmentManager()
                 .findFragmentById(R.id.map)).getMap();
 
-        LatLng sydney = new LatLng(-33.867, 151.206);
-
         googleMap.setMyLocationEnabled(true);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 13));
 
         googleMap.addMarker(new MarkerOptions()
-                .title("Sydney")
-                .snippet("The most populous city in Australia.")
-                .position(sydney));
+                .title(here)
+                .snippet(snippet)
+                .position(currentLatLng));
         
 		return rootView;
 	}
@@ -99,24 +109,24 @@ public class ToGoFragment extends Fragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_StartListening:
-			onStartListening(item);
-			return true;
-		case R.id.menu_StopListening:
-			onStopListening(item);
-			return true;
-		case R.id.menu_RecentLocation:
-			onRecentLocation(item);
-			return true;
-		case R.id.menu_SingleLocation:
-			onSingleLocation(item);
-			return true;
-		case R.id.menu_AccurateProvider:
-			onAccurateProvider(item);
-			return true;
-		case R.id.menu_LowPowerProvider:
-			onLowPowerProvider(item);
-			return true;
+//		case R.id.menu_StartListening:
+//			onStartListening();
+//			return true;
+//		case R.id.menu_StopListening:
+//			onStopListening();
+//			return true;
+//		case R.id.menu_RecentLocation:
+//			onRecentLocation();
+//			return true;
+//		case R.id.menu_SingleLocation:
+//			onSingleLocation();
+//			return true;
+//		case R.id.menu_AccurateProvider:
+//			onAccurateProvider();
+//			return true;
+//		case R.id.menu_LowPowerProvider:
+//			onLowPowerProvider();
+//			return true;
 		case android.R.id.home:
 			NavUtils.navigateUpFromSameTask(this.getActivity());
 			return true;
@@ -124,7 +134,7 @@ public class ToGoFragment extends Fragment {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void onStartListening(MenuItem item) {
+	public void onStartListening() {
 		Log.d(_logTag, "Monitor Location - Start Listening");
 
 		try {
@@ -145,13 +155,13 @@ public class ToGoFragment extends Fragment {
 
 	}
 
-	public void onStopListening(MenuItem item) {
+	public void onStopListening() {
 		Log.d(_logTag, "Monitor Location - Stop Listening");
 
 		doStopListening();
 	}
 
-	public void onRecentLocation(MenuItem item) {
+	public void onRecentLocation() {
 		Log.d(_logTag, "Monitor - Recent Location");
 
 		Location networkLocation;
@@ -180,7 +190,7 @@ public class ToGoFragment extends Fragment {
 		}
 	}
 
-	public void onSingleLocation(MenuItem item) {
+	public void onSingleLocation() {
 		Log.d(_logTag, "Monitor - Single Location");
 
 		LocationManager lm = (LocationManager) getActivity().getSystemService(
@@ -196,7 +206,7 @@ public class ToGoFragment extends Fragment {
 	}
 
 	
-	public void onAccurateProvider(MenuItem item) {
+	public void onAccurateProvider() {
 		Criteria criteria = new Criteria();
 
 		criteria.setAccuracy(Criteria.ACCURACY_FINE);
@@ -215,7 +225,7 @@ public class ToGoFragment extends Fragment {
 		}
 	}
 
-	public void onLowPowerProvider(MenuItem item){
+	public void onLowPowerProvider(){
 		Criteria criteria = new Criteria();
 
 		criteria.setPowerRequirement(Criteria.POWER_LOW);
@@ -231,7 +241,8 @@ public class ToGoFragment extends Fragment {
 			Log.d(_logTag, logMessage);
 		}
 	}
-	public void onExit(MenuItem item) {
+	
+	public void onExit() {
 		// Log.d(_logTag, "Monitor Location Exit");
 		// doStopListening();
 		getActivity().finish();
@@ -257,5 +268,41 @@ public class ToGoFragment extends Fragment {
 	public void setTabTitle(String title, int tabIndex) {
 		String str = title.toUpperCase(Locale.getDefault());
 		getActivity().getActionBar().getTabAt(tabIndex).setText(str);
+	}
+	
+	// get position
+	public Location getLastKnowLocation(){
+		Log.d(_logTag, "Monitor - Recent Location");
+
+		Location networkLocation;
+		Location gpsLocation;
+
+		LocationManager lm = (LocationManager) getActivity().getSystemService(
+				Context.LOCATION_SERVICE);
+
+		networkLocation = lm
+				.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		gpsLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+		if (networkLocation == null && gpsLocation == null){
+			Log.d(_logTag, "Monitor Location: Network and GPS Location both are NULL");
+			return null;
+		}
+		
+		if (networkLocation !=null && gpsLocation != null){
+			if (networkLocation.getTime() > gpsLocation.getTime()){
+				return networkLocation;
+			} else {
+				return gpsLocation;
+			}
+		}
+					
+		if (networkLocation == null) {
+			Log.d(_logTag, "Monitor Location: Network Location is NULL");
+			return gpsLocation;
+		} else {
+			Log.d(_logTag, "Monitor Location: GPS Location is NULL");
+			return networkLocation;
+		}
 	}
 }
