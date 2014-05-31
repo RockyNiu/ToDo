@@ -17,6 +17,7 @@ ToDo App: [Mobile](/MTM/README.md) + [Web](/WTM/README.md)
 - Synchronize the tasks with mobile version, web version, and Google Tasks.
 - Show current location in Google Map
 - Send task by SMS Message
+- Send task by email
 
 ### Need to do
 * Push notifications

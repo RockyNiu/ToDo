@@ -139,10 +139,25 @@ public class EditItemActivity extends Activity {
 		case R.id.menu_sendSmsMessage:
 			if (saveItem()) {
 				String smsMessage = toDoItem.toSmsMessage();
-				Intent sendIntent = new Intent(Intent.ACTION_VIEW);
-				sendIntent.putExtra("sms_body", smsMessage);
-				sendIntent.setType("vnd.android-dir/mms-sms");
-				startActivity(sendIntent);
+				Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+				smsIntent.putExtra("sms_body", smsMessage);
+				smsIntent.setType("vnd.android-dir/mms-sms");
+				startActivity(smsIntent);
+			} else {
+				Utils.showToastInternal(this,
+						"Error happened when saving task.");
+			}
+			return true;
+		case R.id.menu_sendEmail:
+			if (saveItem()){
+				String emailContent = toDoItem.toSmsMessage();
+				Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+				String[] recipients = new String[]{"", "",};
+				emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, recipients);
+				emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "ToDo");
+				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, emailContent);
+				emailIntent.setType("text/plain");
+				startActivity(Intent.createChooser(emailIntent, "Send mail..."));
 			} else {
 				Utils.showToastInternal(this,
 						"Error happened when saving task.");
