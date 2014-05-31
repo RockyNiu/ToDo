@@ -19,8 +19,7 @@ ToDo App: [Mobile](/MTM/README.md) + [Web](/WTM/README.md)
 ### Need to do
 * *change UI, add ToGo tab (done)*
 * *Use google-map-api (done)*
-
-* Send task by SMS
+* *Send task by SMS (done)*
 * Push notifications
 * Social integration(fb/Twitter)
 
