@@ -10,6 +10,8 @@ ToDo Mobile App is a Task Manager application that is integrated into the [Googl
 - Sort tasks by due or priority;
 - Reminder you the task past due;
 - Synchronize the tasks with mobile version, web version, and Google Tasks.
+- Show current location in Google Map
+- Send task by SMS Message
 
 ## Example App
 
