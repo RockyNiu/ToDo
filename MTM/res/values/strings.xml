@@ -52,4 +52,6 @@
     <string name="action_settings">Settings</string>
     <string name="alarm_dialog_ok">OK</string>
 	<string name="exit">Exit</string>
+	<string name="send_smsMessage">Send SMS Message</string>
+	<string name="send_email">Send Email</string>
 </resources>

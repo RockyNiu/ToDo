@@ -52,4 +52,7 @@
     <string name="action_settings">选项</string>
 	<string name="alarm_dialog_ok">确定</string>
 	<string name="exit">退出</string>
+	<string name="send_smsMessage">发送短信</string>
+	<string name="send_email">发送邮件</string>
+	
 </resources>

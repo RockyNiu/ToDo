@@ -26,6 +26,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -36,7 +37,7 @@ public class ToGoFragment extends Fragment {
 	LocationListener _gpsListener;
 	Location currentLocation;
 	private static GoogleMap googleMap;
-	
+
 	private static final String ARG_SECTION_NUMBER = "section_number";
 
 	/**
@@ -63,34 +64,34 @@ public class ToGoFragment extends Fragment {
 		setHasOptionsMenu(true);
 
 		setTabTitle("Where I am", 1);
-//		TextView textView = (TextView) rootView
-//				.findViewById(R.id.section_label);
-//		textView.setText(Integer.toString(getArguments().getInt(
-//				ARG_SECTION_NUMBER)));
-		
-//		onStartListening();
+		// TextView textView = (TextView) rootView
+		// .findViewById(R.id.section_label);
+		// textView.setText(Integer.toString(getArguments().getInt(
+		// ARG_SECTION_NUMBER)));
+
+		// onStartListening();
 		currentLocation = getLastKnowLocation();
-		String here = "Sydney";
-		String snippet = "The most populous city in Australia.";
-		LatLng currentLatLng = new LatLng(-33.867, 151.206);
-		if (currentLocation != null){
+		String here = "Statue of Liberty";
+		String snippet = "The colossal neoclassical sculpture on Liberty Island in the middle of New York Harbor, in Manhattan, New York City.";
+		LatLng currentLatLng = new LatLng(40.689249, -74.0445);
+		if (currentLocation != null) {
 			here = "Here";
 			snippet = "My feet step here.";
-			currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+			currentLatLng = new LatLng(currentLocation.getLatitude(),
+					currentLocation.getLongitude());
 		}
-		
+
 		// Get a handle to the Map Fragment
 		googleMap = ((MapFragment) getActivity().getFragmentManager()
-                .findFragmentById(R.id.map)).getMap();
+				.findFragmentById(R.id.map)).getMap();
 
-        googleMap.setMyLocationEnabled(true);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 13));
+		googleMap.setMyLocationEnabled(true);
+		googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng,
+				13));
 
-        googleMap.addMarker(new MarkerOptions()
-                .title(here)
-                .snippet(snippet)
-                .position(currentLatLng));
-        
+		googleMap.addMarker(new MarkerOptions().title(here).snippet(snippet)
+				.position(currentLatLng));
+
 		return rootView;
 	}
 
@@ -109,24 +110,24 @@ public class ToGoFragment extends Fragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-//		case R.id.menu_StartListening:
-//			onStartListening();
-//			return true;
-//		case R.id.menu_StopListening:
-//			onStopListening();
-//			return true;
-//		case R.id.menu_RecentLocation:
-//			onRecentLocation();
-//			return true;
-//		case R.id.menu_SingleLocation:
-//			onSingleLocation();
-//			return true;
-//		case R.id.menu_AccurateProvider:
-//			onAccurateProvider();
-//			return true;
-//		case R.id.menu_LowPowerProvider:
-//			onLowPowerProvider();
-//			return true;
+		// case R.id.menu_StartListening:
+		// onStartListening();
+		// return true;
+		// case R.id.menu_StopListening:
+		// onStopListening();
+		// return true;
+		// case R.id.menu_RecentLocation:
+		// onRecentLocation();
+		// return true;
+		// case R.id.menu_SingleLocation:
+		// onSingleLocation();
+		// return true;
+		// case R.id.menu_AccurateProvider:
+		// onAccurateProvider();
+		// return true;
+		// case R.id.menu_LowPowerProvider:
+		// onLowPowerProvider();
+		// return true;
 		case android.R.id.home:
 			NavUtils.navigateUpFromSameTask(this.getActivity());
 			return true;
@@ -205,7 +206,6 @@ public class ToGoFragment extends Fragment {
 
 	}
 
-	
 	public void onAccurateProvider() {
 		Criteria criteria = new Criteria();
 
@@ -225,7 +225,7 @@ public class ToGoFragment extends Fragment {
 		}
 	}
 
-	public void onLowPowerProvider(){
+	public void onLowPowerProvider() {
 		Criteria criteria = new Criteria();
 
 		criteria.setPowerRequirement(Criteria.POWER_LOW);
@@ -241,7 +241,7 @@ public class ToGoFragment extends Fragment {
 			Log.d(_logTag, logMessage);
 		}
 	}
-	
+
 	public void onExit() {
 		// Log.d(_logTag, "Monitor Location Exit");
 		// doStopListening();
@@ -263,15 +263,15 @@ public class ToGoFragment extends Fragment {
 		}
 		Log.d(_logTag, "Monitor Location Exit");
 	}
-	
+
 	// set TabTitle
 	public void setTabTitle(String title, int tabIndex) {
 		String str = title.toUpperCase(Locale.getDefault());
 		getActivity().getActionBar().getTabAt(tabIndex).setText(str);
 	}
-	
+
 	// get position
-	public Location getLastKnowLocation(){
+	public Location getLastKnowLocation() {
 		Log.d(_logTag, "Monitor - Recent Location");
 
 		Location networkLocation;
@@ -284,19 +284,20 @@ public class ToGoFragment extends Fragment {
 				.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 		gpsLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-		if (networkLocation == null && gpsLocation == null){
-			Log.d(_logTag, "Monitor Location: Network and GPS Location both are NULL");
+		if (networkLocation == null && gpsLocation == null) {
+			Log.d(_logTag,
+					"Monitor Location: Network and GPS Location both are NULL");
 			return null;
 		}
-		
-		if (networkLocation !=null && gpsLocation != null){
-			if (networkLocation.getTime() > gpsLocation.getTime()){
+
+		if (networkLocation != null && gpsLocation != null) {
+			if (networkLocation.getTime() > gpsLocation.getTime()) {
 				return networkLocation;
 			} else {
 				return gpsLocation;
 			}
 		}
-					
+
 		if (networkLocation == null) {
 			Log.d(_logTag, "Monitor Location: Network Location is NULL");
 			return gpsLocation;

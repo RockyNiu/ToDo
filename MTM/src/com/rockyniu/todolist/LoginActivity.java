@@ -114,7 +114,7 @@ public class LoginActivity extends Activity {
 	 */
 	public void onAddUserClicked(){
 		Intent intent = AccountPicker.newChooseAccountIntent(null, null,
-				new String[] { GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE }, false,
+				new String[] { GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE }, true,
 				null, null, null, null);
 		try {
 			startActivityForResult(intent, REQUEST_ACCOUNT_PICKER);

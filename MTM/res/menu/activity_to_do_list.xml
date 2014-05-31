@@ -4,11 +4,14 @@
         android:id="@+id/menu_addItem"
         android:icon="@drawable/ic_action_new"
         android:showAsAction="always"
-        android:title="@string/add_item"/>
+        android:title="@string/add_item">
+    </item>
+    
     <item
         android:id="@+id/menu_duedate"
         android:title="@string/sortbydue">
     </item>
+    
     <item
         android:id="@+id/menu_priority"
         android:title="@string/sortbypriority">
