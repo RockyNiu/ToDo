@@ -37,7 +37,7 @@ public class TabsActivity extends Activity implements ActionBar.TabListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		requestWindowFeature(Window.FEATURE_PROGRESS);
-		
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tabs);
 
@@ -46,7 +46,7 @@ public class TabsActivity extends Activity implements ActionBar.TabListener {
 		Bundle bundle = intent.getExtras();
 		userId = bundle.getString("_userid");
 		userName = bundle.getString("_username");
-		
+
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -96,7 +96,7 @@ public class TabsActivity extends Activity implements ActionBar.TabListener {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		
+
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -106,7 +106,7 @@ public class TabsActivity extends Activity implements ActionBar.TabListener {
 		this.finish();
 		super.onBackPressed();
 	}
-	
+
 	@Override
 	public void onTabSelected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {
@@ -139,7 +139,7 @@ public class TabsActivity extends Activity implements ActionBar.TabListener {
 		public Fragment getItem(int position) {
 			// getItem is called to instantiate the fragment for the given page.
 			Fragment fragment;
-			switch (position){
+			switch (position) {
 			case 0:
 				fragment = ToDoFragment.newInstance(userId, userName);
 				break;
@@ -161,15 +161,18 @@ public class TabsActivity extends Activity implements ActionBar.TabListener {
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			Locale l = Locale.getDefault();
+			Locale locale = Locale.getDefault();
 			switch (position) {
 			case 0:
-				return getString(R.string.title_activity_to_do_list).toUpperCase(l);
+				return getString(R.string.title_activity_to_do_list)
+						.toUpperCase(locale);
 			case 1:
-				return getString(R.string.title_activity_to_go_list).toUpperCase(l);
+				return getString(R.string.title_activity_to_go_list)
+						.toUpperCase(locale);
 			}
 			return null;
 		}
-		
+
 	}
+
 }

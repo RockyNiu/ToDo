@@ -1,7 +1,9 @@
 package com.rockyniu.todolist;
 
 import java.util.List;
+import java.util.Locale;
 
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Context;
 import android.location.Criteria;
@@ -18,8 +20,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -28,7 +34,8 @@ public class ToGoFragment extends Fragment {
 	final String _logTag = "Monitor Location";
 	LocationListener _networkListener;
 	LocationListener _gpsListener;
-
+	private static GoogleMap googleMap;
+	
 	private static final String ARG_SECTION_NUMBER = "section_number";
 
 	/**
@@ -54,10 +61,26 @@ public class ToGoFragment extends Fragment {
 
 		setHasOptionsMenu(true);
 
-		TextView textView = (TextView) rootView
-				.findViewById(R.id.section_label);
-		textView.setText(Integer.toString(getArguments().getInt(
-				ARG_SECTION_NUMBER)));
+		setTabTitle("Where I am", 1);
+//		TextView textView = (TextView) rootView
+//				.findViewById(R.id.section_label);
+//		textView.setText(Integer.toString(getArguments().getInt(
+//				ARG_SECTION_NUMBER)));
+		
+		// Get a handle to the Map Fragment
+		googleMap = ((MapFragment) getActivity().getFragmentManager()
+                .findFragmentById(R.id.map)).getMap();
+
+        LatLng sydney = new LatLng(-33.867, 151.206);
+
+        googleMap.setMyLocationEnabled(true);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
+
+        googleMap.addMarker(new MarkerOptions()
+                .title("Sydney")
+                .snippet("The most populous city in Australia.")
+                .position(sydney));
+        
 		return rootView;
 	}
 
@@ -228,5 +251,11 @@ public class ToGoFragment extends Fragment {
 			_gpsListener = null;
 		}
 		Log.d(_logTag, "Monitor Location Exit");
+	}
+	
+	// set TabTitle
+	public void setTabTitle(String title, int tabIndex) {
+		String str = title.toUpperCase(Locale.getDefault());
+		getActivity().getActionBar().getTabAt(tabIndex).setText(str);
 	}
 }
