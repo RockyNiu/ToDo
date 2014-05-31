@@ -4,7 +4,7 @@ ToDo
 ToDo App: [Mobile](/MTM/README.md) + [Web](/WTM/README.md)
 
 ### Version
-1.01
+1.04
 
 ### Functions
 - Add items to your task list; (press menu icon "+" on top)
@@ -15,11 +15,10 @@ ToDo App: [Mobile](/MTM/README.md) + [Web](/WTM/README.md)
 - Sort tasks by due or priority;
 - Remind you the task past due;
 - Synchronize the tasks with mobile version, web version, and Google Tasks.
+- Show current location in Google Map
+- Send task by SMS Message
 
 ### Need to do
-* *change UI, add ToGo tab (done)*
-* *Use google-map-api (done)*
-* *Send task by SMS (done)*
 * Push notifications
 * Social integration(fb/Twitter)
 
