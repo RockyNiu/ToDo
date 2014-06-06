@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rockyniu.todolist"
-    android:versionCode="4"
-    android:versionName="1.03" >
+    android:versionCode="5"
+    android:versionName="1.04" >
 
     <uses-sdk
         android:minSdkVersion="17"
@@ -43,7 +43,15 @@
 
     <!-- Allows the API to check the connection status in order to determine whether data can be downloaded -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
+    <!-- permission so the Android application can register and receive messages -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
+    <!-- permission to prevent other Android applications from registering and receiving the Android application's messages.  -->
+    <permission android:name="com.rockyniu.todolist.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.rockyniu.todolist.permission.C2D_MESSAGE" />
+    
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -88,6 +96,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ToDoListActivity" />
         </activity>
+        
+        <receiver
+            android:name=".GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.rockyniu.todolist" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".GcmIntentService" />
     </application>
 
 </manifest>
