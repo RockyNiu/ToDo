@@ -19,7 +19,12 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="@dimen/actionbar_overlay" />
-
+	
+	<TextView
+                android:id="@+id/display"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"/>
+	
     <ListView
         android:id="@+id/namesList"
         android:layout_width="match_parent"
