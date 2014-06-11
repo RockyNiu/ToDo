@@ -1,22 +1,42 @@
 package com.rockyniu.todolist;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
+
+import com.rockyniu.todolist.ToDoFragment.OnDataPass;
+import com.rockyniu.todolist.database.DueComparator;
+import com.rockyniu.todolist.database.ToDoItem;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-public class TabsActivity extends Activity implements ActionBar.TabListener {
+public class TabsActivity extends Activity implements ActionBar.TabListener, OnDataPass{
 
+	final String TAG = "TabsActivity";
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a {@link FragmentPagerAdapter}
@@ -27,6 +47,7 @@ public class TabsActivity extends Activity implements ActionBar.TabListener {
 	SectionsPagerAdapter mSectionsPagerAdapter;
 	String userName;
 	String userId;
+	ToDoItem alarmedItem;
 
 	/**
 	 * The {@link ViewPager} that will host the section contents.
@@ -175,4 +196,26 @@ public class TabsActivity extends Activity implements ActionBar.TabListener {
 
 	}
 
+	@Override
+	public void onStop() {
+//		doStopListening();
+		super.onStop();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		// sync();
+//		setAlarmTime(this);
+	}
+
+
+	
+
+	@Override
+	public void onDataPass(ToDoItem toDoItem) {
+		this.alarmedItem = toDoItem;
+//		setAlarmTime(this);
+	}
+	
 }

@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -92,6 +93,11 @@ public class ToDoFragment extends Fragment {
 	AlarmReceiver pastDueAlarmReceiver;
 
 	/**
+	 * Pass the data to {@link com.rockyniu.todolist.TabsActivity}
+	 */
+	OnDataPass dataPasser;
+
+	/**
 	 * The fragment arguments
 	 */
 	private static final String ARG_USER_ID = "_userid";
@@ -119,7 +125,8 @@ public class ToDoFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_tab_todo, container,
 				false);
 
-		setHasOptionsMenu(true);
+		setHasOptionsMenu(true); // must for additional menu of fragment
+
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("_pastduealarm");
 		pastDueAlarmReceiver = new AlarmReceiver();
@@ -242,7 +249,7 @@ public class ToDoFragment extends Fragment {
 		// ListView scrolling,
 		// we don't look for swipes.
 		toDoListView.setOnScrollListener(touchListener.makeScrollListener());
-		sync();
+		// sync();
 		refreshView();
 		return rootView;
 	}
@@ -277,7 +284,7 @@ public class ToDoFragment extends Fragment {
 										int which) {
 									// continue with delete
 									clearCompleted();
-									refreshView();
+									// refreshView();
 									// sync();
 									refreshView();
 								}
@@ -304,15 +311,23 @@ public class ToDoFragment extends Fragment {
 	}
 
 	@Override
+	public void onStart() {
+		passData();
+		super.onStart();
+		// sync();
+	}
+
+	@Override
 	public void onResume() {
+		refreshView();
+		setAlarmTime(getActivity());
 		super.onResume();
 		// sync();
-		refreshView();
 	}
 
 	@Override
 	public void onStop() {
-		doStopListening();
+//		doStopListening();
 		super.onStop();
 	}
 
@@ -370,7 +385,7 @@ public class ToDoFragment extends Fragment {
 
 	public void refreshView() {
 		refresh();
-		setAlarmTime(this.getActivity());
+		// setAlarmTime(this.getActivity());
 	}
 
 	private void refresh() {
@@ -383,8 +398,15 @@ public class ToDoFragment extends Fragment {
 		adapter.notifyDataSetChanged();
 	}
 
-	// get the first being pastDue ToDoItem
-	// otherwise return null
+	public List<ToDoItem> getNewListFromLocal(ToDoFlag deleted,
+			ToDoStatus status) {
+		return toDoItemDataSource.getNewListFromLocal(userId, status, sortType,
+				deleted);
+	}
+
+	/**
+	 * get the first being pastDue ToDoItem, otherwise return null
+	 */
 	private ToDoItem getFirstBeingPastDueItem() {
 		List<ToDoItem> tempList = localToDoItems;
 		Collections.sort(tempList, new DueComparator());
@@ -427,6 +449,7 @@ public class ToDoFragment extends Fragment {
 		bundle.putString("_pastDueItemNotes", pastDueItemNotes);
 		intent.putExtras(bundle);
 
+		// trigger of sending intent to AlarmReceiver
 		PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent,
 				PendingIntent.FLAG_CANCEL_CURRENT);
 		am.set(AlarmManager.RTC_WAKEUP, timeInMillis, sender);
@@ -436,6 +459,7 @@ public class ToDoFragment extends Fragment {
 	private class AlarmReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			Log.d(TAG, intent.getAction());
 			if ("_pastduealarm".equals(intent.getAction())) {
 				Bundle bundle = intent.getExtras();
 
@@ -472,16 +496,47 @@ public class ToDoFragment extends Fragment {
 		}
 	}
 
-	public List<ToDoItem> getNewListFromLocal(ToDoFlag deleted,
-			ToDoStatus status) {
-		return toDoItemDataSource.getNewListFromLocal(userId, status, sortType,
-				deleted);
-	}
-	
-	void doStopListening(){
+	/**
+	 * stop alarmlistening
+	 */
+	void doStopListening() {
 		if (pastDueAlarmReceiver != null) {
-			this.getActivity().unregisterReceiver(pastDueAlarmReceiver);
+			getActivity().unregisterReceiver(pastDueAlarmReceiver);
 			pastDueAlarmReceiver = null;
 		}
+	}
+
+	/**
+	 * for passing the data back to activity
+	 * 
+	 * @author Lei Niu
+	 * 
+	 */
+	public interface OnDataPass {
+		public void onDataPass(ToDoItem toDoItem);
+	}
+
+	/**
+	 * attach the fragment to activity
+	 */
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			dataPasser = (OnDataPass) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement OnDataPass");
+		}
+	}
+
+	/**
+	 * pass the data
+	 * 
+	 * @param data
+	 */
+	public void passData() {
+		ToDoItem toDoItem = getFirstBeingPastDueItem();
+		dataPasser.onDataPass(toDoItem);
 	}
 }
