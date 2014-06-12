@@ -127,11 +127,6 @@ public class ToDoFragment extends Fragment {
 
 		setHasOptionsMenu(true); // must for additional menu of fragment
 
-		IntentFilter filter = new IntentFilter();
-		filter.addAction("_pastduealarm");
-		pastDueAlarmReceiver = new AlarmReceiver();
-		this.getActivity().registerReceiver(pastDueAlarmReceiver, filter);
-
 		Bundle bundle = getArguments();
 		userId = bundle.getString(ARG_USER_ID);
 		userName = bundle.getString(ARG_USER_NAME);
@@ -147,6 +142,7 @@ public class ToDoFragment extends Fragment {
 		toDoItemDataSource = new ToDoItemDataSource(this.getActivity());
 		// userDataSource = new UserDataSource(this);
 
+		// set item adapter
 		localToDoItems = getNewListFromLocal(ToDoFlag.UNDELETED, status);
 		toDoListView = (ListView) rootView.findViewById(R.id.toDoListView);
 		toDoListView.setEmptyView(rootView.findViewById(R.id.empty_list_item));
@@ -155,6 +151,9 @@ public class ToDoFragment extends Fragment {
 		toDoListView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 
+		// set due time alarm Time
+		setAlarmTime(this.getActivity());
+		
 		checkBox = (CheckBox) rootView.findViewById(R.id.checkBoxHide);
 		checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -166,7 +165,7 @@ public class ToDoFragment extends Fragment {
 				} else {
 					status = ToDoStatus.ALL;
 				}
-				localToDoItems = getNewListFromLocal(ToDoFlag.UNDELETED, status);
+//				localToDoItems = getNewListFromLocal(ToDoFlag.UNDELETED, status);
 				refreshView();
 			}
 		});
@@ -191,6 +190,7 @@ public class ToDoFragment extends Fragment {
 				}
 				currentItem.setModifiedTime(currentTime);
 				toDoItemDataSource.updateItem(currentItem);
+//				localToDoItems.set(position, currentItem); // update localToDoItems
 				// sync();
 				refreshView();
 			}
@@ -235,6 +235,7 @@ public class ToDoFragment extends Fragment {
 									.getTimeInMillis());
 							toDoItemDataSource
 									.labelItemDeletedWithModifiedTime(currentItem);
+//							localToDoItems.remove(position); // remove item from localToDoItems
 						}
 						Utils.showToastInternal(
 								ToDoFragment.this.getActivity(),
@@ -249,11 +250,23 @@ public class ToDoFragment extends Fragment {
 		// ListView scrolling,
 		// we don't look for swipes.
 		toDoListView.setOnScrollListener(touchListener.makeScrollListener());
-		// sync();
+		sync();
 		refreshView();
 		return rootView;
 	}
 
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQUEST_EDIT_ITEM
+				&& resultCode == Activity.RESULT_OK) {
+			// sync();
+			refreshView();
+		}
+//		refreshView();
+	}
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.activity_to_do_list, menu);
@@ -300,7 +313,7 @@ public class ToDoFragment extends Fragment {
 			return true;
 		case R.id.menu_sync:
 			sync();
-			refreshView();
+//			refreshView();
 			return true;
 		case android.R.id.home:
 
@@ -319,26 +332,17 @@ public class ToDoFragment extends Fragment {
 
 	@Override
 	public void onResume() {
-		refreshView();
-		setAlarmTime(getActivity());
+//		refreshView();
 		super.onResume();
+		doListening();
+		setAlarmTime(getActivity());
 		// sync();
 	}
 
 	@Override
 	public void onStop() {
-//		doStopListening();
+		doStopListening();
 		super.onStop();
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == REQUEST_EDIT_ITEM
-				&& resultCode == Activity.RESULT_OK) {
-			// sync();
-			refreshView();
-		}
 	}
 
 	// add or edit Item
@@ -422,6 +426,7 @@ public class ToDoFragment extends Fragment {
 
 	// set alarm for item
 	private void setAlarmTime(Context context) {
+//		refreshView();
 		ToDoItem alarmedItem = getFirstBeingPastDueItem();
 		long timeInMillis;
 		String pastDueItemTitle;
@@ -496,6 +501,16 @@ public class ToDoFragment extends Fragment {
 		}
 	}
 
+	/**
+	 * start alarmlistenning
+	 */
+	void doListening(){
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("_pastduealarm");
+		pastDueAlarmReceiver = new AlarmReceiver();
+		this.getActivity().registerReceiver(pastDueAlarmReceiver, filter);
+	}
+	
 	/**
 	 * stop alarmlistening
 	 */

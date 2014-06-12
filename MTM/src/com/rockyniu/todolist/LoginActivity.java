@@ -67,7 +67,7 @@ public class LoginActivity extends Activity {
 	ProgressBar progressBar;
 
 	// for GCM
-	TextView mDisplay;
+//	TextView mDisplay;
 	GoogleCloudMessaging gcm;
 	AtomicInteger msgId = new AtomicInteger();
 	SharedPreferences prefs;
@@ -83,8 +83,8 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 		userDataSource = new UserDataSource(this);
 
-		// get GCM textview
-		mDisplay = (TextView) findViewById(R.id.display);
+		// GCM information
+//		mDisplay = (TextView) findViewById(R.id.display);
 		context = getApplicationContext();
 
 		// get account names
@@ -114,16 +114,7 @@ public class LoginActivity extends Activity {
 				});
 
 		checkGooglePlaySerViceAvailable();
-		// sendRegistrationIdToBackend();
 
-//		gcmServiceIntent = new Intent(LoginActivity.this,
-//				GcmIntentService.class);
-//		LoginActivity.this.startService(gcmServiceIntent);
-//
-//		IntentFilter filter = new IntentFilter();
-//		filter.addAction("_gcm");
-//		gcmBroadcastReceiver = new GcmBroadcastReceiver();
-//		LoginActivity.this.registerReceiver(gcmBroadcastReceiver, filter);
 	}
 
 	@Override
@@ -221,7 +212,7 @@ public class LoginActivity extends Activity {
 			}
 		} else {
 			// If check succeeds, proceed with GCM registration.
-			gcm = GoogleCloudMessaging.getInstance(this);
+//			gcm = GoogleCloudMessaging.getInstance(this);
 			regid = getRegistrationId(context);
 
 			if (regid == null || regid.isEmpty()) {
@@ -323,6 +314,18 @@ public class LoginActivity extends Activity {
 		}
 	}
 
+	private String getRegistrationServerStatus(Context context, String userName) {
+		final SharedPreferences prefs = getGCMPreferences(context);
+		String status = prefs.getString(userName, "");
+		if (status.isEmpty()||status.equals("NO")) {
+			Log.i(TAG, userName + "is not registrated on backend server.");
+			return "NO";
+		}
+		
+		return "YES";
+	}
+	
+	
 	/**
 	 * Registers the application with GCM servers asynchronously.
 	 * <p>
@@ -339,7 +342,8 @@ public class LoginActivity extends Activity {
 						gcm = GoogleCloudMessaging.getInstance(context);
 					}
 					regid = gcm.register(SENDER_ID);
-					msg = "Device registered, registration ID=" + regid;
+//					msg = "Device registered, registration ID=" + regid;
+					msg = "Device registered to Google Cloud Messaging Server";
 
 					// You should send the registration ID to your server over
 					// HTTP,
@@ -348,7 +352,7 @@ public class LoginActivity extends Activity {
 					// The request to your server should be authenticated if
 					// your app
 					// is using accounts.
-					sendRegistrationIdToBackend();
+//					sendRegistrationIdToBackend();
 
 					// For this demo: we don't need to send it because the
 					// device
@@ -369,7 +373,9 @@ public class LoginActivity extends Activity {
 
 			@Override
 			protected void onPostExecute(String msg) {
-				mDisplay.append(msg + "\n");
+//				mDisplay.append(msg + "\n");
+				Utils.showToastInternal(LoginActivity.this, msg);
+				sendRegistrationIdToBackend();
 			}
 
 		}.execute(null, null, null);
@@ -385,6 +391,7 @@ public class LoginActivity extends Activity {
 		for (String userName : namesList) {
 			sendRegistrationIdToBackend(userName);
 		}
+		
 	}
 
 	/**
@@ -392,20 +399,30 @@ public class LoginActivity extends Activity {
 	 * 
 	 * @param userName
 	 */
-	private void sendRegistrationIdToBackend(String userName) {
+	private void sendRegistrationIdToBackend(final String userName) {
 		if (regid != null) {
-			new AsyncTask<String, Void, String>() {
-				@Override
-				protected String doInBackground(String... params) {
-					return asyncRegistrationIdToBackend(params[0]);
-				}
+			String status = getRegistrationServerStatus(context, userName);
+			if (!status.equals("YES")){
+				new AsyncTask<String, Void, String>() {
+					@Override
+					protected String doInBackground(String... params) {
+						return asyncRegistrationIdToBackend(params[0]);
+					}
 
-				@Override
-				protected void onPostExecute(String msg) {
-					mDisplay.append(msg + "\n");
-				}
+					@Override
+					protected void onPostExecute(String msg) {
+//						mDisplay.append(msg + "\n");
+						if (msg.equals("YES")){
+							storeRegistrationServerId(context, userName, msg);
+							msg = "Device registered to ToDo Server";
+						} else{
+							storeRegistrationServerId(context, userName, "NO");
+						}
+						Utils.showToastInternal(LoginActivity.this, msg);
+					}
 
-			}.execute(userName);
+				}.execute(userName);
+			}
 		}
 	}
 
@@ -421,7 +438,7 @@ public class LoginActivity extends Activity {
 			JSONObject jsonObj = new JSONObject();
 			jsonObj.put("user", userName);
 			jsonObj.put("type", "android");
-			jsonObj.put("token", regid + userName);
+			jsonObj.put("token", regid);
 
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost(TODOSERVER_URL_SUBSCRIBE);
@@ -432,63 +449,15 @@ public class LoginActivity extends Activity {
 			httpPost.setHeader("Content-type", "application/json");
 			httpPost.setEntity(stringEntity);
 			httpClient.execute(httpPost);
-			msg = "Device registered to todo-server, registration ID="
-					+ jsonObj.toString();
+//			msg = "Device registered to todo-server, registration ID="
+//					+ jsonObj.toString();
+			msg = "YES";
 		} catch (IOException | JSONException ex) {
 			msg = "Error :" + ex.getMessage();
 			// return false;
 		}
 		return msg;
 	}
-
-	// private Boolean sendRegistrationIdToBackend() {
-	// // String msg = "";
-	//
-	// try {
-	// // JSONObject registration = new JSONObject();
-	// JSONArray jsonArray = new JSONArray();
-	//
-	// for (String userName : namesList) {
-	// User user = userDataSource.selectUser(userName);
-	// // String userId = user.getId();
-	// JSONObject jsonObj = new JSONObject();
-	//
-	// jsonObj.put("user", userName);
-	// jsonObj.put("type", "android");
-	// jsonObj.put("token", regid + userName);
-	// jsonArray.put(jsonObj);
-	// }
-	//
-	// // registration.put("datastreams", jsonArray);
-	// // registration.put("version", version);
-	//
-	// for (int i = 0; i < jsonArray.length(); i++) {
-	// HttpClient httpClient = new DefaultHttpClient();
-	// HttpPost httpPost = new HttpPost(TODOSERVER_URL_SUBSCRIBE);
-	// StringEntity stringEntity = new
-	// StringEntity(jsonArray.get(i).toString());
-	// stringEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,
-	// "application/json"));
-	// httpPost.setHeader("Accept", "application/json");
-	// httpPost.setHeader("Content-type", "application/json");
-	// httpPost.setEntity(stringEntity);
-	// httpClient.execute(httpPost);
-	// }
-	//
-	//
-	// // Bundle data = new Bundle();
-	// // data.putString("my_message", "Hello World");
-	// // data.putString("my_action",
-	// // "com.google.android.gcm.demo.app.ECHO_NOW");
-	// // String id = Integer.toString(msgId.incrementAndGet());
-	// // gcm.send(SENDER_ID + "@gcm.googleapis.com", id, data);
-	// // msg = "Sent message";
-	// } catch (IOException | JSONException ex) {
-	// // msg = "Error :" + ex.getMessage();
-	// return false;
-	// }
-	// return true;
-	// }
 
 	/**
 	 * Stores the registration ID and app versionCode in the application's
@@ -508,92 +477,18 @@ public class LoginActivity extends Activity {
 		editor.putInt(PROPERTY_APP_VERSION, appVersion);
 		editor.commit();
 	}
+	
+	/**
+	 * Store registration status of backend server
+	 * @param context
+	 * @param userName
+	 * @param status, YES or NO
+	 */
+	private void storeRegistrationServerId(Context context, String userName, String status) {
+		final SharedPreferences prefs = getGCMPreferences(context);
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(userName, status);
+		editor.commit();
+	}
 
-	// public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
-	// @Override
-	// public void onReceive(Context context, Intent intent) {
-	// // Explicitly specify that GcmIntentService will handle the intent.
-	// ComponentName comp = new ComponentName(context.getPackageName(),
-	// GcmIntentService.class.getName());
-	// // Start the service, keeping the device awake while it is launching.
-	// startWakefulService(context, (intent.setComponent(comp)));
-	// setResultCode(Activity.RESULT_OK);
-	// }
-	// }
-	//
-	// public class GcmIntentService extends IntentService {
-	// public static final int NOTIFICATION_ID = 1;
-	// private NotificationManager mNotificationManager;
-	// NotificationCompat.Builder builder;
-	//
-	// public GcmIntentService() {
-	// super("GcmIntentService");
-	// }
-	//
-	// @Override
-	// protected void onHandleIntent(Intent intent) {
-	// Bundle extras = intent.getExtras();
-	// GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
-	// // The getMessageType() intent parameter must be the intent you received
-	// // in your BroadcastReceiver.
-	// String messageType = gcm.getMessageType(intent);
-	//
-	// if (!extras.isEmpty()) { // has effect of unparcelling Bundle
-	// /*
-	// * Filter messages based on message type. Since it is likely that GCM
-	// * will be extended in the future with new message types, just ignore
-	// * any message types you're not interested in, or that you don't
-	// * recognize.
-	// */
-	// if (GoogleCloudMessaging.
-	// MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-	// sendNotification("Send error: " + extras.toString());
-	// } else if (GoogleCloudMessaging.
-	// MESSAGE_TYPE_DELETED.equals(messageType)) {
-	// sendNotification("Deleted messages on server: " +
-	// extras.toString());
-	// // If it's a regular GCM message, do some work.
-	// } else if (GoogleCloudMessaging.
-	// MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-	// // This loop represents the service doing some work.
-	// for (int i=0; i<5; i++) {
-	// Log.i(TAG, "Working... " + (i+1)
-	// + "/5 @ " + SystemClock.elapsedRealtime());
-	// try {
-	// Thread.sleep(5000);
-	// } catch (InterruptedException e) {
-	// }
-	// }
-	// Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
-	// // Post notification of received message.
-	// sendNotification("Received: " + extras.toString());
-	// Log.i(TAG, "Received: " + extras.toString());
-	// }
-	// }
-	// // Release the wake lock provided by the WakefulBroadcastReceiver.
-	// GcmBroadcastReceiver.completeWakefulIntent(intent);
-	// }
-	//
-	// // Put the message into a notification and post it.
-	// // This is just one simple example of what you might choose to do with
-	// // a GCM message.
-	// private void sendNotification(String msg) {
-	// mNotificationManager = (NotificationManager)
-	// this.getSystemService(Context.NOTIFICATION_SERVICE);
-	//
-	// PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-	// new Intent(this, LoginActivity.class), 0);
-	//
-	// NotificationCompat.Builder mBuilder =
-	// new NotificationCompat.Builder(this)
-	// .setSmallIcon(R.drawable.none)
-	// .setContentTitle("GCM Notification")
-	// .setStyle(new NotificationCompat.BigTextStyle()
-	// .bigText(msg))
-	// .setContentText(msg);
-	//
-	// mBuilder.setContentIntent(contentIntent);
-	// mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-	// }
-	// }
 }

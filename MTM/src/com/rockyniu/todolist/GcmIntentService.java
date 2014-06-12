@@ -43,7 +43,7 @@ public class GcmIntentService extends IntentService {
     public GcmIntentService() {
         super("GcmIntentService");
     }
-    public static final String TAG = "GCM Demo";
+    public static final String TAG = "GCM";
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -65,19 +65,13 @@ public class GcmIntentService extends IntentService {
                 sendNotification("Deleted messages on server: " + extras.toString());
             // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                // This loop represents the service doing some work.
-                for (int i = 0; i < 5; i++) {
-                    Log.i(TAG, "Working... " + (i + 1)
-                            + "/5 @ " + SystemClock.elapsedRealtime());
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                    }
-                }
-                Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
                 // Post notification of received message.
-                sendNotification("Received: " + extras.toString());
-                Log.i(TAG, "Received: " + extras.toString());
+            	String message = "";
+            	if (extras.containsKey("message")){
+            		message = extras.getCharSequence("message").toString();
+            		sendNotification(message);
+            		Log.d(TAG, "Received: " + message);
+            	}
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
@@ -96,8 +90,8 @@ public class GcmIntentService extends IntentService {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-        .setSmallIcon(R.drawable.none)
-        .setContentTitle("GCM Notification")
+        .setSmallIcon(R.drawable.ic_launcher)
+        .setContentTitle("ToDo Notification")
         .setStyle(new NotificationCompat.BigTextStyle()
         .bigText(msg))
         .setContentText(msg);

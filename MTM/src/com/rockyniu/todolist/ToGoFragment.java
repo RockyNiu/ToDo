@@ -298,12 +298,12 @@ public class ToGoFragment extends Fragment {
 			}
 		}
 
-		if (networkLocation == null) {
-			Log.d(_logTag, "Monitor Location: Network Location is NULL");
-			return gpsLocation;
-		} else {
+		if (gpsLocation == null) {
 			Log.d(_logTag, "Monitor Location: GPS Location is NULL");
 			return networkLocation;
+		} else {
+			Log.d(_logTag, "Monitor Location: Network Location is NULL");
+			return gpsLocation;
 		}
 	}
 }
