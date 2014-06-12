@@ -13,6 +13,7 @@ ToDo Mobile App is a Task Manager application that is integrated into the [Googl
 - Show current location in Google Map
 - Send task by SMS Message
 - Send task by email
+- Send push notification from server
 
 ## Example App
 
