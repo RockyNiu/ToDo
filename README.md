@@ -1,7 +1,7 @@
 ToDo
 ========
 
-ToDo App: [Mobile](/MTM/README.md) + [Web](/WTM/README.md)
+ToDo is a Task Manager application, including [Mobile version](/MTM/README.md) and [Web version](/WTM/README.md).
 
 ### Version
 1.06
