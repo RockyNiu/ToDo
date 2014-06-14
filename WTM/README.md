@@ -54,4 +54,4 @@ Runs using [Grunt](http://gruntjs.com/getting-started):
 
 ## Example App
 
-A hosted version of the app can be found [here](http://powerful-everglades-4337.herokuapp.com/).
+A hosted version of the app can be found [here](http://tode-web.herokuapp.com/).
