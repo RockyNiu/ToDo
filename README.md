@@ -14,11 +14,12 @@ ToDo App: [Mobile](/MTM/README.md) + [Web](/WTM/README.md)
 - Delete a task; (swipe)
 - Sort tasks by due or priority;
 - Remind you the task past due;
-- Synchronize the tasks with mobile version, web version, and Google Tasks.
-- Show current location in Google Map
-- Send task by SMS Message
-- Send task by email
-- Send push notification from server
+- Synchronize the tasks with mobile version, web version, and Google Tasks;
+- Surport Chinese;
+- Show current location in Google Map;
+- Send task by SMS Message;
+- Send task by email;
+- Send push notification from server;
 
 ### Need to do
 * Combine ToGo with ToDo (show location of ToDo task)
