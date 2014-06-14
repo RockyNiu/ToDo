@@ -4,7 +4,7 @@ ToDo
 ToDo App: [Mobile](/MTM/README.md) + [Web](/WTM/README.md)
 
 ### Version
-1.05
+1.06
 
 ### Functions
 - Add items to your task list; (press menu icon "+" on top)
@@ -21,7 +21,6 @@ ToDo App: [Mobile](/MTM/README.md) + [Web](/WTM/README.md)
 - Send push notification from server
 
 ### Need to do
-* Deploy todo-server on Virtual Machine and update App in Google Store
 * Combine ToGo with ToDo (show location of ToDo task)
 * Social integration(FB/Twitter)
 
