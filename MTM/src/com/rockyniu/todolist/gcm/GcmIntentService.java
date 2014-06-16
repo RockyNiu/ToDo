@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-package com.rockyniu.todolist;
+package com.rockyniu.todolist.gcm;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.rockyniu.todolist.LoginActivity;
+import com.rockyniu.todolist.R;
+import com.rockyniu.todolist.R.drawable;
 
 import android.app.IntentService;
 import android.app.NotificationManager;

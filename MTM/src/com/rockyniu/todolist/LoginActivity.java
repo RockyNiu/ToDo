@@ -43,18 +43,25 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.rockyniu.todolist.database.User;
+import com.rockyniu.todolist.R;
+import com.rockyniu.todolist.R.id;
+import com.rockyniu.todolist.R.layout;
+import com.rockyniu.todolist.R.menu;
 import com.rockyniu.todolist.database.UserDataSource;
+import com.rockyniu.todolist.database.model.User;
+import com.rockyniu.todolist.gcm.GcmBroadcastReceiver;
+import com.rockyniu.todolist.util.Utils;
 
 public class LoginActivity extends Activity {
 
 	static final String TAG = "LoginActiviy";
 
-	private static final String TODOSERVER_URL_SUBSCRIBE = "http://192.168.1.6:8000/subscribe";
+	private static final String TODOSERVER_URL_SUBSCRIBE = "http://todo-server.cloudapp.net:8000/subscribe";
 
 	// for GCM
 	public static final String EXTRA_MESSAGE = "message";
 	public static final String PROPERTY_REG_ID = "registration_id";
+	public static final String BACKEND_REG_STATUS = "registration_on_backend_";
 	private static final String PROPERTY_APP_VERSION = "appVersion";
 	String SENDER_ID = "215231197297"; // from api console
 
@@ -67,7 +74,7 @@ public class LoginActivity extends Activity {
 	ProgressBar progressBar;
 
 	// for GCM
-//	TextView mDisplay;
+	// TextView mDisplay;
 	GoogleCloudMessaging gcm;
 	AtomicInteger msgId = new AtomicInteger();
 	SharedPreferences prefs;
@@ -84,7 +91,7 @@ public class LoginActivity extends Activity {
 		userDataSource = new UserDataSource(this);
 
 		// GCM information
-//		mDisplay = (TextView) findViewById(R.id.display);
+		// mDisplay = (TextView) findViewById(R.id.display);
 		context = getApplicationContext();
 
 		// get account names
@@ -212,7 +219,7 @@ public class LoginActivity extends Activity {
 			}
 		} else {
 			// If check succeeds, proceed with GCM registration.
-//			gcm = GoogleCloudMessaging.getInstance(this);
+			// gcm = GoogleCloudMessaging.getInstance(this);
 			regid = getRegistrationId(context);
 
 			if (regid == null || regid.isEmpty()) {
@@ -294,8 +301,6 @@ public class LoginActivity extends Activity {
 	 * @return Application's {@code SharedPreferences}.
 	 */
 	private SharedPreferences getGCMPreferences(Context context) {
-		// This app persists the registration ID in shared preferences, but how
-		// you store the regID in your app is up to you.
 		return getSharedPreferences(LoginActivity.class.getSimpleName(),
 				Context.MODE_PRIVATE);
 	}
@@ -316,16 +321,15 @@ public class LoginActivity extends Activity {
 
 	private String getRegistrationServerStatus(Context context, String userName) {
 		final SharedPreferences prefs = getGCMPreferences(context);
-		String status = prefs.getString(userName, "");
-		if (status.isEmpty()||status.equals("NO")) {
+		String status = prefs.getString(BACKEND_REG_STATUS + userName, "");
+		if (status.isEmpty() || status.equals("NO")) {
 			Log.i(TAG, userName + "is not registrated on backend server.");
 			return "NO";
 		}
-		
+
 		return "YES";
 	}
-	
-	
+
 	/**
 	 * Registers the application with GCM servers asynchronously.
 	 * <p>
@@ -342,7 +346,7 @@ public class LoginActivity extends Activity {
 						gcm = GoogleCloudMessaging.getInstance(context);
 					}
 					regid = gcm.register(SENDER_ID);
-//					msg = "Device registered, registration ID=" + regid;
+					// msg = "Device registered, registration ID=" + regid;
 					msg = "Device registered to Google Cloud Messaging Server";
 
 					// You should send the registration ID to your server over
@@ -352,7 +356,7 @@ public class LoginActivity extends Activity {
 					// The request to your server should be authenticated if
 					// your app
 					// is using accounts.
-//					sendRegistrationIdToBackend();
+					// sendRegistrationIdToBackend();
 
 					// For this demo: we don't need to send it because the
 					// device
@@ -373,7 +377,7 @@ public class LoginActivity extends Activity {
 
 			@Override
 			protected void onPostExecute(String msg) {
-//				mDisplay.append(msg + "\n");
+				// mDisplay.append(msg + "\n");
 				Utils.showToastInternal(LoginActivity.this, msg);
 				sendRegistrationIdToBackend();
 			}
@@ -391,7 +395,7 @@ public class LoginActivity extends Activity {
 		for (String userName : namesList) {
 			sendRegistrationIdToBackend(userName);
 		}
-		
+
 	}
 
 	/**
@@ -401,8 +405,9 @@ public class LoginActivity extends Activity {
 	 */
 	private void sendRegistrationIdToBackend(final String userName) {
 		if (regid != null) {
-			String status = getRegistrationServerStatus(context, userName);
-			if (!status.equals("YES")){
+			String status = getRegistrationServerStatus(context,
+					BACKEND_REG_STATUS + userName);
+			if (!status.equals("YES")) {
 				new AsyncTask<String, Void, String>() {
 					@Override
 					protected String doInBackground(String... params) {
@@ -411,11 +416,11 @@ public class LoginActivity extends Activity {
 
 					@Override
 					protected void onPostExecute(String msg) {
-//						mDisplay.append(msg + "\n");
-						if (msg.equals("YES")){
+						// mDisplay.append(msg + "\n");
+						if (msg.equals("YES")) {
 							storeRegistrationServerId(context, userName, msg);
 							msg = "Device registered to ToDo Server";
-						} else{
+						} else {
 							storeRegistrationServerId(context, userName, "NO");
 						}
 						Utils.showToastInternal(LoginActivity.this, msg);
@@ -449,8 +454,8 @@ public class LoginActivity extends Activity {
 			httpPost.setHeader("Content-type", "application/json");
 			httpPost.setEntity(stringEntity);
 			httpClient.execute(httpPost);
-//			msg = "Device registered to todo-server, registration ID="
-//					+ jsonObj.toString();
+			// msg = "Device registered to todo-server, registration ID="
+			// + jsonObj.toString();
 			msg = "YES";
 		} catch (IOException | JSONException ex) {
 			msg = "Error :" + ex.getMessage();
@@ -477,17 +482,20 @@ public class LoginActivity extends Activity {
 		editor.putInt(PROPERTY_APP_VERSION, appVersion);
 		editor.commit();
 	}
-	
+
 	/**
 	 * Store registration status of backend server
+	 * 
 	 * @param context
 	 * @param userName
-	 * @param status, YES or NO
+	 * @param status
+	 *            , YES or NO
 	 */
-	private void storeRegistrationServerId(Context context, String userName, String status) {
+	private void storeRegistrationServerId(Context context, String userName,
+			String status) {
 		final SharedPreferences prefs = getGCMPreferences(context);
 		SharedPreferences.Editor editor = prefs.edit();
-		editor.putString(userName, status);
+		editor.putString(BACKEND_REG_STATUS + userName, status);
 		editor.commit();
 	}
 

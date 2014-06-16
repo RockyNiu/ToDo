@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.rockyniu.todolist;
+package com.rockyniu.todolist.gcm;
+
 
 import android.app.Activity;
 import android.content.ComponentName;

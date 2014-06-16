@@ -1,4 +1,4 @@
-package com.rockyniu.todolist;
+package com.rockyniu.todolist.todolist;
 
 import java.util.List;
 import java.util.Locale;
@@ -26,6 +26,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.rockyniu.todolist.R;
+import com.rockyniu.todolist.R.id;
+import com.rockyniu.todolist.R.layout;
+import com.rockyniu.todolist.R.menu;
+import com.rockyniu.todolist.location.MyLocationListener;
+import com.rockyniu.todolist.util.LogHelper;
 
 /**
  * A placeholder fragment containing a simple view.

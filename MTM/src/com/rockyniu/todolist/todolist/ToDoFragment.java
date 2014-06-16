@@ -1,4 +1,4 @@
-package com.rockyniu.todolist;
+package com.rockyniu.todolist.todolist;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -43,13 +43,23 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.tasks.Tasks;
 import com.google.api.services.tasks.model.Task;
-import com.rockyniu.todolist.database.DueComparator;
-import com.rockyniu.todolist.database.ToDoItem;
+import com.rockyniu.todolist.EditItemActivity;
+import com.rockyniu.todolist.R;
+import com.rockyniu.todolist.TabsActivity;
+import com.rockyniu.todolist.R.drawable;
+import com.rockyniu.todolist.R.id;
+import com.rockyniu.todolist.R.layout;
+import com.rockyniu.todolist.R.menu;
+import com.rockyniu.todolist.R.string;
 import com.rockyniu.todolist.database.ToDoItemDataSource;
 import com.rockyniu.todolist.database.ToDoItemDataSource.SortType;
 import com.rockyniu.todolist.database.ToDoItemDataSource.ToDoFlag;
 import com.rockyniu.todolist.database.ToDoItemDataSource.ToDoStatus;
+import com.rockyniu.todolist.database.comparator.DueComparator;
+import com.rockyniu.todolist.database.model.ToDoItem;
 import com.rockyniu.todolist.database.UserDataSource;
+import com.rockyniu.todolist.ui.listener.SwipeDismissListViewTouchListener;
+import com.rockyniu.todolist.util.Utils;
 
 /**
  * A todo fragment.
@@ -83,7 +93,7 @@ public class ToDoFragment extends Fragment {
 	Tasks service;
 	// final static String GOOGLE_TASKS_API_KEY =
 	// "AIzaSyCvtrY8Rvv7KXrAWN0UjgszWe6AUPc8EVc";
-	final static String TODOLIST_NAME = "cs6300ToDoList";
+	final static String TODOLIST_NAME = "ToDoList";
 	List<Task> tasksList;
 
 	private static ListView toDoListView;

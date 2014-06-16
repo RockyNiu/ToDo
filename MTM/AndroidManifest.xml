@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rockyniu.todolist"
-    android:versionCode="5"
-    android:versionName="1.04" >
+    android:versionCode="8"
+    android:versionName="1.07" >
 
     <uses-sdk
         android:minSdkVersion="17"
@@ -70,7 +70,7 @@
             android:value="AIzaSyBGOiSz2C3a_3faKUSnmi_TsT_6IVPRGpU" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name="com.rockyniu.todolist.LoginActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Holo.ActionBarOverlay" >
             <intent-filter>
@@ -81,19 +81,23 @@
         </activity>
         <activity
             android:name=".TabsActivity"
+            android:hardwareAccelerated="false"
             android:label="@string/title_activity_to_do_list" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".LoginActivity" />
         </activity>
-        <activity
-            android:name=".ToDoFragment"
+
+        <fragment
+            android:name="com.rockyniu.todolist.todolist.ToDoFragment"
             android:label="@string/title_activity_to_do_list" >
-        </activity>
-        <activity
-            android:name=".ToGoFragment"
+        </fragment>
+        
+        <fragment
+            android:name="com.rockyniu.todolist.todolist.ToGoFragment"
             android:label="@string/title_activity_to_go_list" >
-        </activity>
+        </fragment>
+
         <activity
             android:name=".EditItemActivity"
             android:label="@string/title_activity_edit_item" >
@@ -103,7 +107,7 @@
         </activity>
 
         <receiver
-            android:name=".GcmBroadcastReceiver"
+            android:name="com.rockyniu.todolist.gcm.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -112,7 +116,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".GcmIntentService" />
+        <service android:name="com.rockyniu.todolist.gcm.GcmIntentService" />
     </application>
 
 </manifest>

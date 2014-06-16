@@ -1,4 +1,4 @@
-package com.rockyniu.todolist;
+package com.rockyniu.todolist.util;
 
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;

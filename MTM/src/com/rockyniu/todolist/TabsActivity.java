@@ -6,9 +6,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import com.rockyniu.todolist.ToDoFragment.OnDataPass;
-import com.rockyniu.todolist.database.DueComparator;
-import com.rockyniu.todolist.database.ToDoItem;
+import com.rockyniu.todolist.database.comparator.DueComparator;
+import com.rockyniu.todolist.database.model.ToDoItem;
+import com.rockyniu.todolist.todolist.ToDoFragment;
+import com.rockyniu.todolist.todolist.ToGoFragment;
+import com.rockyniu.todolist.todolist.ToDoFragment.OnDataPass;
 
 import android.app.ActionBar;
 import android.app.Activity;

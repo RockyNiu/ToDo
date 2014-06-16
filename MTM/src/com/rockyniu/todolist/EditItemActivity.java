@@ -18,8 +18,9 @@ import android.widget.SeekBar;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.rockyniu.todolist.database.ToDoItem;
 import com.rockyniu.todolist.database.ToDoItemDataSource;
+import com.rockyniu.todolist.database.model.ToDoItem;
+import com.rockyniu.todolist.util.Utils;
 
 //@TargetApi(9)
 public class EditItemActivity extends Activity {

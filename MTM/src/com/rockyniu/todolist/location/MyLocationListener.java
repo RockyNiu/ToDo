@@ -1,4 +1,6 @@
-package com.rockyniu.todolist;
+package com.rockyniu.todolist.location;
+
+import com.rockyniu.todolist.util.LogHelper;
 
 import android.location.Location;
 import android.location.LocationListener;

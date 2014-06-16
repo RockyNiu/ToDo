@@ -5,6 +5,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.rockyniu.todolist.database.comparator.DueComparator;
+import com.rockyniu.todolist.database.comparator.PriorityComparator;
+import com.rockyniu.todolist.database.model.SyncResult;
+import com.rockyniu.todolist.database.model.ToDoItem;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.rockyniu.todolist.database.model.User;
+
 
 import android.content.ContentValues;
 import android.content.Context;
