@@ -7,6 +7,7 @@ ToDo is a Task Manager application, including [Mobile version](/MTM/README.md), 
 1.09
 
 ### Functions
+- Google+ login
 - Add items to your task list; (press menu icon "+" on top)
 - Set a task name, priority, due date, due time;
 - Edit an existing task; (long press)
