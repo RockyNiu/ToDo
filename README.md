@@ -28,6 +28,6 @@ ToDo is a Task Manager application, including [Mobile version](/MTM/README.md), 
 * Social integration(FB/Twitter)
 
 ### Contribution
-* Author::[RockyNiu](https://github.com/RockyNiu) (Android)
+* Author::[RockyNiu](https://github.com/RockyNiu) (Android, Server)
 * Author::[pdenney](https://github.com/pdenney) (Web)
 * Author::Mono(Art Design)
