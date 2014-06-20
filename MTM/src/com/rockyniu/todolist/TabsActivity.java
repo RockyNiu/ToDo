@@ -15,6 +15,7 @@ import com.rockyniu.todolist.todolist.ToDoFragment.OnDataPass;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -22,6 +23,7 @@ import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -36,7 +38,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class TabsActivity extends Activity implements ActionBar.TabListener, OnDataPass{
+public class TabsActivity extends Activity implements ActionBar.TabListener,
+		OnDataPass {
 
 	final String TAG = "TabsActivity";
 	/**
@@ -118,16 +121,45 @@ public class TabsActivity extends Activity implements ActionBar.TabListener, OnD
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
+		switch (item.getItemId()) {
+//		case R.id.menu_exit:
+//			android.os.Process.killProcess(android.os.Process.myPid());
+//            System.exit(1);
+//			return true;
+		}
 
 		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
 	public void onBackPressed() {
-		this.setResult(RESULT_OK);
-		this.finish();
-		super.onBackPressed();
+//		this.setResult(RESULT_OK);
+//		this.finish();
+//		super.onBackPressed();
+		
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Exit RockToDo?");
+        alertDialogBuilder
+//                .setMessage("Click yes to exit!")
+                .setCancelable(false)
+                .setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                moveTaskToBack(true);
+                                android.os.Process.killProcess(android.os.Process.myPid());
+                                System.exit(1);
+                            }
+                        })
+
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
 	}
 
 	@Override
@@ -200,7 +232,7 @@ public class TabsActivity extends Activity implements ActionBar.TabListener, OnD
 
 	@Override
 	public void onStop() {
-//		doStopListening();
+		// doStopListening();
 		super.onStop();
 	}
 
@@ -208,16 +240,13 @@ public class TabsActivity extends Activity implements ActionBar.TabListener, OnD
 	public void onResume() {
 		super.onResume();
 		// sync();
-//		setAlarmTime(this);
+		// setAlarmTime(this);
 	}
-
-
-	
 
 	@Override
 	public void onDataPass(ToDoItem toDoItem) {
 		this.alarmedItem = toDoItem;
-//		setAlarmTime(this);
+		// setAlarmTime(this);
 	}
-	
+
 }

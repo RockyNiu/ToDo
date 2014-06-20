@@ -4,4 +4,8 @@
     <color name="title_text">#ffffffff</color>
     <color name="title_separator">#40ffffff</color>
     <color name="empty_list">#aaaaaaaa</color>
+    
+    <color name="priority_low">#00FF7F</color>
+    <color name="priority_median">#FFFF00</color>
+    <color name="priority_high">#DC143C</color>
 </resources>

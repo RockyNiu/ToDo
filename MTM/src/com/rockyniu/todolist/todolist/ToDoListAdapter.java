@@ -18,9 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rockyniu.todolist.R;
-import com.rockyniu.todolist.R.drawable;
-import com.rockyniu.todolist.R.id;
-import com.rockyniu.todolist.R.layout;
 import com.rockyniu.todolist.database.model.ToDoItem;
 
 public class ToDoListAdapter extends ArrayAdapter<ToDoItem> {
@@ -54,11 +51,8 @@ public class ToDoListAdapter extends ArrayAdapter<ToDoItem> {
 			view = inflater.inflate(R.layout.row_layout, null);
 		}
 
-		ImageView imagePriority = (ImageView) view
-				.findViewById(R.id.priority_icon);
+		ImageView imagePriorityBar = (ImageView) view.findViewById(R.id.priority_bar);
 		TextView title = (TextView) view.findViewById(R.id.todo_title);
-		ImageView imageWarning = (ImageView) view
-				.findViewById(R.id.warning_icon);
 		TextView notesView = (TextView) view.findViewById(R.id.todo_notes);
 
 		ToDoItem currentItem = list.get(position);
@@ -127,26 +121,23 @@ public class ToDoListAdapter extends ArrayAdapter<ToDoItem> {
 
 		// set priority icon
 		if (currentItem.getPriority() == 0) {
-			imagePriority.setImageResource(R.drawable.low);
+			imagePriorityBar.setBackgroundColor(Color.GREEN);
 		} else if (currentItem.getPriority() == 1) {
-			imagePriority.setImageResource(R.drawable.median);
+			imagePriorityBar.setBackgroundColor(Color.YELLOW);
 		} else {
-			imagePriority.setImageResource(R.drawable.high);
+			imagePriorityBar.setBackgroundColor(Color.RED);
 		}
 
 		// check if item past due.
 		if (currentItem.isPastDue()) {
 			title.setTextColor(Color.RED);
 			notesView.setTextColor(Color.RED);
-			imageWarning.setVisibility(View.VISIBLE);
 		} else if (currentItem.isCompleted()) {
 			title.setTextColor(Color.GREEN);
 			notesView.setTextColor(Color.GREEN);
-			imageWarning.setVisibility(View.GONE);
 		} else {
 			title.setTextColor(colorTextPrimary);
 			notesView.setTextColor(colorTextSecondary);
-			imageWarning.setVisibility(View.GONE);
 		}
 
 		String itemName = currentItem.getTitle();

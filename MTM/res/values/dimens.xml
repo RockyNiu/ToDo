@@ -23,4 +23,6 @@
     <dimen name="button_with">100sp</dimen>
 
     <dimen name="inset_size">2dp</dimen>
+    
+    <dimen name="priority_bar_width">10dp</dimen>
 </resources>

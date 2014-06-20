@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <string name="app_name">ToDo</string>
+    <string name="app_name">RockToDo</string>
     <string name="title_activity_main">Choose account</string>
     <string name="add_user">Add account</string>
     <string name="title_activity_add_user">Add User</string>

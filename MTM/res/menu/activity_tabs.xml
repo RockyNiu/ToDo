@@ -2,5 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.rockyniu.togo.TabsActivity" >
 
+    <!--
+         <item
+        android:id="@+id/menu_exit"
+        android:title="@string/exit">
+    </item>
+    -->
+
 
 </menu>

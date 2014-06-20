@@ -12,14 +12,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,6 +49,7 @@ import com.rockyniu.todolist.R.id;
 import com.rockyniu.todolist.R.layout;
 import com.rockyniu.todolist.R.menu;
 import com.rockyniu.todolist.R.string;
+import com.rockyniu.todolist.alarm.AlarmReceiver;
 import com.rockyniu.todolist.database.ToDoItemDataSource;
 import com.rockyniu.todolist.database.ToDoItemDataSource.SortType;
 import com.rockyniu.todolist.database.ToDoItemDataSource.ToDoFlag;
@@ -100,7 +99,7 @@ public class ToDoFragment extends Fragment {
 	private CheckBox checkBox;
 
 	// for check pastDue
-	AlarmReceiver pastDueAlarmReceiver;
+	PastDueAlarmReceiver pastDueAlarmReceiver;
 
 	/**
 	 * Pass the data to {@link com.rockyniu.todolist.TabsActivity}
@@ -163,7 +162,7 @@ public class ToDoFragment extends Fragment {
 
 		// set due time alarm Time
 		setAlarmTime(this.getActivity());
-		
+
 		checkBox = (CheckBox) rootView.findViewById(R.id.checkBoxHide);
 		checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -175,7 +174,8 @@ public class ToDoFragment extends Fragment {
 				} else {
 					status = ToDoStatus.ALL;
 				}
-//				localToDoItems = getNewListFromLocal(ToDoFlag.UNDELETED, status);
+				// localToDoItems = getNewListFromLocal(ToDoFlag.UNDELETED,
+				// status);
 				refreshView();
 			}
 		});
@@ -200,7 +200,8 @@ public class ToDoFragment extends Fragment {
 				}
 				currentItem.setModifiedTime(currentTime);
 				toDoItemDataSource.updateItem(currentItem);
-//				localToDoItems.set(position, currentItem); // update localToDoItems
+				// localToDoItems.set(position, currentItem); // update
+				// localToDoItems
 				// sync();
 				refreshView();
 			}
@@ -245,7 +246,8 @@ public class ToDoFragment extends Fragment {
 									.getTimeInMillis());
 							toDoItemDataSource
 									.labelItemDeletedWithModifiedTime(currentItem);
-//							localToDoItems.remove(position); // remove item from localToDoItems
+							// localToDoItems.remove(position); // remove item
+							// from localToDoItems
 						}
 						Utils.showToastInternal(
 								ToDoFragment.this.getActivity(),
@@ -265,7 +267,6 @@ public class ToDoFragment extends Fragment {
 		return rootView;
 	}
 
-
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -274,9 +275,9 @@ public class ToDoFragment extends Fragment {
 			// sync();
 			refreshView();
 		}
-//		refreshView();
+		// refreshView();
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.activity_to_do_list, menu);
@@ -323,7 +324,7 @@ public class ToDoFragment extends Fragment {
 			return true;
 		case R.id.menu_sync:
 			sync();
-//			refreshView();
+			// refreshView();
 			return true;
 		case android.R.id.home:
 
@@ -342,7 +343,7 @@ public class ToDoFragment extends Fragment {
 
 	@Override
 	public void onResume() {
-//		refreshView();
+		// refreshView();
 		super.onResume();
 		doListening();
 		setAlarmTime(getActivity());
@@ -350,9 +351,9 @@ public class ToDoFragment extends Fragment {
 	}
 
 	@Override
-	public void onStop() {
+	public void onPause() {
 		doStopListening();
-		super.onStop();
+		super.onPause();
 	}
 
 	// add or edit Item
@@ -436,7 +437,7 @@ public class ToDoFragment extends Fragment {
 
 	// set alarm for item
 	private void setAlarmTime(Context context) {
-//		refreshView();
+		// refreshView();
 		ToDoItem alarmedItem = getFirstBeingPastDueItem();
 		long timeInMillis;
 		String pastDueItemTitle;
@@ -458,7 +459,7 @@ public class ToDoFragment extends Fragment {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent();
-		intent.setAction("_pastduealarm");
+		intent.setAction("com.rockyniu.todolist.pastduealarm");
 		Bundle bundle = new Bundle();
 		bundle.putString("_pastDueItemTitle", pastDueItemTitle);
 		bundle.putString("_pastDueItemNotes", pastDueItemNotes);
@@ -470,57 +471,17 @@ public class ToDoFragment extends Fragment {
 		am.set(AlarmManager.RTC_WAKEUP, timeInMillis, sender);
 	}
 
-	// past due alarm receiver
-	private class AlarmReceiver extends BroadcastReceiver {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Log.d(TAG, intent.getAction());
-			if ("_pastduealarm".equals(intent.getAction())) {
-				Bundle bundle = intent.getExtras();
-
-				String pastDueItemTitle = bundle.getString("_pastDueItemTitle");
-				String pastDueItemNotes = bundle.getString("_pastDueItemNotes");
-				String message = pastDueItemTitle + "\n\n" + pastDueItemNotes;
-
-				final Dialog dialog = new Dialog(context);
-				dialog.setContentView(R.layout.alarm_dialog);
-				dialog.setTitle("Task Past Due!");
-
-				// set the custom dialog components - text, image and button
-				TextView text = (TextView) dialog
-						.findViewById(R.id.alarm_dialog_text);
-				text.setText(message);
-				ImageView image = (ImageView) dialog
-						.findViewById(R.id.alarm_dialog_icon);
-				image.setImageResource(R.drawable.warning);
-
-				Button dialogButton = (Button) dialog
-						.findViewById(R.id.alarm_dialog_button);
-				// if button is clicked, close the custom dialog
-
-				dialogButton.setOnClickListener(new View.OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						dialog.dismiss();
-						refreshView();
-					}
-				});
-				dialog.show();
-			}
-		}
-	}
-
 	/**
 	 * start alarmlistenning
 	 */
-	void doListening(){
+	void doListening() {
 		IntentFilter filter = new IntentFilter();
-		filter.addAction("_pastduealarm");
-		pastDueAlarmReceiver = new AlarmReceiver();
+		filter.addAction("com.rockyniu.todolist.pastduealarm");
+		pastDueAlarmReceiver = new PastDueAlarmReceiver();
 		this.getActivity().registerReceiver(pastDueAlarmReceiver, filter);
+
 	}
-	
+
 	/**
 	 * stop alarmlistening
 	 */
@@ -529,6 +490,46 @@ public class ToDoFragment extends Fragment {
 			getActivity().unregisterReceiver(pastDueAlarmReceiver);
 			pastDueAlarmReceiver = null;
 		}
+	}
+
+	private class PastDueAlarmReceiver extends AlarmReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Bundle bundle = intent.getExtras();
+
+			String pastDueItemTitle = bundle.getString("_pastDueItemTitle");
+			String pastDueItemNotes = bundle.getString("_pastDueItemNotes");
+			String message = pastDueItemTitle + pastDueItemNotes;
+
+			final Dialog dialog = new Dialog(context);
+			dialog.setContentView(R.layout.alarm_dialog);
+			dialog.setTitle("Task Past Due!");
+
+			// set the custom dialog components - text, image and button
+			TextView text = (TextView) dialog
+					.findViewById(R.id.alarm_dialog_text);
+			text.setText(message);
+			ImageView image = (ImageView) dialog
+					.findViewById(R.id.alarm_dialog_icon);
+			image.setImageResource(R.drawable.warning);
+
+			Button dialogButton = (Button) dialog
+					.findViewById(R.id.alarm_dialog_button);
+			// if button is clicked, close the custom dialog
+
+			dialogButton.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+					refreshView();
+				}
+			});
+			dialog.show();
+
+		}
+
 	}
 
 	/**

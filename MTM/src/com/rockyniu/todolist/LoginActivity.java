@@ -43,10 +43,6 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.rockyniu.todolist.R;
-import com.rockyniu.todolist.R.id;
-import com.rockyniu.todolist.R.layout;
-import com.rockyniu.todolist.R.menu;
 import com.rockyniu.todolist.database.UserDataSource;
 import com.rockyniu.todolist.database.model.User;
 import com.rockyniu.todolist.gcm.GcmBroadcastReceiver;
@@ -81,8 +77,14 @@ public class LoginActivity extends Activity {
 	Context context;
 	String regid;
 
+	// for gcm service
 	Intent gcmServiceIntent;
 	GcmBroadcastReceiver gcmBroadcastReceiver;
+
+	// user information
+	SharedPreferences settings;
+	String userId;
+	String userName;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -122,6 +124,10 @@ public class LoginActivity extends Activity {
 
 		checkGooglePlaySerViceAvailable();
 
+		// get the user settings
+		settings = getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+		userId = settings.getString("UserId", null);
+		userName = settings.getString("UserName", null);
 	}
 
 	@Override
@@ -137,7 +143,11 @@ public class LoginActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		refreshView();
+		if (userName != null) {
+			goToToDoList(userName);
+		} else {
+			refreshView();
+		}
 		// checkGooglePlaySerViceAvailable(LoginActivity.this);
 	}
 
@@ -240,9 +250,19 @@ public class LoginActivity extends Activity {
 	}
 
 	private void goToToDoList(String userName) {
+
 		User user = userDataSource.selectUser(userName);
 		String userId = user.getId();
-		String token = user.getPassword();
+		// String token = user.getPassword();
+
+		// save user settings
+		settings = getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString("UserId", userId);
+		editor.putString("UserName", userName);
+		editor.commit();
+
+		// Sent the intent
 		Intent intent = new Intent(LoginActivity.this, TabsActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putString("_userid", userId);
@@ -419,7 +439,7 @@ public class LoginActivity extends Activity {
 						// mDisplay.append(msg + "\n");
 						if (msg.equals("YES")) {
 							storeRegistrationServerId(context, userName, msg);
-							msg = "Device registered to ToDo Server";
+							msg = "Device registered to RockToDo Server";
 						} else {
 							storeRegistrationServerId(context, userName, "NO");
 						}
