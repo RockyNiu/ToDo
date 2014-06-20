@@ -23,6 +23,7 @@ ToDo is a Task Manager application, including [Mobile version](/MTM/README.md), 
 - Send push notification from server;
 
 ### Need to do
+* Setting Activity
 * Update UI design
 * Combine ToGo with ToDo (show location of ToDo task)
 * Social integration(FB/Twitter)
