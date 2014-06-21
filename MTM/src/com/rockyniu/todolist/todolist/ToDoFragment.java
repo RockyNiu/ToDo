@@ -65,6 +65,7 @@ import com.rockyniu.todolist.util.Utils;
  */
 public class ToDoFragment extends Fragment {
 	static final String TAG = "TodoFragment";
+	
 	static final int REQUEST_EDIT_ITEM = 101;
 	static final int REQUEST_TOKEN = 1000;
 	static final int REQUEST_GOOGLE_TASKS_SERVICES = 1001;
@@ -270,7 +271,7 @@ public class ToDoFragment extends Fragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == REQUEST_EDIT_ITEM
+		if (requestCode == ToDoFragment.REQUEST_EDIT_ITEM
 				&& resultCode == Activity.RESULT_OK) {
 			// sync();
 			refreshView();
@@ -363,7 +364,7 @@ public class ToDoFragment extends Fragment {
 		bundle.putString("_userid", userId);
 		bundle.putString("_itemid", itemId);
 		myIntent.putExtras(bundle);
-		startActivityForResult(myIntent, REQUEST_EDIT_ITEM);
+		startActivityForResult(myIntent, ToDoFragment.REQUEST_EDIT_ITEM);
 	}
 
 	// label items completed as deleted

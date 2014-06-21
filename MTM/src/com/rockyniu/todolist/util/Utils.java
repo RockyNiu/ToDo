@@ -8,7 +8,6 @@ import java.util.TimeZone;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.util.Log;
@@ -20,11 +19,10 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.tasks.model.Task;
 import com.rockyniu.todolist.R;
-import com.rockyniu.todolist.R.string;
 import com.rockyniu.todolist.database.model.ToDoItem;
 
 public class Utils {
-
+	
 	public static List<ToDoItem> convertTasksToToDoItems(String userId,
 			List<Task> tasks) {
 		if (tasks == null) {

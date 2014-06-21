@@ -1,47 +1,40 @@
 package com.rockyniu.todolist;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 
-import com.rockyniu.todolist.database.comparator.DueComparator;
-import com.rockyniu.todolist.database.model.ToDoItem;
-import com.rockyniu.todolist.todolist.ToDoFragment;
-import com.rockyniu.todolist.todolist.ToGoFragment;
-import com.rockyniu.todolist.todolist.ToDoFragment.OnDataPass;
-
+import android.accounts.AccountManager;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+
+import com.rockyniu.todolist.database.UserDataSource;
+import com.rockyniu.todolist.database.model.ToDoItem;
+import com.rockyniu.todolist.database.model.User;
+import com.rockyniu.todolist.register.Register;
+import com.rockyniu.todolist.todolist.ToDoFragment;
+import com.rockyniu.todolist.todolist.ToDoFragment.OnDataPass;
+import com.rockyniu.todolist.todolist.ToGoFragment;
+import com.rockyniu.todolist.user.UserInformation;
+import com.rockyniu.todolist.util.Constance;
 
 public class TabsActivity extends Activity implements ActionBar.TabListener,
 		OnDataPass {
 
 	final String TAG = "TabsActivity";
+	Register register;
+	UserInformation userInformation;
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a {@link FragmentPagerAdapter}
@@ -52,7 +45,7 @@ public class TabsActivity extends Activity implements ActionBar.TabListener,
 	SectionsPagerAdapter mSectionsPagerAdapter;
 	String userName;
 	String userId;
-	ToDoItem alarmedItem;
+	// ToDoItem alarmedItem;
 
 	/**
 	 * The {@link ViewPager} that will host the section contents.
@@ -66,13 +59,18 @@ public class TabsActivity extends Activity implements ActionBar.TabListener,
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tabs);
-
+//		context = getApplicationContext();
+		register = new Register(TabsActivity.this);
+		userInformation = new UserInformation(TabsActivity.this);
+		
 		// user information
-		Intent intent = getIntent();
-		Bundle bundle = intent.getExtras();
-		userId = bundle.getString("_userid");
-		userName = bundle.getString("_username");
-
+//		Intent intent = getIntent();
+//		Bundle bundle = intent.getExtras();
+//		userId = bundle.getString("_userid");
+//		userName = bundle.getString("_username");
+		userId = userInformation.getUserId();
+		userName = userInformation.getUserName();
+		
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -109,6 +107,23 @@ public class TabsActivity extends Activity implements ActionBar.TabListener,
 	}
 
 	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == Constance.REQUEST_USER_PICKER
+				&& resultCode == Activity.RESULT_OK) {
+			userName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+			User user = (new UserDataSource(this)).selectUser(userName);
+			userId = user.getId();
+			userInformation.saveUserInfo(userId, userName);
+			register.sendRegistrationIdToBackend(userName);
+			finish();
+			startActivity(getIntent());
+		}
+		
+//		 refreshView();
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -122,10 +137,9 @@ public class TabsActivity extends Activity implements ActionBar.TabListener,
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		switch (item.getItemId()) {
-//		case R.id.menu_exit:
-//			android.os.Process.killProcess(android.os.Process.myPid());
-//            System.exit(1);
-//			return true;
+		case R.id.menu_setting:
+			userInformation.onUserPicker();
+			return true;
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -133,33 +147,35 @@ public class TabsActivity extends Activity implements ActionBar.TabListener,
 
 	@Override
 	public void onBackPressed() {
-//		this.setResult(RESULT_OK);
-//		this.finish();
-//		super.onBackPressed();
-		
+		// this.setResult(RESULT_OK);
+		// this.finish();
+		// super.onBackPressed();
+
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Exit RockToDo?");
-        alertDialogBuilder
-//                .setMessage("Click yes to exit!")
-                .setCancelable(false)
-                .setPositiveButton("Yes",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                moveTaskToBack(true);
-                                android.os.Process.killProcess(android.os.Process.myPid());
-                                System.exit(1);
-                            }
-                        })
+		alertDialogBuilder.setTitle("Exit "
+				+ getResources().getString(R.string.app_name) + "?");
+		alertDialogBuilder
+				// .setMessage("Click yes to exit!")
+				.setCancelable(false)
+				.setPositiveButton("Yes",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								moveTaskToBack(true);
+								android.os.Process
+										.killProcess(android.os.Process.myPid());
+								System.exit(1);
+							}
+						})
 
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+				.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
 
-                        dialog.cancel();
-                    }
-                });
+						dialog.cancel();
+					}
+				});
 
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+		AlertDialog alertDialog = alertDialogBuilder.create();
+		alertDialog.show();
 	}
 
 	@Override
@@ -245,7 +261,7 @@ public class TabsActivity extends Activity implements ActionBar.TabListener,
 
 	@Override
 	public void onDataPass(ToDoItem toDoItem) {
-		this.alarmedItem = toDoItem;
+		// this.alarmedItem = toDoItem;
 		// setAlarmTime(this);
 	}
 
