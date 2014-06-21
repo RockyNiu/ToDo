@@ -4,7 +4,7 @@ ToDo
 ToDo is a Task Manager application, including [Mobile version](/MTM/README.md), [Web version](/WTM/README.md), and [server](https://github.com/RockyNiu/todo-server)
 
 ### Version
-1.09
+1.14
 
 ### Functions
 - Google+ login
@@ -24,6 +24,7 @@ ToDo is a Task Manager application, including [Mobile version](/MTM/README.md), 
 
 ### Need to do
 * Setting Activity
+* Refactor
 * Update UI design
 * Combine ToGo with ToDo (show location of ToDo task)
 * Social integration(FB/Twitter)
