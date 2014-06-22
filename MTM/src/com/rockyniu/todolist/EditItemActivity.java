@@ -27,7 +27,7 @@ import com.rockyniu.todolist.database.model.ToDoItem;
 import com.rockyniu.todolist.util.Utils;
 
 //@TargetApi(9)
-public class EditItemActivity extends Activity {
+public class EditItemActivity extends BaseActivity {
 
 	private final static int DUE_IS_EARLIER = 404;
 	private final static int UPDATE_DONE = 0;
@@ -317,57 +317,5 @@ public class EditItemActivity extends Activity {
 		return UPDATE_DONE;
 
 	}
-	
-	/**
-	 * listen the touch event
-	 */
-	@Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
 
-            // get current focus, default is itemNameEditText
-//            View itemNameEditText = getCurrentFocus();
-
-            if (isShouldHideInput(itemNameEditText, ev)) {
-                hideSoftInput(itemNameEditText.getWindowToken());
-            }
-        }
-        return super.dispatchTouchEvent(ev);
-    }
-	
-	/**
-	 * Know whether click in the area of itemNameEditText
-	 * @param view
-	 * @param event
-	 * @return true, if click itemNameEditText, return flase otherwise
-	 */
-	private boolean isShouldHideInput(View view, MotionEvent event) {
-        if (view != null && (view instanceof EditText)) {
-            int[] l = { 0, 0 };
-            view.getLocationInWindow(l);
-            int left = l[0], top = l[1], bottom = top + view.getHeight(), right = left
-                    + view.getWidth();
-            if (event.getX() > left && event.getX() < right
-                    && event.getY() > top && event.getY() < bottom) {
-                // click itemNameEditText
-                return false;
-            } else {
-                return true;
-            }
-        }
-        // not itemNameEditText
-        return false;
-    }
-	
-	/**
-	 * hide soft input keyboard
-	 * @param token
-	 */
-	private void hideSoftInput(IBinder token) {
-        if (token != null) {
-            InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            im.hideSoftInputFromWindow(token,
-                    InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
 }

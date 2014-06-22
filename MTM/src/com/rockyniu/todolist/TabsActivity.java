@@ -29,7 +29,7 @@ import com.rockyniu.todolist.todolist.ToGoFragment;
 import com.rockyniu.todolist.user.UserInformation;
 import com.rockyniu.todolist.util.Constance;
 
-public class TabsActivity extends Activity implements ActionBar.TabListener,
+public class TabsActivity extends BaseActivity implements ActionBar.TabListener,
 		OnDataPass {
 
 	final String TAG = "TabsActivity";

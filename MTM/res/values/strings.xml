@@ -55,4 +55,6 @@
 	<string name="send_smsMessage">Send SMS Message</string>
 	<string name="send_email">Send Email</string>
 	<string name="setting">Setting</string>
+	<string name="search">Search</string>
+	<string name="map_search_default">Address</string>
 </resources>
