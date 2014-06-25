@@ -24,7 +24,8 @@ import android.widget.Toast;
 
 import com.rockyniu.todolist.database.ToDoItemDataSource;
 import com.rockyniu.todolist.database.model.ToDoItem;
-import com.rockyniu.todolist.util.Utils;
+import com.rockyniu.todolist.util.DialogHelper;
+import com.rockyniu.todolist.util.ToastHelper;
 
 //@TargetApi(9)
 public class EditItemActivity extends BaseActivity {
@@ -85,7 +86,7 @@ public class EditItemActivity extends BaseActivity {
 			this.setTitle("Edit Item");
 			toDoItem = itemdatasource.getItemByItemId(itemId);
 			if (toDoItem == null) {
-				Utils.showErrorToast(this, "Task does not exits.");
+				ToastHelper.showErrorToast(this, "Task does not exits.");
 				// Toast toast = Toast.makeText(this, "Task does not exist.",
 				// Toast.LENGTH_LONG);
 				// toast.show();
@@ -149,7 +150,7 @@ public class EditItemActivity extends BaseActivity {
 				smsIntent.setType("vnd.android-dir/mms-sms");
 				startActivity(smsIntent);
 			} else {
-				Utils.showToastInternal(this,
+				ToastHelper.showToastInternal(this,
 						"Error happened when saving task.");
 			}
 			return true;
@@ -164,7 +165,7 @@ public class EditItemActivity extends BaseActivity {
 				emailIntent.setType("text/plain");
 				startActivity(Intent.createChooser(emailIntent, "Send mail..."));
 			} else {
-				Utils.showToastInternal(this,
+				ToastHelper.showToastInternal(this,
 						"Error happened when saving task.");
 			}
 			return true;
@@ -183,7 +184,7 @@ public class EditItemActivity extends BaseActivity {
 	}
 
 	public void onCancelClick(View view) {
-		Utils.showToastInternal(this, "Cancel Editing.");
+		ToastHelper.showToastInternal(this, "Cancel Editing.");
 		this.setResult(RESULT_CANCELED);
 		this.finish();
 	}
@@ -201,25 +202,25 @@ public class EditItemActivity extends BaseActivity {
 		String name = itemNameEditText.getText().toString().trim()
 				.replaceAll("\\s+", " ");
 		if (name.isEmpty()) {
-			Utils.showItemNameIsEmptyDialog(EditItemActivity.this);
+			DialogHelper.showItemNameIsEmptyDialog(EditItemActivity.this);
 			return false;
 		}
 		if (itemId.equals(getString(R.string.new_item))) {
 			// Add item
 			int updateResult = addItem(name);
 			if (updateResult == UPDATE_DONE) {
-				Utils.showToastInternal(this, "Task created.");
+				ToastHelper.showToastInternal(this, "Task created.");
 			} else if (updateResult == DUE_IS_EARLIER) {
-				Utils.showDueTimeIsEarlierDialog(EditItemActivity.this);
+				DialogHelper.showDueTimeIsEarlierDialog(EditItemActivity.this);
 				return false;
 			}
 		} else {
 			// Update item
 			int updateResult = updateItem(name);
 			if (updateResult == UPDATE_DONE) {
-				Utils.showToastInternal(this, "Task updated.");
+				ToastHelper.showToastInternal(this, "Task updated.");
 			} else if (updateResult == DUE_IS_EARLIER) {
-				Utils.showDueTimeIsEarlierDialog(EditItemActivity.this);
+				DialogHelper.showDueTimeIsEarlierDialog(EditItemActivity.this);
 				return false;
 			}
 		}
@@ -250,7 +251,7 @@ public class EditItemActivity extends BaseActivity {
 		newItem.setUserId(userId);
 		if (name.length() > MAX_LENGTH) {
 			name = name.substring(0, MAX_LENGTH);
-			Utils.showToastInternal(this,
+			ToastHelper.showToastInternal(this,
 					"Name is truncated to 140 characters.");
 		}
 		newItem.setTitle(name);
@@ -294,7 +295,7 @@ public class EditItemActivity extends BaseActivity {
 		ToDoItem item = new ToDoItem();
 		if (name.length() > MAX_LENGTH) {
 			name = name.substring(0, MAX_LENGTH);
-			Utils.showToastInternal(this,
+			ToastHelper.showToastInternal(this,
 					"Name is truncated to 140 characters.");
 		}
 		item.setTitle(name);

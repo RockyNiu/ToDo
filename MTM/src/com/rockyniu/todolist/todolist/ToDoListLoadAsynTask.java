@@ -31,10 +31,10 @@ import com.rockyniu.todolist.database.ToDoItemDataSource;
 import com.rockyniu.todolist.database.UserDataSource;
 import com.rockyniu.todolist.database.ToDoItemDataSource.ToDoFlag;
 import com.rockyniu.todolist.database.ToDoItemDataSource.ToDoStatus;
+import com.rockyniu.todolist.database.model.Converter;
 import com.rockyniu.todolist.database.model.SyncResult;
 import com.rockyniu.todolist.database.model.ToDoItem;
 import com.rockyniu.todolist.database.model.User;
-import com.rockyniu.todolist.util.Utils;
 
 class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 
@@ -282,7 +282,7 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 	// synchronize with the local database
 	protected Object[] syncLocalDatabase(List<Task> tasks) {
 
-		List<ToDoItem> remoteItems = Utils.convertTasksToToDoItems(userId,
+		List<ToDoItem> remoteItems = Converter.convertTasksToToDoItems(userId,
 				tasks);
 		List<ToDoItem> localItems = toDoItemDataSource.getToDoListBothStatus(
 				userId, ToDoFlag.All);
@@ -297,7 +297,7 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 
 	// synchronize with the remote database
 	protected List<Task> syncRemoteDatabase(Object[] sync) throws IOException {
-		List<Task> tasks = Utils
+		List<Task> tasks = Converter
 				.convertToDoItemsToTasks((List<ToDoItem>) sync[0]);
 		List<SyncResult> syncResults = (List<SyncResult>) sync[1];
 		try {
@@ -354,7 +354,7 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 												// database after updated in
 												// local
 												// database
-												ToDoItem item = Utils
+												ToDoItem item = Converter
 														.convertTaskToToDoItem(
 																userId, task);
 												item.setModifiedTime(deletedTime);
@@ -383,7 +383,7 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 								tasks.set(i, newTask);
 								// task.setUpdated(newTask.getUpdated());
 								// update the item id in local database
-								ToDoItem item = Utils.convertTaskToToDoItem(
+								ToDoItem item = Converter.convertTaskToToDoItem(
 										userId, task);
 								toDoItemDataSource.updateItem(item);
 								toDoItemDataSource.changeItemId(taskId,

@@ -23,7 +23,7 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.rockyniu.todolist.LoginActivity;
 import com.rockyniu.todolist.util.Constance;
-import com.rockyniu.todolist.util.Utils;
+import com.rockyniu.todolist.util.ToastHelper;
 
 public class Register {
 
@@ -86,7 +86,7 @@ public class Register {
 			@Override
 			protected void onPostExecute(String msg) {
 				// mDisplay.append(msg + "\n");
-				Utils.showToastInternal((Activity)context, msg);
+				ToastHelper.showToastInternal((Activity)context, msg);
 //				sendRegistrationIdToBackend();
 			}
 
@@ -193,7 +193,7 @@ public class Register {
 						} else {
 							storeRegistrationServerId(context, userName, "NO");
 						}
-						Utils.showToastInternal((Activity)context, msg);
+						ToastHelper.showToastInternal((Activity)context, msg);
 					}
 
 				}.execute(userName);

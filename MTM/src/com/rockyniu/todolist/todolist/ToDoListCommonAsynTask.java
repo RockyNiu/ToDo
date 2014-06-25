@@ -10,7 +10,7 @@ import android.util.Log;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.tasks.Tasks;
 import com.rockyniu.todolist.database.ToDoItemDataSource;
-import com.rockyniu.todolist.util.Utils;
+import com.rockyniu.todolist.util.ToastHelper;
 
 abstract class ToDoListCommonAsynTask extends AsyncTask<Integer, Void, Boolean> {
 	
@@ -60,16 +60,16 @@ abstract class ToDoListCommonAsynTask extends AsyncTask<Integer, Void, Boolean> 
 		try {
 			return doInBackground(requestCodes[0]);
 		} catch (OperationCanceledException e) {
-			Utils.logAndShow(toDoFragment.getActivity(), ToDoFragment.TAG, e);
+			ToastHelper.logAndShow(toDoFragment.getActivity(), ToDoFragment.TAG, e);
 			Log.e("OperationCanceledException", e.toString());
 		} catch (AuthenticatorException e) {
-			Utils.logAndShow(toDoFragment.getActivity(), ToDoFragment.TAG, e);
+			ToastHelper.logAndShow(toDoFragment.getActivity(), ToDoFragment.TAG, e);
 			Log.e("AuthenticatorException", e.toString());
 		} catch (GoogleJsonResponseException e){
-			Utils.logAndShow(toDoFragment.getActivity(), ToDoFragment.TAG, e);
+			ToastHelper.logAndShow(toDoFragment.getActivity(), ToDoFragment.TAG, e);
 			Log.e("GoogleJsonResponseException", e.toString());
 		} catch (IOException e) {
-			Utils.logAndShow(toDoFragment.getActivity(), ToDoFragment.TAG, e);
+			ToastHelper.logAndShow(toDoFragment.getActivity(), ToDoFragment.TAG, e);
 			Log.e("IOException", e.toString());
 		} catch (Exception e){
 			Log.e("Exception", e.toString());

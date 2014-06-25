@@ -1,27 +1,14 @@
-package com.rockyniu.todolist.util;
+package com.rockyniu.todolist.database.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
-import android.accounts.OperationCanceledException;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.res.Resources;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.api.client.googleapis.json.GoogleJsonError;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.tasks.model.Task;
-import com.rockyniu.todolist.R;
-import com.rockyniu.todolist.database.model.ToDoItem;
 
-public class Utils {
+public class Converter {
 	
 	public static List<ToDoItem> convertTasksToToDoItems(String userId,
 			List<Task> tasks) {
@@ -181,113 +168,5 @@ public class Utils {
 		return task;
 	}
 
-	/**
-	 * Logs the given throwable and shows an error alert dialog with its
-	 * message.
-	 * 
-	 * @param activity
-	 *            activity
-	 * @param tag
-	 *            log tag to use
-	 * @param t
-	 *            throwable to log and show
-	 */
-	public static void logAndShow(Activity activity, String tag, Throwable t) {
-		Log.e(tag, "Error", t);
-		String message = t.getMessage();
-		if (t instanceof GoogleJsonResponseException) {
-			GoogleJsonError details = ((GoogleJsonResponseException) t)
-					.getDetails();
-			if (details != null) {
-				message = details.getMessage();
-			}
-		} else if (t.getCause() instanceof OperationCanceledException) {
-			message = ((OperationCanceledException) t.getCause()).getMessage();
-		} else if (t.getCause() instanceof GoogleAuthException) {
-			message = ((GoogleAuthException) t.getCause()).getMessage();
-		} else if (t instanceof IOException) {
-			if (t.getMessage() == null) {
-				message = "IOException";
-			}
-		}
-		showErrorToast(activity, message);
-	}
-
-	/**
-	 * Shows an toast message with the given message.
-	 * 
-	 * @param activity
-	 *            activity
-	 * @param message
-	 *            message to show or {@code null} for none
-	 */
-	public static void showErrorToast(Activity activity, String message) {
-		String errorMessage = getErrorMessage(activity, message);
-		showToastInternal(activity, errorMessage);
-	}
-
-	private static String getErrorMessage(Activity activity, String message) {
-		Resources resources = activity.getResources();
-		if (message == null) {
-			return resources.getString(R.string.error);
-		}
-		return resources.getString(R.string.error_format, message);
-	}
-
-	public static void showToastInternal(final Activity activity,
-			final String toastMessage) {
-		activity.runOnUiThread(new Runnable() {
-			public void run() {
-				Toast.makeText(activity, toastMessage, Toast.LENGTH_LONG)
-						.show();
-			}
-		});
-	}
-
-	/**
-	 * Shows an alert dialog with the given message. click is need to dismiss
-	 * the message.
-	 * 
-	 * @param activity
-	 *            activity
-	 * @param message
-	 *            message to show or {@code null} for none
-	 * @param title
-	 *            title of dialog
-	 */
-	private static void showNeedClickDialog(Activity activity, String message,
-			String title) {
-		AlertDialog alertDialog;
-		alertDialog = new AlertDialog.Builder(activity).create();
-		alertDialog.setTitle(title);
-		alertDialog.setMessage(message);
-		alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK",
-				new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				});
-		alertDialog.show();
-		return;
-	}
-
-	// public static void showPastDueDialog(Activity activity, String message){
-	// showNeedClickDialog(activity, message, "Task Past Due!");
-	// }
-
-	private static void showTaskCreationErrorDialog(Activity activity,
-			String message) {
-		showNeedClickDialog(activity, message, "Task Creation Error");
-	}
-
-	public static void showItemNameIsEmptyDialog(Activity activity) {
-		showTaskCreationErrorDialog(activity, "Task name cannot be empty.");
-	}
-
-	public static void showDueTimeIsEarlierDialog(Activity activity) {
-		showTaskCreationErrorDialog(activity,
-				"Due time cannot be earlier than now.");
-	}
+	
 }

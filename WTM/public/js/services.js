@@ -3,7 +3,7 @@
 /* Services */
 
 var BASE_URL  = 'https://www.googleapis.com/tasks';
-var TASK_LIST = 'cs6300ToDoList';
+var TASK_LIST = 'ToDoList';
 
 angular.module('myApp.services', []).
 	service('taskListService', function ($http) {

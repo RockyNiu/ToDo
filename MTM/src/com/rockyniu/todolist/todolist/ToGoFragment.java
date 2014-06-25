@@ -47,7 +47,7 @@ import com.rockyniu.todolist.R;
 import com.rockyniu.todolist.location.MyLocationListener;
 import com.rockyniu.todolist.map.JSONParser;
 import com.rockyniu.todolist.util.LogHelper;
-import com.rockyniu.todolist.util.Utils;
+import com.rockyniu.todolist.util.ToastHelper;
 
 /**
  * To Go Fragment.
@@ -457,7 +457,7 @@ public class ToGoFragment extends Fragment {
 
 		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
-			Utils.showErrorToast(getActivity(), "Fail to parse path");
+			ToastHelper.showErrorToast(getActivity(), "Fail to parse path");
 		}
 	}
 

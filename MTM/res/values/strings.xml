@@ -57,4 +57,5 @@
 	<string name="setting">Setting</string>
 	<string name="search">Search</string>
 	<string name="map_search_default">Address</string>
+	<string name="welcome">Choose Google Account</string>
 </resources>

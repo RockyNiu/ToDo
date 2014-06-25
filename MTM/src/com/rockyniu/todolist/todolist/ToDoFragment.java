@@ -58,7 +58,7 @@ import com.rockyniu.todolist.database.comparator.DueComparator;
 import com.rockyniu.todolist.database.model.ToDoItem;
 import com.rockyniu.todolist.database.UserDataSource;
 import com.rockyniu.todolist.ui.listener.SwipeDismissListViewTouchListener;
-import com.rockyniu.todolist.util.Utils;
+import com.rockyniu.todolist.util.ToastHelper;
 
 /**
  * A todo fragment.
@@ -250,7 +250,7 @@ public class ToDoFragment extends Fragment {
 							// localToDoItems.remove(position); // remove item
 							// from localToDoItems
 						}
-						Utils.showToastInternal(
+						ToastHelper.showToastInternal(
 								ToDoFragment.this.getActivity(),
 								"Task deleted.");
 						// refreshView();
@@ -353,6 +353,7 @@ public class ToDoFragment extends Fragment {
 
 	@Override
 	public void onPause() {
+		sync();
 		doStopListening();
 		super.onPause();
 	}

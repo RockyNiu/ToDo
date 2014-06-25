@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <string name="app_name">ToDo</string>
+    <string name="app_name">牛人记事簿</string>
     <string name="title_activity_main">请选择用户</string>
     <string name="add_user">添加用户</string>
     <string name="title_activity_add_user">添加用户</string>
@@ -57,4 +57,5 @@
 	<string name="setting">设置</string>
 	<string name="search">搜索</string>
 	<string name="map_search_default">地址</string>
+	<string name="welcome">选择谷歌账号</string>
 </resources>

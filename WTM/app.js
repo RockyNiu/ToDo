@@ -13,10 +13,10 @@ var express	= require('express'),
   passport = require('passport');
 
 var app = module.exports = express();
-var api_key = 'AIzaSyD_lg5I32CR3zRB4CC52jQfc8IOD18JF6Q';
+var api_key = 'AIzaSyBZkUlraCA5FB29FY0GSUfZodNbaUDk6a8';
 
 // Connect to our MongoDB instance we're going to use to store user session information 
-mongoose.connect('mongodb://pdenney:Test1@ds039037.mongolab.com:39037/todogatech');
+mongoose.connect('mongodb://rocky:test@ds045089.mongolab.com:45089/todo-web');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 var User = null;
@@ -74,17 +74,17 @@ app.configure(function() {
 // development only
 if (app.get('env') === 'development') {
   app.use(express.errorHandler());
-  app.set('site url', 'http://localhost:8088');
+  app.set('site url', 'http://todo-web.herokuapp.com'); //'http://localhost:8088'
 }
 
 // production only
 if (app.get('env') === 'production') {
-    app.set('site url', 'http://powerful-everglades-4337.herokuapp.com');
+    app.set('site url', 'http://todo-web.herokuapp.com');
 }
 
 passport.use(new GoogleStrategy({
-    clientID: '1095559941785-o929b0piv15052hij02j78ch6fn4dc47.apps.googleusercontent.com',
-    clientSecret: 'QpKdaazcQth2x0KylIAa86vy',
+    clientID: '215231197297-qevqs47k0trj846llhn4cp933l3ru3ph.apps.googleusercontent.com',
+    clientSecret: '4df0KtYvx4LniPZtv6nDmxDk',
     callbackURL: app.get('site url') + '/auth/google/callback',
     scope: 'https://www.googleapis.com/auth/tasks https://www.googleapis.com/auth/userinfo.profile'
   },
