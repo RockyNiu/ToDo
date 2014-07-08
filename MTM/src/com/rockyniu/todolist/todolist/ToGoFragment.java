@@ -87,13 +87,11 @@ public class ToGoFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+		super.onCreateView(inflater, container, savedInstanceState);
+		
 		View rootView = inflater.inflate(R.layout.fragment_tab_togo, container,
 				false);
-
 		setHasOptionsMenu(true);
-
-		// setTabTitle(getResources().getString(R.string.title_activity_to_go_list),
-		// 1);
 
 		// onStartListening();
 		currentLocation = getLastKnowLocation();
@@ -182,11 +180,37 @@ public class ToGoFragment extends Fragment {
 	}
 
 	@Override
+	public void onStart(){
+		super.onStart();
+		onStartListening();
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+	}
+	
+	@Override
+	public void onPause(){
+		super.onPause();
+	}
+	
+	@Override
 	public void onStop() {
 		doStopListening();
 		super.onStop();
 	}
 
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+	}
+	
+	@Override
+	public void onDetach(){
+		super.onDetach();
+	}
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.activity_to_go_list, menu);
@@ -229,12 +253,12 @@ public class ToGoFragment extends Fragment {
 					.getSystemService(Context.LOCATION_SERVICE);
 
 			_networkListener = new MyLocationListener();
-			lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
-					_networkListener);
+			lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000*60*10, 1000,
+					_networkListener); //10min or 1000m
 
 			_gpsListener = new MyLocationListener();
-			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
-					_gpsListener);
+			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000*60*10, 1000,
+					_gpsListener); // 10min or 1000m
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -328,12 +352,6 @@ public class ToGoFragment extends Fragment {
 		}
 	}
 
-	public void onExit() {
-		// Log.d(_logTag, "Monitor Location Exit");
-		// doStopListening();
-		getActivity().finish();
-	}
-
 	void doStopListening() {
 		LocationManager lm = (LocationManager) getActivity().getSystemService(
 				Context.LOCATION_SERVICE);
@@ -384,12 +402,12 @@ public class ToGoFragment extends Fragment {
 			}
 		}
 
-		if (gpsLocation == null) {
-			Log.d(_logTag, "Monitor Location: GPS Location is NULL");
-			return networkLocation;
-		} else {
-			Log.d(_logTag, "Monitor Location: Network Location is NULL");
+		if (networkLocation == null) {
+			Log.d(_logTag, "Monitor Location: get GPS Location");
 			return gpsLocation;
+		} else {
+			Log.d(_logTag, "Monitor Location: get Network Location");
+			return networkLocation;
 		}
 	}
 

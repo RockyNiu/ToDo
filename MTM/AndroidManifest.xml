@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rockyniu.todolist"
-    android:versionCode="17"
-    android:versionName="1.16" >
+    android:versionCode="18"
+    android:versionName="1.17" >
 
     <uses-sdk
         android:minSdkVersion="16"
-        android:targetSdkVersion="19" />
+        android:targetSdkVersion="20" />
 
     <!-- Google Maps Android API uses OpenGL ES version 2 to render the map -->
     <uses-feature
@@ -81,6 +81,7 @@
         </activity>
         <activity
             android:name=".TabsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:hardwareAccelerated="false"
             android:label="@string/title_activity_to_do_list" >
             <meta-data

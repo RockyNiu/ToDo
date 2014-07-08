@@ -123,6 +123,7 @@ public class TabsActivity extends BaseActivity implements ActionBar.TabListener,
 //		 refreshView();
 	}
 
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 

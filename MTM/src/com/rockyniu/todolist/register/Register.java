@@ -86,7 +86,8 @@ public class Register {
 			@Override
 			protected void onPostExecute(String msg) {
 				// mDisplay.append(msg + "\n");
-				ToastHelper.showToastInternal((Activity)context, msg);
+//				ToastHelper.showToastInternal((Activity)context, msg);
+				Log.i(TAG, msg);
 //				sendRegistrationIdToBackend();
 			}
 
@@ -193,7 +194,8 @@ public class Register {
 						} else {
 							storeRegistrationServerId(context, userName, "NO");
 						}
-						ToastHelper.showToastInternal((Activity)context, msg);
+//						ToastHelper.showToastInternal((Activity)context, msg);
+						Log.i(TAG, msg);
 					}
 
 				}.execute(userName);

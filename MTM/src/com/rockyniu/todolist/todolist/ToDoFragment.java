@@ -353,11 +353,17 @@ public class ToDoFragment extends Fragment {
 
 	@Override
 	public void onPause() {
-		sync();
+//		sync();
 		doStopListening();
 		super.onPause();
 	}
-
+	
+	@Override
+	public void onStop(){
+		sync();
+		super.onStop();
+	}
+	
 	// add or edit Item
 	private void editItem(String itemId) {
 		Intent myIntent = new Intent(this.getActivity(), EditItemActivity.class);
