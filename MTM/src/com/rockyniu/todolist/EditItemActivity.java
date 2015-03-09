@@ -3,24 +3,18 @@ package com.rockyniu.todolist;
 import java.util.Calendar;
 import java.util.UUID;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.rockyniu.todolist.database.ToDoItemDataSource;
 import com.rockyniu.todolist.database.model.ToDoItem;
@@ -30,9 +24,9 @@ import com.rockyniu.todolist.util.ToastHelper;
 //@TargetApi(9)
 public class EditItemActivity extends BaseActivity {
 
-	private final static int DUE_IS_EARLIER = 404;
-	private final static int UPDATE_DONE = 0;
-	private final int MAX_LENGTH = 140; // max length of name
+	private final static int DUE_IS_EARLIER = 1004;
+	private final static int UPDATE_DONE = -1001;
+	private final int MAX_LENGTH = 500; // max length of name
 
 	private ToDoItemDataSource itemdatasource;
 	private ToDoItem toDoItem;
@@ -56,7 +50,7 @@ public class EditItemActivity extends BaseActivity {
 		Bundle bundle = intent.getExtras();
 		userId = bundle.getString("_userid");
 		itemId = bundle.getString("_itemid");
-
+		toDoItem = new ToDoItem();
 		itemdatasource = new ToDoItemDataSource(this);
 		itemNameEditText = (EditText) findViewById(R.id.edit_name_edittext);
 		priorityBar = (SeekBar) findViewById(R.id.edit_priority_seekbar);
@@ -155,13 +149,17 @@ public class EditItemActivity extends BaseActivity {
 			}
 			return true;
 		case R.id.menu_sendEmail:
-			if (saveItem()){
+			if (saveItem()) {
 				String emailContent = toDoItem.toSmsMessage();
-				Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-				String[] recipients = new String[]{"", "",};
-				emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, recipients);
-				emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "ToDo");
-				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, emailContent);
+				Intent emailIntent = new Intent(
+						android.content.Intent.ACTION_SEND);
+				String[] recipients = new String[] { "", "", };
+				emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+						recipients);
+				emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+						"ToDo");
+				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+						emailContent);
 				emailIntent.setType("text/plain");
 				startActivity(Intent.createChooser(emailIntent, "Send mail..."));
 			} else {
@@ -191,11 +189,10 @@ public class EditItemActivity extends BaseActivity {
 
 	@Override
 	public void onBackPressed() {
-		if (saveItem()) {
-			this.setResult(RESULT_OK);
-			this.finish();
-			super.onBackPressed();
-		}
+		ToastHelper.showToastInternal(this, "Cancel Editing.");
+		this.setResult(RESULT_CANCELED);
+		this.finish();
+		super.onBackPressed();
 	}
 
 	private boolean saveItem() {
@@ -251,8 +248,8 @@ public class EditItemActivity extends BaseActivity {
 		newItem.setUserId(userId);
 		if (name.length() > MAX_LENGTH) {
 			name = name.substring(0, MAX_LENGTH);
-			ToastHelper.showToastInternal(this,
-					"Name is truncated to 140 characters.");
+			ToastHelper.showToastInternal(this, "Name is truncated to "
+					+ MAX_LENGTH + " 140 characters.");
 		}
 		newItem.setTitle(name);
 		newItem.setNotes("");
@@ -295,8 +292,8 @@ public class EditItemActivity extends BaseActivity {
 		ToDoItem item = new ToDoItem();
 		if (name.length() > MAX_LENGTH) {
 			name = name.substring(0, MAX_LENGTH);
-			ToastHelper.showToastInternal(this,
-					"Name is truncated to 140 characters.");
+			ToastHelper.showToastInternal(this, "Name is truncated to "
+					+ MAX_LENGTH + " 140 characters.");
 		}
 		item.setTitle(name);
 		item.setNotes("");
@@ -318,5 +315,4 @@ public class EditItemActivity extends BaseActivity {
 		return UPDATE_DONE;
 
 	}
-
 }

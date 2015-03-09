@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/item_name_default"
-                android:maxLength="140"
+                android:maxLength="500"
                 android:textSize="@dimen/text_size_medium" >
             </EditText>
         </LinearLayout>

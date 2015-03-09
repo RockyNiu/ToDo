@@ -15,7 +15,7 @@
     <string name="title_activity_edit_item">编辑任务</string>
     <string name="title_activity_add_item">添加任务</string>
     <string name="item_name">任务名</string>
-    <string name="item_name_default">任务（小于140个字符）</string>
+    <string name="item_name_default">任务（小于250个字符）</string>
     <string name="item_note">注释</string>
     <string name="item_note_default">注释</string>
     <string name="cancel_button">取消</string>

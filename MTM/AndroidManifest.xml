@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rockyniu.todolist"
-    android:versionCode="18"
-    android:versionName="1.17" >
+    android:versionCode="19"
+    android:versionName="1.18" >
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -93,11 +93,10 @@
             android:name="com.rockyniu.todolist.todolist.ToDoFragment"
             android:label="@string/title_activity_to_do_list" >
         </fragment>
-        
         <fragment
             android:name="com.rockyniu.todolist.todolist.ToGoFragment"
-            android:launchMode="singleTop"
-            android:label="@string/title_activity_to_go_list" >
+            android:label="@string/title_activity_to_go_list"
+            android:launchMode="singleTop" >
         </fragment>
 
         <activity
@@ -119,14 +118,14 @@
         </receiver>
 
         <service android:name="com.rockyniu.todolist.gcm.GcmIntentService" />
-        
-        <receiver android:name="com.rockyniu.todolist.alarm.AlarmReceiver">  
-            <intent-filter>  
-                <action android:name="com.rockyniu.todolist.pastduealarm"/>
-                <category android:name="android.intent.category.DEFAULT" />  
-            </intent-filter>  
-    	</receiver>
-    	  
+
+        <receiver android:name="com.rockyniu.todolist.alarm.AlarmReceiver" >
+            <intent-filter>
+                <action android:name="com.rockyniu.todolist.pastduealarm" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

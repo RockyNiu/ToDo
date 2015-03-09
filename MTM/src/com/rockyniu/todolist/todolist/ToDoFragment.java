@@ -65,7 +65,7 @@ import com.rockyniu.todolist.util.ToastHelper;
  */
 public class ToDoFragment extends Fragment {
 	static final String TAG = "TodoFragment";
-	
+
 	static final int REQUEST_EDIT_ITEM = 101;
 	static final int REQUEST_TOKEN = 1000;
 	static final int REQUEST_GOOGLE_TASKS_SERVICES = 1001;
@@ -353,17 +353,17 @@ public class ToDoFragment extends Fragment {
 
 	@Override
 	public void onPause() {
-//		sync();
+		// sync();
 		doStopListening();
 		super.onPause();
 	}
-	
+
 	@Override
-	public void onStop(){
+	public void onStop() {
 		sync();
 		super.onStop();
 	}
-	
+
 	// add or edit Item
 	private void editItem(String itemId) {
 		Intent myIntent = new Intent(this.getActivity(), EditItemActivity.class);
@@ -409,16 +409,6 @@ public class ToDoFragment extends Fragment {
 	public void refreshView() {
 		refresh();
 		// setAlarmTime(this.getActivity());
-	}
-
-	private void refresh() {
-		ToDoListAdapter adapter = new ToDoListAdapter(this.getActivity(),
-				localToDoItems);
-		toDoListView.setAdapter(adapter);
-		localToDoItems = getNewListFromLocal(ToDoFlag.UNDELETED,
-				checkBox.isChecked() ? ToDoStatus.ACTIVE : ToDoStatus.ALL);
-		adapter.updateList(localToDoItems);
-		adapter.notifyDataSetChanged();
 	}
 
 	public List<ToDoItem> getNewListFromLocal(ToDoFlag deleted,
@@ -482,7 +472,7 @@ public class ToDoFragment extends Fragment {
 	/**
 	 * start alarmlistenning
 	 */
-	void doListening() {
+	private void doListening() {
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("com.rockyniu.todolist.pastduealarm");
 		pastDueAlarmReceiver = new PastDueAlarmReceiver();
@@ -493,11 +483,21 @@ public class ToDoFragment extends Fragment {
 	/**
 	 * stop alarmlistening
 	 */
-	void doStopListening() {
+	private void doStopListening() {
 		if (pastDueAlarmReceiver != null) {
 			getActivity().unregisterReceiver(pastDueAlarmReceiver);
 			pastDueAlarmReceiver = null;
 		}
+	}
+
+	private void refresh() {
+		ToDoListAdapter adapter = new ToDoListAdapter(this.getActivity(),
+				localToDoItems);
+		toDoListView.setAdapter(adapter);
+		localToDoItems = getNewListFromLocal(ToDoFlag.UNDELETED,
+				checkBox.isChecked() ? ToDoStatus.ACTIVE : ToDoStatus.ALL);
+		adapter.updateList(localToDoItems);
+		adapter.notifyDataSetChanged();
 	}
 
 	private class PastDueAlarmReceiver extends AlarmReceiver {
