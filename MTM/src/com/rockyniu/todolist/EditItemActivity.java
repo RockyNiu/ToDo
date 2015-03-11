@@ -89,8 +89,6 @@ public class EditItemActivity extends BaseActivity {
 			}
 		}
 
-		userId = bundle.getString("_userid");
-
 		toDoItem = new ToDoItem();
 
 		if (itemId.equals(getString(R.string.new_item))) {
