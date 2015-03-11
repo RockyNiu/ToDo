@@ -54,7 +54,7 @@ import com.rockyniu.todolist.util.ToastHelper;
  */
 public class ToGoFragment extends Fragment {
 
-	final String TAG = "ToGoGragment";
+	final String TAG = "ToGoFragment";
 	final String _logTag = "Monitor Location";
 	LocationListener _networkListener;
 	LocationListener _gpsListener;

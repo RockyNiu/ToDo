@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
+import com.rockyniu.todolist.R;
 import com.rockyniu.todolist.util.Constance;
 import com.rockyniu.todolist.util.ToastHelper;
 
@@ -34,10 +35,8 @@ public class UserInformation {
 		try {
 			activity.startActivityForResult(intent, Constance.REQUEST_USER_PICKER);
 		} catch (Exception e) {
-			// checkGooglePlaySerViceAvailable(LoginActivity.this);
-			ToastHelper.showErrorToast(activity, "Fail to add new user.");
+			ToastHelper.showErrorToast(activity, activity.getResources().getString(R.string.fail_to_add_new_user));
 		}
-		// sendRegistrationIdToBackend();
 	}
 
 	/**

@@ -9,7 +9,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -64,13 +63,9 @@ public class TabsActivity extends BaseActivity implements ActionBar.TabListener,
 		userInformation = new UserInformation(TabsActivity.this);
 		
 		// user information
-//		Intent intent = getIntent();
-//		Bundle bundle = intent.getExtras();
-//		userId = bundle.getString("_userid");
-//		userName = bundle.getString("_username");
 		userId = userInformation.getUserId();
 		userName = userInformation.getUserName();
-		
+
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -118,9 +113,10 @@ public class TabsActivity extends BaseActivity implements ActionBar.TabListener,
 			register.sendRegistrationIdToBackend(userName);
 			finish();
 			startActivity(getIntent());
+		} else {
+			//TODO
 		}
 		
-//		 refreshView();
 	}
 
 	

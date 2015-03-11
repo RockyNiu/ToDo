@@ -3,7 +3,12 @@ package com.rockyniu.todolist;
 import java.util.Calendar;
 import java.util.UUID;
 
+import android.accounts.AccountManager;
+import android.app.Activity;
+import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
@@ -17,7 +22,12 @@ import android.widget.SeekBar;
 import android.widget.TimePicker;
 
 import com.rockyniu.todolist.database.ToDoItemDataSource;
+import com.rockyniu.todolist.database.UserDataSource;
 import com.rockyniu.todolist.database.model.ToDoItem;
+import com.rockyniu.todolist.database.model.User;
+import com.rockyniu.todolist.register.Register;
+import com.rockyniu.todolist.user.UserInformation;
+import com.rockyniu.todolist.util.Constance;
 import com.rockyniu.todolist.util.DialogHelper;
 import com.rockyniu.todolist.util.ToastHelper;
 
@@ -28,6 +38,7 @@ public class EditItemActivity extends BaseActivity {
 	private final static int UPDATE_DONE = -1001;
 	private final int MAX_LENGTH = 500; // max length of name
 
+	private UserInformation userInformation;
 	private ToDoItemDataSource itemdatasource;
 	private ToDoItem toDoItem;
 	private String userId;
@@ -35,9 +46,7 @@ public class EditItemActivity extends BaseActivity {
 	private boolean completed;
 	private Long completedTime;
 	private EditText itemNameEditText;
-	// private EditText itemNoteEditText;
 	private CheckBox setDueTimeCheckBox;
-	// private TextView dueTitle;
 	private DatePicker dueDatePicker;
 	private TimePicker dueTimePicker;
 	private SeekBar priorityBar;
@@ -46,17 +55,43 @@ public class EditItemActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_item);
-		Intent intent = getIntent();
-		Bundle bundle = intent.getExtras();
-		userId = bundle.getString("_userid");
-		itemId = bundle.getString("_itemid");
-		toDoItem = new ToDoItem();
+
 		itemdatasource = new ToDoItemDataSource(this);
 		itemNameEditText = (EditText) findViewById(R.id.edit_name_edittext);
 		priorityBar = (SeekBar) findViewById(R.id.edit_priority_seekbar);
 		setDueTimeCheckBox = (CheckBox) findViewById(R.id.edit_due_checkbox);
 		dueDatePicker = (DatePicker) findViewById(R.id.edit_due_datepicker);
 		dueTimePicker = (TimePicker) findViewById(R.id.edit_due_timepicker);
+
+		userInformation = new UserInformation(EditItemActivity.this);
+
+		SharedPreferences sharedPreferences = getSharedPreferences("UserInfo",
+				Context.MODE_PRIVATE);
+		userId = sharedPreferences.getString("UserId", "");
+		itemId = getString(R.string.new_item);
+
+		Intent intent = getIntent();
+		String type = intent.getType();
+
+		Bundle bundle = intent.getExtras();
+		if (type != null && type.equals("text/plain")
+				&& intent.getClipData() != null) {
+			ClipData data = intent.getClipData();
+			itemNameEditText.setText(data.getItemAt(0).getText());
+		} else if (bundle != null) {
+			if (bundle.keySet().contains(Intent.EXTRA_TEXT)) { // for Baidu
+																// browser
+				String content = bundle.getString(Intent.EXTRA_TEXT);
+				itemNameEditText.setText(content);
+			} else {
+				userId = bundle.getString("_userid");
+				itemId = bundle.getString("_itemid");
+			}
+		}
+
+		userId = bundle.getString("_userid");
+
+		toDoItem = new ToDoItem();
 
 		if (itemId.equals(getString(R.string.new_item))) {
 			this.setTitle("Add New Item");
@@ -80,10 +115,8 @@ public class EditItemActivity extends BaseActivity {
 			this.setTitle("Edit Item");
 			toDoItem = itemdatasource.getItemByItemId(itemId);
 			if (toDoItem == null) {
-				ToastHelper.showErrorToast(this, "Task does not exits.");
-				// Toast toast = Toast.makeText(this, "Task does not exist.",
-				// Toast.LENGTH_LONG);
-				// toast.show();
+				ToastHelper.showErrorToast(EditItemActivity.this,
+						"Task does not exits.");
 				finish();
 				this.setResult(RESULT_CANCELED);
 				return;
@@ -161,7 +194,7 @@ public class EditItemActivity extends BaseActivity {
 				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
 						emailContent);
 				emailIntent.setType("text/plain");
-				startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+				startActivity(Intent.createChooser(emailIntent, "Share"));
 			} else {
 				ToastHelper.showToastInternal(this,
 						"Error happened when saving task.");
@@ -172,6 +205,26 @@ public class EditItemActivity extends BaseActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(menuItem);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == Constance.REQUEST_USER_PICKER
+				&& resultCode == Activity.RESULT_OK) {
+			String userName = data
+					.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+			User user = (new UserDataSource(this)).selectUser(userName);
+			userId = user.getId();
+			userInformation.saveUserInfo(userId, userName);
+			Register register = new Register(EditItemActivity.this);
+			register.sendRegistrationIdToBackend(userName);
+			finish();
+			startActivity(getIntent());
+		} else {
+			// TODO
+		}
+
 	}
 
 	public void onSaveClick(View view) {
@@ -245,6 +298,9 @@ public class EditItemActivity extends BaseActivity {
 		// create item and save into database
 		ToDoItem newItem = new ToDoItem();
 		newItem.setId(UUID.randomUUID().toString());
+		if (userId == "") {
+			userInformation.onUserPicker();
+		}
 		newItem.setUserId(userId);
 		if (name.length() > MAX_LENGTH) {
 			name = name.substring(0, MAX_LENGTH);
@@ -305,6 +361,9 @@ public class EditItemActivity extends BaseActivity {
 		}
 
 		item.setId(itemId);
+		if (userId == "") {
+			userInformation.onUserPicker();
+		}
 		item.setUserId(userId);
 		item.setCompleted(completed);
 		item.setCompletedTime(completedTime);

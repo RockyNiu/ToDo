@@ -43,20 +43,14 @@ import com.google.api.services.tasks.Tasks;
 import com.google.api.services.tasks.model.Task;
 import com.rockyniu.todolist.EditItemActivity;
 import com.rockyniu.todolist.R;
-import com.rockyniu.todolist.TabsActivity;
-import com.rockyniu.todolist.R.drawable;
-import com.rockyniu.todolist.R.id;
-import com.rockyniu.todolist.R.layout;
-import com.rockyniu.todolist.R.menu;
-import com.rockyniu.todolist.R.string;
 import com.rockyniu.todolist.alarm.AlarmReceiver;
 import com.rockyniu.todolist.database.ToDoItemDataSource;
 import com.rockyniu.todolist.database.ToDoItemDataSource.SortType;
 import com.rockyniu.todolist.database.ToDoItemDataSource.ToDoFlag;
 import com.rockyniu.todolist.database.ToDoItemDataSource.ToDoStatus;
+import com.rockyniu.todolist.database.UserDataSource;
 import com.rockyniu.todolist.database.comparator.DueComparator;
 import com.rockyniu.todolist.database.model.ToDoItem;
-import com.rockyniu.todolist.database.UserDataSource;
 import com.rockyniu.todolist.ui.listener.SwipeDismissListViewTouchListener;
 import com.rockyniu.todolist.util.ToastHelper;
 
@@ -79,6 +73,7 @@ public class ToDoFragment extends Fragment {
 	private SortType sortType = SortType.DUE;
 	private ToDoStatus status = ToDoStatus.ALL;
 	static List<ToDoItem> localToDoItems;
+	ToDoListAdapter adapter;
 
 	// for auth2.0
 	String userName;
@@ -156,8 +151,7 @@ public class ToDoFragment extends Fragment {
 		localToDoItems = getNewListFromLocal(ToDoFlag.UNDELETED, status);
 		toDoListView = (ListView) rootView.findViewById(R.id.toDoListView);
 		toDoListView.setEmptyView(rootView.findViewById(R.id.empty_list_item));
-		ToDoListAdapter adapter = new ToDoListAdapter(this.getActivity(),
-				localToDoItems);
+		adapter = new ToDoListAdapter(this.getActivity(), localToDoItems);
 		toDoListView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 
@@ -187,10 +181,7 @@ public class ToDoFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// / mark the task either completed or uncompleted
-				ToDoListAdapter tasksAdapter = (ToDoListAdapter) toDoListView
-						.getAdapter();
-				ToDoItem currentItem = (ToDoItem) tasksAdapter
-						.getItem(position);
+				ToDoItem currentItem = adapter.getItem(position);
 				long currentTime = Calendar.getInstance().getTimeInMillis();
 				if (currentItem.isCompleted()) {
 					currentItem.setCompleted(false);
@@ -213,10 +204,7 @@ public class ToDoFragment extends Fragment {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				ToDoListAdapter tasksAdapter = (ToDoListAdapter) toDoListView
-						.getAdapter();
-				ToDoItem currentItem = (ToDoItem) tasksAdapter
-						.getItem(position);
+				ToDoItem currentItem = adapter.getItem(position);
 				String itemId = currentItem.getId();
 				editItem(itemId);
 				return true;
@@ -238,10 +226,7 @@ public class ToDoFragment extends Fragment {
 
 						// Delete all dismissed tasks
 						for (int position : reverseSortedPositions) {
-							ToDoListAdapter tasksAdapter = (ToDoListAdapter) toDoListView
-									.getAdapter();
-							ToDoItem currentItem = (ToDoItem) tasksAdapter
-									.getItem(position);
+							ToDoItem currentItem = adapter.getItem(position);
 							// label delete
 							currentItem.setModifiedTime(Calendar.getInstance()
 									.getTimeInMillis());
@@ -348,6 +333,7 @@ public class ToDoFragment extends Fragment {
 		super.onResume();
 		doListening();
 		setAlarmTime(getActivity());
+		refreshView();
 		// sync();
 	}
 
@@ -491,9 +477,6 @@ public class ToDoFragment extends Fragment {
 	}
 
 	private void refresh() {
-		ToDoListAdapter adapter = new ToDoListAdapter(this.getActivity(),
-				localToDoItems);
-		toDoListView.setAdapter(adapter);
 		localToDoItems = getNewListFromLocal(ToDoFlag.UNDELETED,
 				checkBox.isChecked() ? ToDoStatus.ACTIVE : ToDoStatus.ALL);
 		adapter.updateList(localToDoItems);

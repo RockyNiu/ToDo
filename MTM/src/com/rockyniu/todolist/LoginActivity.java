@@ -139,9 +139,11 @@ public class LoginActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == Constance.REQUEST_USER_PICKER
 				&& resultCode == RESULT_OK) {
-			String userName = data
+			userName = data
 					.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
 			register.sendRegistrationIdToBackend(userName);
+		} else {
+			//TODO
 		}
 	}
 
@@ -249,11 +251,6 @@ public class LoginActivity extends Activity {
 
 		// Sent the intent
 		Intent intent = new Intent(LoginActivity.this, TabsActivity.class);
-		// Bundle bundle = new Bundle();
-		// bundle.putString("_userid", userId);
-		// bundle.putString("_username", userName);
-		// // bundle.putString("_token", token);
-		// intent.putExtras(bundle);
 		startActivity(intent);
 	}
 
