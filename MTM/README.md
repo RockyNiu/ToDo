@@ -14,6 +14,7 @@ ToDo Mobile App is a Task Manager application that is integrated into the [Googl
 - Send task by SMS Message
 - Send task by email
 - Send push notification from server
+- Receive text shared from other apps, such as browser
 
 ## Example App
 
