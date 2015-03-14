@@ -88,6 +88,7 @@ public class ToDoFragment extends Fragment {
 	Tasks service;
 	// final static String GOOGLE_TASKS_API_KEY =
 	// "AIzaSyCvtrY8Rvv7KXrAWN0UjgszWe6AUPc8EVc";
+//	AIzaSyBkzy0IPUqvgTDsMvyEPZGLTBn4S0AqRNU
 	final static String TODOLIST_NAME = "ToDoList";
 	List<Task> tasksList;
 

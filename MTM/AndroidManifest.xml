@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rockyniu.todolist"
-    android:versionCode="21"
-    android:versionName="1.20" >
+    android:versionCode="22"
+    android:versionName="1.21" >
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -67,7 +67,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBkzy0IPUqvgTDsMvyEPZGLTBn4S0AqRNU" />
+            android:value="AIzaSyCvtrY8Rvv7KXrAWN0UjgszWe6AUPc8EVc" />
 
         <activity
             android:name="com.rockyniu.todolist.LoginActivity"

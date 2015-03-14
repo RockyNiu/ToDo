@@ -28,8 +28,8 @@ import com.rockyniu.todolist.todolist.ToGoFragment;
 import com.rockyniu.todolist.user.UserInformation;
 import com.rockyniu.todolist.util.Constance;
 
-public class TabsActivity extends BaseActivity implements ActionBar.TabListener,
-		OnDataPass {
+public class TabsActivity extends BaseActivity implements
+		ActionBar.TabListener, OnDataPass {
 
 	final String TAG = "TabsActivity";
 	Register register;
@@ -58,10 +58,10 @@ public class TabsActivity extends BaseActivity implements ActionBar.TabListener,
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tabs);
-//		context = getApplicationContext();
+		// context = getApplicationContext();
 		register = new Register(TabsActivity.this);
 		userInformation = new UserInformation(TabsActivity.this);
-		
+
 		// user information
 		userId = userInformation.getUserId();
 		userName = userInformation.getUserName();
@@ -114,12 +114,11 @@ public class TabsActivity extends BaseActivity implements ActionBar.TabListener,
 			finish();
 			startActivity(getIntent());
 		} else {
-			//TODO
+			// TODO
 		}
-		
+
 	}
 
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -149,12 +148,12 @@ public class TabsActivity extends BaseActivity implements ActionBar.TabListener,
 		// super.onBackPressed();
 
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-		alertDialogBuilder.setTitle("Exit "
-				+ getResources().getString(R.string.app_name) + "?");
+		alertDialogBuilder.setTitle(getResources().getString(R.string.exit)
+				+ " " + getResources().getString(R.string.app_name) + "?");
 		alertDialogBuilder
 				// .setMessage("Click yes to exit!")
 				.setCancelable(false)
-				.setPositiveButton("Yes",
+				.setPositiveButton(getResources().getString(R.string.yes),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								moveTaskToBack(true);
@@ -164,12 +163,13 @@ public class TabsActivity extends BaseActivity implements ActionBar.TabListener,
 							}
 						})
 
-				.setNegativeButton("No", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
+				.setNegativeButton(getResources().getString(R.string.no),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
 
-						dialog.cancel();
-					}
-				});
+								dialog.cancel();
+							}
+						});
 
 		AlertDialog alertDialog = alertDialogBuilder.create();
 		alertDialog.show();

@@ -4,9 +4,9 @@
         android:title="@string/send_smsMessage">
     </item>
     
-    <item android:id="@+id/menu_sendEmail"
+    <item android:id="@+id/menu_share"
         android:icon="@android:drawable/ic_dialog_email"
-        android:title="@string/send_email">
+        android:title="@string/share">
     </item>
     
 </menu>

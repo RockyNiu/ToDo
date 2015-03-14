@@ -44,7 +44,9 @@ public class ToastHelper {
 				message = "IOException";
 			}
 		}
-		ToastHelper.showErrorToast(activity, message);
+		Log.d(tag, message);
+		ToastHelper.showErrorToast(activity,
+				activity.getResources().getString(R.string.error));
 	}
 
 	/**

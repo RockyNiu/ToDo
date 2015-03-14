@@ -1,9 +1,10 @@
 package com.rockyniu.todolist.util;
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+
+import com.rockyniu.todolist.R;
 
 public class DialogHelper {
 
@@ -24,9 +25,10 @@ public class DialogHelper {
 		alertDialog = new AlertDialog.Builder(activity).create();
 		alertDialog.setTitle(title);
 		alertDialog.setMessage(message);
-		alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK",
+		alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, activity
+				.getResources().getString(R.string.ok),
 				new DialogInterface.OnClickListener() {
-	
+
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
@@ -36,22 +38,19 @@ public class DialogHelper {
 		return;
 	}
 
-	static void showTaskCreationErrorDialog(Activity activity,
-			String message) {
-		showNeedClickDialog(activity, message, "Task Creation Error");
+	static void showTaskCreationErrorDialog(Activity activity, String message) {
+		showNeedClickDialog(activity, message, activity.getResources()
+				.getString(R.string.fail_to_create_new_task));
 	}
 
 	public static void showItemNameIsEmptyDialog(Activity activity) {
-		showTaskCreationErrorDialog(activity, "Task name cannot be empty.");
+		showTaskCreationErrorDialog(activity, activity.getResources()
+				.getString(R.string.empty_name));
 	}
 
 	public static void showDueTimeIsEarlierDialog(Activity activity) {
-		showTaskCreationErrorDialog(activity,
-				"Due time cannot be earlier than now.");
+		showTaskCreationErrorDialog(activity, activity.getResources()
+				.getString(R.string.due_earlier_than_now));
 	}
 
-
-	// public static void showPastDueDialog(Activity activity, String message){
-	// showNeedClickDialog(activity, message, "Task Past Due!");
-	// }
 }

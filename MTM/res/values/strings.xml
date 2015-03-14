@@ -7,15 +7,21 @@
     <string name="alarm_dialog_ok">OK</string>
     <string name="app_name">RockToDo</string>
     <string name="cancel_button">Cancel</string>
+    <string name="cancel_editing">Cancel Editing.</string>
     <string name="changepwd">Change password</string>
     <string name="clear_completed">Clear all completed tasks</string>
     <string name="confirm_pwd">Confirm password</string>
+    <string name="device_not_supported">Your device is not supported.</string>
     <string name="due_title">Due date</string>
+    <string name="due_earlier_than_now">Due time cannot be earlier than now.</string>
     <string name="empty_list">No tasks found.</string>
+    <string name="empty_name">Task name cannot be empty.</string>
     <string name="error">Error</string>
     <string name="error_format">[Error] %s</string>
     <string name="exit">Exit</string>
     <string name="fail_to_add_new_user">Fail to add new user.</string>
+    <string name="fail_to_create_new_task">Fail to create new task.</string>
+    <string name="fail_to_save_task">Fail to save task.</string>
     <string name="hello_world">Hello world!</string>
     <string name="hide_completed">Hide completed tasks</string>
     <string name="item_name">Task name</string>
@@ -25,8 +31,11 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="map_search_default">Address</string>
+    <string name="name_truncated">Name is truncated to MAX_LENGTH (140 characters)."</string>
     <string name="new_item">NewItem</string>
     <string name="new_user">NewUser</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
     <string name="popmenu1">Edit task</string>
     <string name="popmenu2">Delete task</string>
     <string name="priority">Priority</string>
@@ -34,10 +43,10 @@
     <string name="save_button">Save</string>
     <string name="search">Search</string>
     <string name="select_label">Select</string>
-    <string name="send_email">Send Email</string>
     <string name="send_smsMessage">Send SMS Message</string>
     <string name="set_due_time">Set due time?</string>
     <string name="setting">Setting</string>
+    <string name="share">Share</string>
     <string name="show_list">Show ToDoList</string>
     <string name="sign_out">Sign Out</string>
     <string name="sortbydue">Sort by due</string>
@@ -45,6 +54,9 @@
     <string name="subtitle">Subtitle</string>
     <string name="sync">Synchronize</string>
     <string name="task_checked">Completed?</string>
+    <string name="task_created">Task Created.</string>
+    <string name="task_doesnot_exist">Task does not exist.</string>
+    <string name="task_updated">Task Updated.</string>
     <string name="time_title">Due time</string>
     <string name="title_activity_add_item">Add Item</string>
     <string name="title_activity_add_user">Add User</string>
@@ -59,5 +71,6 @@
     <string name="user_pwd">Password</string>
     <string name="warning_description">Past due!</string>
     <string name="welcome">Choose Google Account</string>
+    <string name="yes">Yes</string>
 
 </resources>

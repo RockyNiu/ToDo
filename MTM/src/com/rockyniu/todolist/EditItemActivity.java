@@ -114,7 +114,7 @@ public class EditItemActivity extends BaseActivity {
 			toDoItem = itemdatasource.getItemByItemId(itemId);
 			if (toDoItem == null) {
 				ToastHelper.showErrorToast(EditItemActivity.this,
-						"Task does not exits.");
+						getResources().getString(R.string.task_doesnot_exist));
 				finish();
 				this.setResult(RESULT_CANCELED);
 				return;
@@ -176,10 +176,10 @@ public class EditItemActivity extends BaseActivity {
 				startActivity(smsIntent);
 			} else {
 				ToastHelper.showToastInternal(this,
-						"Error happened when saving task.");
+						getResources().getString(R.string.fail_to_save_task));
 			}
 			return true;
-		case R.id.menu_sendEmail:
+		case R.id.menu_share:
 			if (saveItem()) {
 				String emailContent = toDoItem.toSmsMessage();
 				Intent emailIntent = new Intent(
@@ -192,10 +192,11 @@ public class EditItemActivity extends BaseActivity {
 				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
 						emailContent);
 				emailIntent.setType("text/plain");
-				startActivity(Intent.createChooser(emailIntent, "Share"));
+				startActivity(Intent.createChooser(emailIntent, getResources()
+						.getString(R.string.share)));
 			} else {
 				ToastHelper.showToastInternal(this,
-						"Error happened when saving task.");
+						getResources().getString(R.string.fail_to_save_task));
 			}
 			return true;
 		case android.R.id.home:
@@ -233,14 +234,16 @@ public class EditItemActivity extends BaseActivity {
 	}
 
 	public void onCancelClick(View view) {
-		ToastHelper.showToastInternal(this, "Cancel Editing.");
+		ToastHelper.showToastInternal(this,
+				getResources().getString(R.string.cancel_editing));
 		this.setResult(RESULT_CANCELED);
 		this.finish();
 	}
 
 	@Override
 	public void onBackPressed() {
-		ToastHelper.showToastInternal(this, "Cancel Editing.");
+		ToastHelper.showToastInternal(this,
+				getResources().getString(R.string.cancel_editing));
 		this.setResult(RESULT_CANCELED);
 		this.finish();
 		super.onBackPressed();
@@ -257,7 +260,8 @@ public class EditItemActivity extends BaseActivity {
 			// Add item
 			int updateResult = addItem(name);
 			if (updateResult == UPDATE_DONE) {
-				ToastHelper.showToastInternal(this, "Task created.");
+				ToastHelper.showToastInternal(this,
+						getResources().getString(R.string.task_created));
 			} else if (updateResult == DUE_IS_EARLIER) {
 				DialogHelper.showDueTimeIsEarlierDialog(EditItemActivity.this);
 				return false;
@@ -266,7 +270,8 @@ public class EditItemActivity extends BaseActivity {
 			// Update item
 			int updateResult = updateItem(name);
 			if (updateResult == UPDATE_DONE) {
-				ToastHelper.showToastInternal(this, "Task updated.");
+				ToastHelper.showToastInternal(this,
+						getResources().getString(R.string.task_updated));
 			} else if (updateResult == DUE_IS_EARLIER) {
 				DialogHelper.showDueTimeIsEarlierDialog(EditItemActivity.this);
 				return false;
@@ -302,8 +307,8 @@ public class EditItemActivity extends BaseActivity {
 		newItem.setUserId(userId);
 		if (name.length() > MAX_LENGTH) {
 			name = name.substring(0, MAX_LENGTH);
-			ToastHelper.showToastInternal(this, "Name is truncated to "
-					+ MAX_LENGTH + " 140 characters.");
+			ToastHelper.showToastInternal(this,
+					getResources().getString(R.string.name_truncated));
 		}
 		newItem.setTitle(name);
 		newItem.setNotes("");
@@ -346,8 +351,8 @@ public class EditItemActivity extends BaseActivity {
 		ToDoItem item = new ToDoItem();
 		if (name.length() > MAX_LENGTH) {
 			name = name.substring(0, MAX_LENGTH);
-			ToastHelper.showToastInternal(this, "Name is truncated to "
-					+ MAX_LENGTH + " 140 characters.");
+			ToastHelper.showToastInternal(this,
+					getResources().getString(R.string.name_truncated));
 		}
 		item.setTitle(name);
 		item.setNotes("");

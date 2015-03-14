@@ -1,8 +1,6 @@
 package com.rockyniu.todolist.todolist;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import android.accounts.Account;
@@ -16,25 +14,17 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.api.client.auth.oauth2.RefreshTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.util.DateTime;
 import com.google.api.services.tasks.Tasks;
-import com.google.api.services.tasks.Tasks.Tasklists;
 import com.google.api.services.tasks.TasksRequest;
 import com.google.api.services.tasks.TasksRequestInitializer;
 import com.google.api.services.tasks.TasksScopes;
 import com.google.api.services.tasks.model.Task;
 import com.google.api.services.tasks.model.TaskList;
-import com.google.api.services.tasks.model.TaskLists;
-import com.rockyniu.todolist.database.ToDoItemDataSource;
-import com.rockyniu.todolist.database.UserDataSource;
 import com.rockyniu.todolist.database.ToDoItemDataSource.ToDoFlag;
-import com.rockyniu.todolist.database.ToDoItemDataSource.ToDoStatus;
 import com.rockyniu.todolist.database.model.Converter;
 import com.rockyniu.todolist.database.model.SyncResult;
 import com.rockyniu.todolist.database.model.ToDoItem;
-import com.rockyniu.todolist.database.model.User;
 
 class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 
@@ -43,17 +33,15 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 	}
 
 	private final String TASK_LIST_ID = "task_list_id_";
-	Context context = toDoFragment.getActivity().getApplicationContext();
+	private Context context = toDoFragment.getActivity()
+			.getApplicationContext();
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected boolean doInBackground(Integer requestCode) throws Exception {
 
-		// get token
-		// if (activity.token==null || activity.token.isEmpty()){
 		getToken();
 
-		// }
 		if (toDoFragment.token == null && toDoFragment.token == null) {
 			return false;
 		} else if (requestCode == ToDoFragment.REQUEST_TOKEN) {
@@ -121,20 +109,8 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 		try {
 			service = new Tasks.Builder(toDoFragment.httpTransport,
 					toDoFragment.jsonFactory, toDoFragment.credential)
-					.setTasksRequestInitializer(new TasksRequestInitializer()
-					/*
-					 * {
-					 * 
-					 * @Override public void initializeTasksRequest(
-					 * TasksRequest<?> request) throws IOException {
-					 * 
-					 * @SuppressWarnings("rawtypes") TasksRequest tasksRequest =
-					 * (TasksRequest) request; //
-					 * tasksRequest.set("showDeleted", true); //
-					 * tasksRequest.setKey
-					 * (ToDoListActivity.GOOGLE_TASKS_API_KEY); } }
-					 */
-					).setApplicationName("RockyNiu-ToDo").build();
+					.setTasksRequestInitializer(new TasksRequestInitializer())
+					.setApplicationName("RockyNiu-ToDo").build();
 		} catch (Exception e) {
 			service = null;
 		}
@@ -153,7 +129,7 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 		// if task list id dosen't exist
 		if (taskListId == null) {
 			taskListId = getTaskListIdFromServer(listName);
-			if (taskListId == null){
+			if (taskListId == null) {
 				taskListId = insertTaskList(); // insert new task list to server
 			}
 			storeListId(context, userName, taskListId); // store list id in
@@ -168,10 +144,11 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 
 				// get task list id from server
 				taskListId = getTaskListIdFromServer(listName);
-				if (taskListId == null){
-					taskListId = insertTaskList(); // insert new task list to server
+				if (taskListId == null) {
+					taskListId = insertTaskList(); // insert new task list to
+													// server
 				}
-				
+
 				// store task list in local database
 				storeListId(context, userName, taskListId);
 				tasks = getTasksFromServer(taskListId);
@@ -181,7 +158,7 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 			if (taskListId != null && tasks != null) {
 				results[0] = taskListId;
 				results[1] = tasks;
-			} else{
+			} else {
 				results = null;
 			}
 			return results;
@@ -197,14 +174,14 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 	 * @return
 	 * @throws IOException
 	 */
-	private List<Task> getTasksFromServer(String taskListId) throws Exception {
-		return service.tasks()
+	private synchronized List<Task> getTasksFromServer(String taskListId)
+			throws Exception {
+		return service
+				.tasks()
 				.list(taskListId)
-				// .setFields("items")
 				.setFields(
 						"items/id, items/title, items/notes, items/due"
 								+ ", items/status, items/updated, items/deleted, items/completed")
-				// .setFields("items/id, title, notes, due, status, updated, deleted")
 				.execute().getItems();
 	}
 
@@ -214,7 +191,7 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 	 * @return
 	 * @throws IOException
 	 */
-	private String insertTaskList() throws IOException {
+	private synchronized String insertTaskList() throws IOException {
 		TaskList taskList = new TaskList().setTitle(ToDoFragment.TODOLIST_NAME);
 		taskList = service.tasklists().insert(taskList).execute();
 		return taskList.getId();
@@ -226,7 +203,8 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 	 * @param listName
 	 * @throws IOException
 	 */
-	private String getTaskListIdFromServer(String listName) throws IOException {
+	private synchronized String getTaskListIdFromServer(String listName)
+			throws IOException {
 		List<TaskList> taskLists = service.tasklists().list().execute()
 				.getItems();
 		String taskListId = null;
@@ -263,11 +241,13 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 	 * @param taskListId
 	 */
 	private void storeListId(Context context, String userName, String taskListId) {
-		if (taskListId != null | !taskListId.isEmpty()) {
+		if (taskListId != null && !taskListId.isEmpty()) {
 			final SharedPreferences prefs = getToDoPreferences(context);
 			SharedPreferences.Editor editor = prefs.edit();
 			editor.putString(TASK_LIST_ID + userName, taskListId);
 			editor.commit();
+		} else {
+			// TODO
 		}
 	}
 
@@ -290,8 +270,6 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 		Object[] syncResults = toDoItemDataSource.synWithRemote(localItems,
 				remoteItems);
 
-		// activity.localToDoItems = (List<ToDoItem>) syncResults[0];
-		// activity.refreshView();
 		return syncResults;
 	}
 
@@ -383,8 +361,8 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 								tasks.set(i, newTask);
 								// task.setUpdated(newTask.getUpdated());
 								// update the item id in local database
-								ToDoItem item = Converter.convertTaskToToDoItem(
-										userId, task);
+								ToDoItem item = Converter
+										.convertTaskToToDoItem(userId, task);
 								toDoItemDataSource.updateItem(item);
 								toDoItemDataSource.changeItemId(taskId,
 										newTask.getId());
@@ -413,8 +391,4 @@ class ToDoListLoadAsynTask extends ToDoListCommonAsynTask {
 		}
 		return null;
 	}
-
-	// static void run(ToDoListActivity toDoListActivity) {
-	// new ToDoListLoadAsynTask(toDoListActivity).execute();
-	// }
 }

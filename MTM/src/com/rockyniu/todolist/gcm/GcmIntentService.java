@@ -16,20 +16,18 @@
 
 package com.rockyniu.todolist.gcm;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.rockyniu.todolist.LoginActivity;
-import com.rockyniu.todolist.R;
-import com.rockyniu.todolist.R.drawable;
-
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.rockyniu.todolist.LoginActivity;
+import com.rockyniu.todolist.R;
 
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
