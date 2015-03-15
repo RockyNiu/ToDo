@@ -3,12 +3,11 @@ ToDo
 
 ToDo is a Task Manager application, including [Mobile version](/MTM/README.md), [Web version](/WTM/README.md), and [server](https://github.com/RockyNiu/todo-server)
 
-As this is my first app in Google Store, I would like to thank my peers, who led me into real CS engineer career. However in short of real experience, I made a very bad design of synchronization to google cloud. At that time, I just started my career changes from a neuroscientist. I have being resolved one problem, and another problem came out again, and tried to resolve it again for a while. I finally decided to stop the updating until I have enough time to perfectly resolve the problem of synchronization (Only for the last modified task). Also there are other design considerations, such as to replace the google map tab by a deamon server to remind users.. 
-
-I am still proud of this app, which includes so much sweat and friendship.
+As this is my first app in Google Store, I would like to thank my peers, who led me into real CS engineer career. At that time, I just started my career jump from a neuroscientist. I really appreciate their help. I am proud of this app, which includes so much sweat and friendship.
 
 ### Version
-1.21
+1.22
+Support sdk16-20 (Android4.1~4.4). There might be unexcepted bugs in sdk21+(Android5.0+)
 
 ### Functions
 - Google+ login
@@ -31,7 +30,7 @@ I am still proud of this app, which includes so much sweat and friendship.
 * Setting Activity
 * Refactor
 * Update UI design
-* Combine ToGo with ToDo (show location of ToDo task)
+* Combine ToGo with ToDo (show location of ToDo task. Remove ToGo Tab, instead by deamon server?)
 * Social integration(FB/Twitter)
 
 ### Contribution

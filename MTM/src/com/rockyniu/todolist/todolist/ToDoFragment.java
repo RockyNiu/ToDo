@@ -393,7 +393,7 @@ public class ToDoFragment extends Fragment {
 		toDoListLoadAsynTask.execute(UPDATE_REMOTE_DATABASE);
 	}
 
-	public void refreshView() {
+	public synchronized void refreshView() {
 		refresh();
 		// setAlarmTime(this.getActivity());
 	}
