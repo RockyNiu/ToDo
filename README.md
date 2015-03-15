@@ -3,11 +3,14 @@ ToDo
 
 ToDo is a Task Manager application, including [Mobile version](/MTM/README.md), [Web version](/WTM/README.md), and [server](https://github.com/RockyNiu/todo-server)
 
-As this is my first app in Google Store, I would like to thank my peers, who led me into real CS engineer career. At that time, I just started my career jump from a neuroscientist. I really appreciate their help. I am proud of this app, which includes so much sweat and friendship.
+As this is my first app in Google Store, I would like to thank my peers, who led me into real CS engineer career. At that time, I just started my career jump from a neuroscientist. I really appreciate their help. 
+
+I am proud of this app, which includes so much sweat and warm friendship.
 
 ### Version
-1.22
-Support sdk16-20 (Android4.1~4.4). There might be unexcepted bugs in sdk21+(Android5.0+), such as last modified task needs some time for a break before synchronization.
+v1.24
+Support sdk16-20 (Android4.1~4.4). 
+There might be unexcepted bugs in sdk21+(Android5.0+), such as last modified task needs some time for a break before synchronization.
 
 ### Functions
 - Google+ login

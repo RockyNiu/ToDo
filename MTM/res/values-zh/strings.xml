@@ -7,37 +7,44 @@
     <string name="alarm_dialog_ok">确定</string>
     <string name="app_name">牛人记事簿</string>
     <string name="cancel_button">取消</string>
-    <string name="changepwd">修改密码</string>
+    <string name="change_password">修改密码</string>
+    <string name="cancel_editing">取消编辑。</string>
     <string name="clear_completed">清除所有已完成任务</string>
-    <string name="confirm_pwd">确认密码</string>
+    <string name="confirm_password">确认密码</string>
+    <string name="device_not_supported">您的设备不支持该应用。</string>
     <string name="due_title">预定日期</string>
+    <string name="due_earlier_than_now">预定日期早于现在时间。</string>
     <string name="empty_list">暂时没有任务在列表中。</string>
+    <string name="empty_name">任务名为空。</string>
     <string name="error">错误</string>
     <string name="error_format">[错误] %s</string>
     <string name="exit">退出</string>
     <string name="fail_to_add_new_user">添加新用户失败。</string>
+    <string name="fail_to_create_new_task">添加新任务失败。</string>
+    <string name="fail_to_save_task">保存任务失败。</string>
     <string name="hello_world">您好！</string>
     <string name="hide_completed">隐藏已完成任务</string>
     <string name="item_name">任务名</string>
-    <string name="item_name_default">任务（小于250个字符）</string>
+    <string name="item_name_default">任务（小于250个中文字符）</string>
     <string name="item_note">注释</string>
     <string name="item_note_default">注释</string>
     <string name="login">登录</string>
     <string name="logout">登录出去</string>
     <string name="map_search_default">地址</string>
+    <string name="name_truncated">任务名被修改为最大长度（250个中文字符）</string>
     <string name="new_item">新任务</string>
     <string name="new_user">新用户</string>
-    <string name="popmenu1">编辑任务</string>
-    <string name="popmenu2">删除任务</string>
+    <string name="no">否</string>
+    <string name="ok">确定</string>
     <string name="priority">优先级</string>
     <string name="priority_description">优先级</string>
     <string name="save_button">保存</string>
     <string name="search">搜索</string>
     <string name="select_label">选择</string>
-    <string name="send_email">发送邮件</string>
     <string name="send_smsMessage">发送短信</string>
     <string name="set_due_time">设置时间吗？</string>
     <string name="setting">设置</string>
+    <string name="share">共享</string>
     <string name="show_list">显示任务列表</string>
     <string name="sign_out">登录出去</string>
     <string name="sortbydue">按预定时间排序</string>
@@ -45,6 +52,9 @@
     <string name="subtitle">副标题</string>
     <string name="sync">同步</string>
     <string name="task_checked">完成了吗？</string>
+    <string name="task_created">已新建任务。</string>
+    <string name="task_doesnot_exist">任务不存在。</string>
+    <string name="task_updated">任务已更新。</string>
     <string name="time_title">预定时间</string>
     <string name="title_activity_add_item">添加任务</string>
     <string name="title_activity_add_user">添加用户</string>
@@ -56,9 +66,9 @@
     <string name="title_separator_desc">任务分割符</string>
     <string name="user_is_connected">用户已连接！</string>
     <string name="user_name">用户名</string>
-    <string name="user_pwd">密码</string>
+    <string name="user_password">密码</string>
     <string name="warning_description">已过预定时间！</string>
     <string name="welcome">选择谷歌账号</string>
-
-
+    <string name="yes">是</string>
+    
 </resources>

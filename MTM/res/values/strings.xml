@@ -8,9 +8,9 @@
     <string name="app_name">RockToDo</string>
     <string name="cancel_button">Cancel</string>
     <string name="cancel_editing">Cancel Editing.</string>
-    <string name="changepwd">Change password</string>
+    <string name="change_password">Change password</string>
     <string name="clear_completed">Clear all completed tasks</string>
-    <string name="confirm_pwd">Confirm password</string>
+    <string name="confirm_password">Confirm password</string>
     <string name="device_not_supported">Your device is not supported.</string>
     <string name="due_title">Due date</string>
     <string name="due_earlier_than_now">Due time cannot be earlier than now.</string>
@@ -31,13 +31,11 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="map_search_default">Address</string>
-    <string name="name_truncated">Name is truncated to MAX_LENGTH (140 characters)."</string>
+    <string name="name_truncated">Name is truncated to MAX_LENGTH (500haracters).</string>
     <string name="new_item">NewItem</string>
     <string name="new_user">NewUser</string>
     <string name="no">No</string>
     <string name="ok">OK</string>
-    <string name="popmenu1">Edit task</string>
-    <string name="popmenu2">Delete task</string>
     <string name="priority">Priority</string>
     <string name="priority_description">priority</string>
     <string name="save_button">Save</string>
@@ -68,7 +66,7 @@
     <string name="title_separator_desc">Title separator</string>
     <string name="user_is_connected">User is connected!</string>
     <string name="user_name">User name</string>
-    <string name="user_pwd">Password</string>
+    <string name="user_password">Password</string>
     <string name="warning_description">Past due!</string>
     <string name="welcome">Choose Google Account</string>
     <string name="yes">Yes</string>
