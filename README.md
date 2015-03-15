@@ -7,7 +7,7 @@ As this is my first app in Google Store, I would like to thank my peers, who led
 
 ### Version
 1.22
-Support sdk16-20 (Android4.1~4.4). There might be unexcepted bugs in sdk21+(Android5.0+)
+Support sdk16-20 (Android4.1~4.4). There might be unexcepted bugs in sdk21+(Android5.0+), such as last modified task needs some time for a break before synchronization.
 
 ### Functions
 - Google+ login
