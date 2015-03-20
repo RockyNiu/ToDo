@@ -10,7 +10,7 @@ I am proud of this app, which includes so much sweat and warm friendship.
 ### Version
 v1.24
 Support sdk16-20 (Android4.1~4.4). 
-There might be unexcepted bugs in sdk21+(Android5.0+). For example, it is need to wait for a while before synchronizating the last modified task.
+There might be unexcepted bugs in sdk21+(Android5.0+). For example, it is need to wait for a while before synchronizing the last modified task.
 
 ### Functions
 - Google+ login
